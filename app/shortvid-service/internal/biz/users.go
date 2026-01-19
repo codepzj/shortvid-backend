@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	v1 "shortvid-backend/api/shortvid-service/v1"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -37,6 +38,9 @@ func (uc *UsersUsecase) GetUserByID(ctx context.Context, id int32) (*User, error
 	if err != nil {
 		uc.logger.Errorf("get user by id failed: %v", err)
 		return nil, err
+	}
+	if user == nil {
+		return nil, v1.ErrorUserNotFound("user not found")
 	}
 	return user, nil
 }

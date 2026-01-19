@@ -2,8 +2,11 @@ package data
 
 import (
 	"context"
+	"errors"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/data/model"
+
+	"gorm.io/gorm"
 )
 
 type usersRepo struct {
@@ -27,6 +30,9 @@ func (r *usersRepo) CreateUser(ctx context.Context, user *biz.User) error {
 func (r *usersRepo) GetUserByID(ctx context.Context, id int32) (*biz.User, error) {
 	user, err := r.data.query.User.WithContext(ctx).Where(r.data.query.User.ID.Eq(id)).First()
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return &biz.User{
