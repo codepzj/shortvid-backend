@@ -3,37 +3,76 @@
 
 openapi: 3.0.3
 info:
-    title: Greeter API
-    description: The greeting service definition.
+    title: UsersService API
     version: 0.0.1
 paths:
-    /helloworld/{name}:
-        get:
+    /api/v1/users:
+        post:
             tags:
-                - Greeter
-                - subgroup
-            description: Sends a greeting
-            operationId: Greeter_SayHello
-            parameters:
-                - name: name
-                  in: path
-                  required: true
-                  schema:
-                    type: string
+                - UsersService
+            operationId: UsersService_CreateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/.CreateUserRequest'
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+                                $ref: '#/components/schemas/.CreateUserResponse'
+    /api/v1/users/{id}:
+        get:
+            tags:
+                - UsersService
+            operationId: UsersService_GetUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/.GetUserResponse'
 components:
     schemas:
-        helloworld.v1.HelloReply:
+        .CreateUserRequest:
             type: object
             properties:
-                message:
+                nickname:
                     type: string
-            description: The response message containing the greetings
+                avatar:
+                    type: string
+                email:
+                    type: string
+                provider:
+                    type: string
+                providerUid:
+                    type: string
+        .CreateUserResponse:
+            type: object
+            properties: {}
+        .GetUserResponse:
+            type: object
+            properties:
+                nickname:
+                    type: string
+                avatar:
+                    type: string
+                email:
+                    type: string
+                provider:
+                    type: string
+                providerUid:
+                    type: string
 tags:
-    - name: Greeter
+    - name: UsersService

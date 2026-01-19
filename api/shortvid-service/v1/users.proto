@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option go_package = "shortvid-backend/api/shortvid-service/v1;v1";
+
+import "google/api/annotations.proto";
+
+service UsersService {
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse){
+        option (google.api.http) = {
+            post: "/api/v1/users"
+            body: "*"
+        };    
+    }
+    rpc GetUser(GetUserRequest) returns (GetUserResponse){
+        option (google.api.http) = {
+            get: "/api/v1/users/{id}"
+        };
+    }
+}
+
+message CreateUserRequest {
+    string nickname = 1;
+    string avatar = 2;
+    string email = 3;
+    string provider = 4;
+    string provider_uid = 5;
+}
+
+message CreateUserResponse {
+}
+
+message GetUserRequest {
+    int32 id = 1;
+}
+
+message GetUserResponse {
+    string nickname = 1;
+    string avatar = 2;
+    string email = 3;
+    string provider = 4;
+    string provider_uid = 5;
+}

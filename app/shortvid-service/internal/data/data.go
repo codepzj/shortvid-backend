@@ -1,24 +1,33 @@
 package data
 
 import (
-	"shortvid-backend/app/shortvid-service/internal/conf"
+	"shortvid-backend/app/shortvid-service/internal/data/infra"
+	"shortvid-backend/app/shortvid-service/internal/data/query"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"github.com/redis/go-redis/v9"
+	"gorm.io/gorm"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewGreeterRepo)
+var ProviderSet = wire.NewSet(infra.NewDB, infra.NewRedis, NewData, NewUsersRepo)
 
 // Data .
 type Data struct {
-	// TODO wrapped database client
+	query  *query.Query
+	redis  *redis.Client
+	logger log.Logger
 }
 
 // NewData .
-func NewData(c *conf.Data) (*Data, func(), error) {
+func NewData(db *gorm.DB, redis *redis.Client, logger log.Logger) (*Data, func(), error) {
 	cleanup := func() {
-		log.Info("closing the data resources")
+		logger.Log(log.LevelInfo, "closing the data resources")
 	}
-	return &Data{}, cleanup, nil
+	return &Data{
+		query:  query.Use(db),
+		redis:  redis,
+		logger: logger,
+	}, cleanup, nil
 }
