@@ -2,14 +2,16 @@ package biz
 
 import (
 	"context"
+
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 type User struct {
-	Nickname   string
-	Avatar     string
-	Email      string
+	Nickname    string
+	Avatar      string
+	Email       string
 	ProviderUID string
-	Provider   string
+	Provider    string
 }
 
 type UsersRepo interface {
@@ -18,11 +20,12 @@ type UsersRepo interface {
 }
 
 type UsersUsecase struct {
-	repo UsersRepo
+	logger *log.Helper
+	repo   UsersRepo
 }
 
-func NewUsersUsecase(repo UsersRepo) *UsersUsecase {
-	return &UsersUsecase{repo: repo}
+func NewUsersUsecase(logger log.Logger, repo UsersRepo) *UsersUsecase {
+	return &UsersUsecase{logger: log.NewHelper(logger), repo: repo}
 }
 
 func (uc *UsersUsecase) CreateUser(ctx context.Context, user *User) error {
@@ -30,5 +33,10 @@ func (uc *UsersUsecase) CreateUser(ctx context.Context, user *User) error {
 }
 
 func (uc *UsersUsecase) GetUserByID(ctx context.Context, id int32) (*User, error) {
-	return uc.repo.GetUserByID(ctx, id)
+	user, err := uc.repo.GetUserByID(ctx, id)
+	if err != nil {
+		uc.logger.Errorf("get user by id failed: %v", err)
+		return nil, err
+	}
+	return user, nil
 }

@@ -33,7 +33,6 @@ func (s *UsersService) CreateUser(ctx context.Context, req *v1.CreateUserRequest
 func (s *UsersService) GetUser(ctx context.Context, req *v1.GetUserRequest) (*v1.GetUserResponse, error) {
 	user, err := s.uc.GetUserByID(ctx, req.Id)
 	if err != nil {
-
 		return nil, err
 	}
 	return &v1.GetUserResponse{
