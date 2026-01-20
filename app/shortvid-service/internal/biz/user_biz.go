@@ -2,8 +2,11 @@ package biz
 
 import (
 	"context"
+	"errors"
+	"math/rand"
 	v1 "shortvid-backend/api/shortvid-service/v1"
 	"shortvid-backend/app/shortvid-service/internal/data/model"
+	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -30,6 +33,8 @@ type UsersRepo interface {
 	CreateUser(ctx context.Context, user *model.User) error
 	GetUserByID(ctx context.Context, id int32) (*model.User, error)
 	GetUserByEmailAndProvider(ctx context.Context, email string, provider string) (*model.User, error)
+	GetUserByUserUID(ctx context.Context, userUID int32) (*model.User, error)
+	UpdateLoginInfo(ctx context.Context, userID int32) error
 }
 
 type UsersUsecase struct {
@@ -52,18 +57,28 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 			ID:          existingUserModel.ID,
 			UserUID:     existingUserModel.UserUID,
 			Nickname:    existingUserModel.Nickname,
-			Avatar:      *existingUserModel.Avatar,
-			Email:       *existingUserModel.Email,
-			ProviderUID: *existingUserModel.ProviderUID,
-			Provider:    *existingUserModel.Provider,
+			Avatar:      existingUserModel.Avatar,
+			Email:       existingUserModel.Email,
+			ProviderUID: existingUserModel.ProviderUID,
+			Provider:    existingUserModel.Provider,
 		}, false, nil
 	}
+
+	// 生成唯一的UserUID
+	userUID, err := uc.generateUniqueUserUID(ctx)
+	if err != nil {
+		uc.logger.Log(log.LevelError, "msg", "Generate unique UserUID failed", "error", err)
+		return nil, false, err
+	}
+
 	userModel := &model.User{
+		UserUID:     userUID,
 		Nickname:    user.Nickname,
-		Avatar:      &user.Avatar,
-		Email:       &user.Email,
-		ProviderUID: &user.ProviderUID,
-		Provider:    &user.Provider,
+		Avatar:      user.Avatar,
+		Email:       user.Email,
+		ProviderUID: user.ProviderUID,
+		Provider:    user.Provider,
+		LastLoginAt: time.Now(),
 	}
 	err = uc.repo.CreateUser(ctx, userModel)
 	if err != nil {
@@ -74,10 +89,10 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 		ID:          userModel.ID,
 		UserUID:     userModel.UserUID,
 		Nickname:    userModel.Nickname,
-		Avatar:      *userModel.Avatar,
-		Email:       *userModel.Email,
-		ProviderUID: *userModel.ProviderUID,
-		Provider:    *userModel.Provider,
+		Avatar:      userModel.Avatar,
+		Email:       userModel.Email,
+		ProviderUID: userModel.ProviderUID,
+		Provider:    userModel.Provider,
 	}, true, nil
 }
 
@@ -94,9 +109,41 @@ func (uc *UsersUsecase) GetUserByID(ctx context.Context, id int32) (*UserProfile
 		ID:          userModel.ID,
 		UserUID:     userModel.UserUID,
 		Nickname:    userModel.Nickname,
-		Avatar:      *userModel.Avatar,
-		Email:       *userModel.Email,
-		Provider:    *userModel.Provider,
-		ProviderUID: *userModel.ProviderUID,
+		Avatar:      userModel.Avatar,
+		Email:       userModel.Email,
+		Provider:    userModel.Provider,
+		ProviderUID: userModel.ProviderUID,
 	}, nil
+}
+
+// UpdateLoginInfo 更新登录信息
+func (uc *UsersUsecase) UpdateLoginInfo(ctx context.Context, userID int32) error {
+	return uc.repo.UpdateLoginInfo(ctx, userID)
+}
+
+// generateUniqueUserUID 生成唯一的UserUID (10000-999999999范围)
+func (uc *UsersUsecase) generateUniqueUserUID(ctx context.Context) (int32, error) {
+	const maxRetries = 10
+	const minUID = 10000
+	const maxUID = 999999999
+
+	for i := range maxRetries {
+		// 生成随机UserUID
+		userUID := int32(rand.Intn(maxUID-minUID+1) + minUID)
+
+		// 检查是否已存在
+		existingUser, err := uc.repo.GetUserByUserUID(ctx, userUID)
+		if err != nil {
+			return 0, err
+		}
+
+		// 如果不存在，返回这个UserUID
+		if existingUser == nil {
+			return userUID, nil
+		}
+
+		uc.logger.Log(log.LevelWarn, "msg", "Generated UserUID already exists, retrying", "userUID", userUID, "attempt", i+1)
+	}
+
+	return 0, errors.New("failed to generate unique UserUID after max retries")
 }

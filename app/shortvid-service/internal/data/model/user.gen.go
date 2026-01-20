@@ -20,12 +20,12 @@ type User struct {
 	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;comment:删除时间" json:"deleted_at"`                 // 删除时间
 	UserUID     int32          `gorm:"column:user_uid;not null;comment:用户唯一ID" json:"user_uid"`          // 用户唯一ID
 	Nickname    string         `gorm:"column:nickname;not null;comment:昵称" json:"nickname"`              // 昵称
-	Avatar      *string        `gorm:"column:avatar;comment:头像" json:"avatar"`                           // 头像
-	Email       *string        `gorm:"column:email;comment:邮箱" json:"email"`                             // 邮箱
-	Provider    *string        `gorm:"column:provider;default:firebase;comment:主要登录提供商" json:"provider"` // 主要登录提供商
-	ProviderUID *string        `gorm:"column:provider_uid;comment:第三方平台用户UID" json:"provider_uid"`       // 第三方平台用户UID
-	LastLoginAt *time.Time     `gorm:"column:last_login_at;comment:最后登录时间" json:"last_login_at"`         // 最后登录时间
-	LoginCount  *int32         `gorm:"column:login_count;comment:登录次数" json:"login_count"`               // 登录次数
+	Avatar      string         `gorm:"column:avatar;comment:头像" json:"avatar"`                           // 头像
+	Email       string         `gorm:"column:email;comment:邮箱" json:"email"`                             // 邮箱
+	Provider    string         `gorm:"column:provider;default:firebase;comment:主要登录提供商" json:"provider"` // 主要登录提供商
+	ProviderUID string         `gorm:"column:provider_uid;comment:第三方平台用户UID" json:"provider_uid"`       // 第三方平台用户UID
+	LastLoginAt time.Time      `gorm:"column:last_login_at;comment:最后登录时间" json:"last_login_at"`         // 最后登录时间
+	LoginCount  int32          `gorm:"column:login_count;comment:登录次数" json:"login_count"`               // 登录次数
 	Status      int32          `gorm:"column:status;not null;default:1;comment:状态" json:"status"`        // 状态
 }
 

@@ -63,24 +63,30 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *v1.LoginFirebaseR
 		return nil, err
 	}
 
-	// 4. 生成sessionID
+	// 4. 更新登录信息
+	if err := s.uc.UpdateLoginInfo(ctx, user.ID); err != nil {
+		s.logger.Log(log.LevelError, "msg", "Update login info failed", "error", err)
+		return nil, err
+	}
+
+	// 5. 生成sessionID
 	sessionID := uuid.NewString()
 
-	// 5. 生成accessToken
+	// 6. 生成accessToken
 	_, err = s.jwtService.GenerateAccessToken(user.UserUID, sessionID)
 	if err != nil {
 		s.logger.Log(log.LevelError, "msg", "Generate access token failed", "error", err)
 		return nil, err
 	}
 
-	// 6. 生成refreshToken
+	// 7. 生成refreshToken
 	_, err = s.jwtService.GenerateRefreshToken(user.UserUID, sessionID)
 	if err != nil {
 		s.logger.Log(log.LevelError, "msg", "Generate refresh token failed", "error", err)
 		return nil, err
 	}
 
-	// 7. 创建用户会话session
+	// 8. 创建用户会话session
 	session := &model.UserSession{
 		UserUID:   user.UserUID,
 		SessionID: sessionID,
@@ -94,19 +100,19 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *v1.LoginFirebaseR
 		return nil, err
 	}
 
-	// 8. 限制会话数量
+	// 9. 限制会话数量
 	if err := s.userSessionService.LimitUserSession(ctx, user.UserUID); err != nil {
 		s.logger.Log(log.LevelError, "msg", "Limit user session failed", "error", err)
 		return nil, err
 	}
 
-	// 9. 将用户会话缓存到redis中
+	// 10. 将用户会话缓存到redis中
 	expiration := s.jwtService.GetTokenExpiration()
 	if err := s.cacheService.SetUserSession(ctx, user.UserUID, sessionID, expiration); err != nil {
 		s.logger.Log(log.LevelError, "msg", "Set user session failed", "error", err)
 	}
 
-	// 10. 如果用户是新用户，则记录日志
+	// 11. 如果用户是新用户，则记录日志
 	if isNew {
 		s.logger.Log(log.LevelInfo, "msg", "user is new")
 	} else {

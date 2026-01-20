@@ -27,7 +27,7 @@ func main() {
 	g := gen.NewGenerator(gen.Config{
 		OutPath:       "../../internal/data/query",                   // 生成的代码路径
 		Mode:          gen.WithDefaultQuery | gen.WithQueryInterface, // 生成模式
-		FieldNullable: true,                                          // 数据库字段设置为空值列，当更新或插入时，设置为nil而不是零值
+		FieldNullable: false,                                         // 数据库字段设置为空值列，当更新或插入时，设置为nil而不是零值
 	})
 
 	// 读取配置

@@ -18,7 +18,7 @@ CREATE TABLE `user` (
     `last_login_at` datetime(3) DEFAULT NULL COMMENT '最后登录时间',
     `login_count` int DEFAULT '0' COMMENT '登录次数',
     
-    `status` int(11) NOT NULL DEFAULT 1 COMMENT '状态',
+    `status` int(11) NOT NULL DEFAULT 1 COMMENT '状态', -- 1: 正常, 2: 禁用
     PRIMARY KEY (`id`),
     UNIQUE KEY `user_uid` (`user_uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
