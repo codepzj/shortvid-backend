@@ -19,15 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UsersService_CreateUser_FullMethodName = "/UsersService/CreateUser"
-	UsersService_GetUser_FullMethodName    = "/UsersService/GetUser"
+	UsersService_LoginFirebase_FullMethodName = "/UsersService/LoginFirebase"
+	UsersService_GetUser_FullMethodName       = "/UsersService/GetUser"
 )
 
 // UsersServiceClient is the client API for UsersService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UsersServiceClient interface {
-	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
+	LoginFirebase(ctx context.Context, in *LoginFirebaseRequest, opts ...grpc.CallOption) (*LoginFirebaseResponse, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 }
 
@@ -39,10 +39,10 @@ func NewUsersServiceClient(cc grpc.ClientConnInterface) UsersServiceClient {
 	return &usersServiceClient{cc}
 }
 
-func (c *usersServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
+func (c *usersServiceClient) LoginFirebase(ctx context.Context, in *LoginFirebaseRequest, opts ...grpc.CallOption) (*LoginFirebaseResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateUserResponse)
-	err := c.cc.Invoke(ctx, UsersService_CreateUser_FullMethodName, in, out, cOpts...)
+	out := new(LoginFirebaseResponse)
+	err := c.cc.Invoke(ctx, UsersService_LoginFirebase_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (c *usersServiceClient) GetUser(ctx context.Context, in *GetUserRequest, op
 // All implementations must embed UnimplementedUsersServiceServer
 // for forward compatibility.
 type UsersServiceServer interface {
-	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
+	LoginFirebase(context.Context, *LoginFirebaseRequest) (*LoginFirebaseResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	mustEmbedUnimplementedUsersServiceServer()
 }
@@ -75,8 +75,8 @@ type UsersServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUsersServiceServer struct{}
 
-func (UnimplementedUsersServiceServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateUser not implemented")
+func (UnimplementedUsersServiceServer) LoginFirebase(context.Context, *LoginFirebaseRequest) (*LoginFirebaseResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method LoginFirebase not implemented")
 }
 func (UnimplementedUsersServiceServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUser not implemented")
@@ -102,20 +102,20 @@ func RegisterUsersServiceServer(s grpc.ServiceRegistrar, srv UsersServiceServer)
 	s.RegisterService(&UsersService_ServiceDesc, srv)
 }
 
-func _UsersService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateUserRequest)
+func _UsersService_LoginFirebase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginFirebaseRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).CreateUser(ctx, in)
+		return srv.(UsersServiceServer).LoginFirebase(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UsersService_CreateUser_FullMethodName,
+		FullMethod: UsersService_LoginFirebase_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).CreateUser(ctx, req.(*CreateUserRequest))
+		return srv.(UsersServiceServer).LoginFirebase(ctx, req.(*LoginFirebaseRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -146,8 +146,8 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UsersServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateUser",
-			Handler:    _UsersService_CreateUser_Handler,
+			MethodName: "LoginFirebase",
+			Handler:    _UsersService_LoginFirebase_Handler,
 		},
 		{
 			MethodName: "GetUser",

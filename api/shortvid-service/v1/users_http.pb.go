@@ -19,38 +19,38 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationUsersServiceCreateUser = "/UsersService/CreateUser"
 const OperationUsersServiceGetUser = "/UsersService/GetUser"
+const OperationUsersServiceLoginFirebase = "/UsersService/LoginFirebase"
 
 type UsersServiceHTTPServer interface {
-	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	LoginFirebase(context.Context, *LoginFirebaseRequest) (*LoginFirebaseResponse, error)
 }
 
 func RegisterUsersServiceHTTPServer(s *http.Server, srv UsersServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/api/v1/users", _UsersService_CreateUser0_HTTP_Handler(srv))
+	r.POST("/api/v1/login/firebase", _UsersService_LoginFirebase0_HTTP_Handler(srv))
 	r.GET("/api/v1/users/{id}", _UsersService_GetUser0_HTTP_Handler(srv))
 }
 
-func _UsersService_CreateUser0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx http.Context) error {
+func _UsersService_LoginFirebase0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in CreateUserRequest
+		var in LoginFirebaseRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUsersServiceCreateUser)
+		http.SetOperation(ctx, OperationUsersServiceLoginFirebase)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CreateUser(ctx, req.(*CreateUserRequest))
+			return srv.LoginFirebase(ctx, req.(*LoginFirebaseRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateUserResponse)
+		reply := out.(*LoginFirebaseResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -78,8 +78,8 @@ func _UsersService_GetUser0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx ht
 }
 
 type UsersServiceHTTPClient interface {
-	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *CreateUserResponse, err error)
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserResponse, err error)
+	LoginFirebase(ctx context.Context, req *LoginFirebaseRequest, opts ...http.CallOption) (rsp *LoginFirebaseResponse, err error)
 }
 
 type UsersServiceHTTPClientImpl struct {
@@ -90,19 +90,6 @@ func NewUsersServiceHTTPClient(client *http.Client) UsersServiceHTTPClient {
 	return &UsersServiceHTTPClientImpl{client}
 }
 
-func (c *UsersServiceHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...http.CallOption) (*CreateUserResponse, error) {
-	var out CreateUserResponse
-	pattern := "/api/v1/users"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationUsersServiceCreateUser))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
 func (c *UsersServiceHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*GetUserResponse, error) {
 	var out GetUserResponse
 	pattern := "/api/v1/users/{id}"
@@ -110,6 +97,19 @@ func (c *UsersServiceHTTPClientImpl) GetUser(ctx context.Context, in *GetUserReq
 	opts = append(opts, http.Operation(OperationUsersServiceGetUser))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *UsersServiceHTTPClientImpl) LoginFirebase(ctx context.Context, in *LoginFirebaseRequest, opts ...http.CallOption) (*LoginFirebaseResponse, error) {
+	var out LoginFirebaseResponse
+	pattern := "/api/v1/login/firebase"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUsersServiceLoginFirebase))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

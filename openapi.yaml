@@ -6,16 +6,16 @@ info:
     title: UsersService API
     version: 0.0.1
 paths:
-    /api/v1/users:
+    /api/v1/login/firebase:
         post:
             tags:
                 - UsersService
-            operationId: UsersService_CreateUser
+            operationId: UsersService_LoginFirebase
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/.CreateUserRequest'
+                            $ref: '#/components/schemas/.LoginFirebaseRequest'
                 required: true
             responses:
                 "200":
@@ -23,7 +23,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/.CreateUserResponse'
+                                $ref: '#/components/schemas/.LoginFirebaseResponse'
     /api/v1/users/{id}:
         get:
             tags:
@@ -45,14 +45,6 @@ paths:
                                 $ref: '#/components/schemas/.GetUserResponse'
 components:
     schemas:
-        .CreateUserRequest:
-            type: object
-            properties:
-                idToken:
-                    type: string
-        .CreateUserResponse:
-            type: object
-            properties: {}
         .GetUserResponse:
             type: object
             properties:
@@ -66,5 +58,13 @@ components:
                     type: string
                 providerUid:
                     type: string
+        .LoginFirebaseRequest:
+            type: object
+            properties:
+                idToken:
+                    type: string
+        .LoginFirebaseResponse:
+            type: object
+            properties: {}
 tags:
     - name: UsersService

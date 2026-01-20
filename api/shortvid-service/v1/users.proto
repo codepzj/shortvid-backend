@@ -5,9 +5,9 @@ option go_package = "shortvid-backend/api/shortvid-service/v1;v1";
 import "google/api/annotations.proto";
 
 service UsersService {
-    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse){
+    rpc LoginFirebase(LoginFirebaseRequest) returns (LoginFirebaseResponse){
         option (google.api.http) = {
-            post: "/api/v1/users"
+            post: "/api/v1/login/firebase"
             body: "*"
         };    
     }
@@ -18,11 +18,11 @@ service UsersService {
     }
 }
 
-message CreateUserRequest {
+message LoginFirebaseRequest {
     string idToken = 1;
 }
 
-message CreateUserResponse {
+message LoginFirebaseResponse {
 }
 
 message GetUserRequest {

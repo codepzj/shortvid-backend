@@ -23,17 +23,18 @@ type UsersRepo interface {
 }
 
 type UsersUsecase struct {
-	logger *log.Helper
+	logger log.Logger
 	repo   UsersRepo
 }
 
 func NewUsersUsecase(logger log.Logger, repo UsersRepo) *UsersUsecase {
-	return &UsersUsecase{logger: log.NewHelper(logger), repo: repo}
+	return &UsersUsecase{logger: logger, repo: repo}
 }
 
 func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User, bool, error) {
 	existingUser, err := uc.repo.GetUserByEmailAndProvider(ctx, user.Email, user.Provider)
 	if err != nil {
+		uc.logger.Log(log.LevelError, "msg", "Get user by email and provider failed", "error", err)
 		return nil, false, err
 	}
 	if existingUser != nil {
@@ -41,6 +42,7 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 	}
 	err = uc.repo.CreateUser(ctx, user)
 	if err != nil {
+		uc.logger.Log(log.LevelError, "msg", "Create user failed", "error", err)
 		return nil, false, err
 	}
 	return user, true, nil
@@ -49,7 +51,7 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 func (uc *UsersUsecase) GetUserByID(ctx context.Context, id int32) (*User, error) {
 	user, err := uc.repo.GetUserByID(ctx, id)
 	if err != nil {
-		uc.logger.Errorf("get user by id failed: %v", err)
+		uc.logger.Log(log.LevelError, "msg", "Get user by id failed", "error", err)
 		return nil, err
 	}
 	if user == nil {
