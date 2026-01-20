@@ -5,6 +5,7 @@ go 1.25.3
 require (
 	firebase.google.com/go/v4 v4.18.0
 	github.com/go-kratos/kratos/v2 v2.9.2
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/google/wire v0.6.0
 	github.com/redis/go-redis/v9 v9.17.2
 	go.uber.org/automaxprocs v1.5.1

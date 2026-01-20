@@ -10,6 +10,8 @@ message Bootstrap {
   Data data = 2;
   Log log = 3;
   Firebase firebase = 4;
+  Jwt jwt = 5;
+  Session session = 6;
 }
 
 message Server {
@@ -40,8 +42,10 @@ message Data {
     string network = 1;
     string addr = 2;
     string password = 3;
-    google.protobuf.Duration read_timeout = 4;
-    google.protobuf.Duration write_timeout = 5;
+    int32 db = 4;
+    string key_prefix = 5;
+    google.protobuf.Duration read_timeout = 6;
+    google.protobuf.Duration write_timeout = 7;
   }
   Database database = 1;
   Redis redis = 2;
@@ -60,4 +64,18 @@ message Log {
 
 message Firebase {
   string credentials_json = 1;
+}
+
+message Jwt {
+  string issuer = 1;
+  string secret_key = 2;
+  google.protobuf.Duration access_token_expires_in = 3;
+  google.protobuf.Duration refresh_token_expires_in = 4;
+}
+
+message Session {
+  bool http_only = 1;
+  bool secure = 2;
+  bool limit_enabled = 3;
+  int32 limit_count = 4;
 }

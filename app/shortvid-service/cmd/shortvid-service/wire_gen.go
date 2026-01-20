@@ -13,6 +13,8 @@ import (
 	"shortvid-backend/app/shortvid-service/internal/conf"
 	"shortvid-backend/app/shortvid-service/internal/data"
 	"shortvid-backend/app/shortvid-service/internal/data/infra"
+	"shortvid-backend/app/shortvid-service/internal/data/infra/cache"
+	"shortvid-backend/app/shortvid-service/internal/data/infra/db"
 	"shortvid-backend/app/shortvid-service/internal/server"
 	"shortvid-backend/app/shortvid-service/internal/service"
 )
@@ -24,18 +26,22 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, logger log.Logger) (*kratos.App, func(), error) {
-	db := infra.NewDB(confData)
-	client := infra.NewRedis(confData)
+func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, jwt *conf.Jwt, session *conf.Session, logger log.Logger) (*kratos.App, func(), error) {
+	gormDB := db.NewDB(confData)
+	client := cache.NewRedis(confData)
 	authClient := infra.NewFirebaseApp(firebase)
-	dataData, cleanup, err := data.NewData(db, client, authClient, logger)
+	dataData, cleanup, err := data.NewData(gormDB, client, authClient, logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	usersRepo := data.NewUsersRepo(dataData)
 	usersUsecase := biz.NewUsersUsecase(logger, usersRepo)
-	firebaseService := service.NewFirebaseService(logger, dataData)
-	usersService := service.NewUsersService(logger, usersUsecase, firebaseService)
+	firebaseService := service.NewFirebaseService(logger, authClient)
+	jwtService := service.NewJwtService(jwt, logger)
+	userSessionRepo := data.NewUserSessionRepo(dataData)
+	cacheService := service.NewCacheService(client, logger)
+	userSessionService := service.NewUserSessionService(logger, session, userSessionRepo, cacheService, jwtService)
+	usersService := service.NewUsersService(logger, usersUsecase, firebaseService, jwtService, userSessionService, cacheService)
 	grpcServer := server.NewGRPCServer(confServer, usersService, logger)
 	httpServer := server.NewHTTPServer(confServer, usersService, logger)
 	app := newApp(logger, grpcServer, httpServer)

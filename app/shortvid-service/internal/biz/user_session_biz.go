@@ -1,0 +1,22 @@
+package biz
+
+import (
+	"context"
+	"shortvid-backend/app/shortvid-service/internal/data/model"
+)
+
+type UserSessionUsecase struct {
+	repo UserSessionRepo
+}
+
+func NewUserSessionUsecase(repo UserSessionRepo) *UserSessionUsecase {
+	return &UserSessionUsecase{repo: repo}
+}
+
+type UserSessionRepo interface {
+	CreateUserSession(ctx context.Context, userSession *model.UserSession) error
+	FindUserSessionByUserUID(ctx context.Context, userUID int32) ([]*model.UserSession, error)
+	FindUserSessionBySessionID(ctx context.Context, sessionID string) (*model.UserSession, error)
+	DeleteUserSessionBySessionID(ctx context.Context, sessionID string) error
+	DeleteUserSessionByIDs(ctx context.Context, ids []int64) error
+}

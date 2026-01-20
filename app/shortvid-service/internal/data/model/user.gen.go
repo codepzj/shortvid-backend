@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-const TableNameUser = "users"
+const TableNameUser = "user"
 
 // User 用户表
 type User struct {
@@ -18,7 +18,7 @@ type User struct {
 	CreatedAt   time.Time      `gorm:"column:created_at;not null;default:CURRENT_TIMESTAMP(3)" json:"created_at"`
 	UpdatedAt   time.Time      `gorm:"column:updated_at;not null;default:CURRENT_TIMESTAMP(3)" json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;comment:删除时间" json:"deleted_at"`                 // 删除时间
-	UserUID     string         `gorm:"column:user_uid;not null;comment:用户唯一ID" json:"user_uid"`          // 用户唯一ID
+	UserUID     int32          `gorm:"column:user_uid;not null;comment:用户唯一ID" json:"user_uid"`          // 用户唯一ID
 	Nickname    string         `gorm:"column:nickname;not null;comment:昵称" json:"nickname"`              // 昵称
 	Avatar      *string        `gorm:"column:avatar;comment:头像" json:"avatar"`                           // 头像
 	Email       *string        `gorm:"column:email;comment:邮箱" json:"email"`                             // 邮箱

@@ -2,6 +2,8 @@ package data
 
 import (
 	"shortvid-backend/app/shortvid-service/internal/data/infra"
+	"shortvid-backend/app/shortvid-service/internal/data/infra/cache"
+	"shortvid-backend/app/shortvid-service/internal/data/infra/db"
 	"shortvid-backend/app/shortvid-service/internal/data/query"
 
 	"firebase.google.com/go/v4/auth"
@@ -12,7 +14,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(infra.NewDB, infra.NewRedis, infra.NewFirebaseApp, NewData, NewUsersRepo)
+var ProviderSet = wire.NewSet(db.NewDB, cache.NewRedis, infra.NewFirebaseApp, NewData, NewUsersRepo, NewUserSessionRepo)
 
 // Data .
 type Data struct {
@@ -33,8 +35,4 @@ func NewData(db *gorm.DB, redis *redis.Client, firebaseAuth *auth.Client, logger
 		firebaseAuth: firebaseAuth,
 		logger:       logger,
 	}, cleanup, nil
-}
-
-func (d *Data) GetFirebaseAuth() *auth.Client {
-	return d.firebaseAuth
 }
