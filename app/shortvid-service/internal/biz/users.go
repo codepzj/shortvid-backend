@@ -8,6 +8,7 @@ import (
 )
 
 type User struct {
+	UserUID     string
 	Nickname    string
 	Avatar      string
 	Email       string
@@ -18,6 +19,7 @@ type User struct {
 type UsersRepo interface {
 	CreateUser(ctx context.Context, user *User) error
 	GetUserByID(ctx context.Context, id int32) (*User, error)
+	GetUserByEmailAndProvider(ctx context.Context, email string, provider string) (*User, error)
 }
 
 type UsersUsecase struct {
@@ -29,8 +31,19 @@ func NewUsersUsecase(logger log.Logger, repo UsersRepo) *UsersUsecase {
 	return &UsersUsecase{logger: log.NewHelper(logger), repo: repo}
 }
 
-func (uc *UsersUsecase) CreateUser(ctx context.Context, user *User) error {
-	return uc.repo.CreateUser(ctx, user)
+func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User, bool, error) {
+	existingUser, err := uc.repo.GetUserByEmailAndProvider(ctx, user.Email, user.Provider)
+	if err != nil {
+		return nil, false, err
+	}
+	if existingUser != nil {
+		return existingUser, false, nil
+	}
+	err = uc.repo.CreateUser(ctx, user)
+	if err != nil {
+		return nil, false, err
+	}
+	return user, true, nil
 }
 
 func (uc *UsersUsecase) GetUserByID(ctx context.Context, id int32) (*User, error) {

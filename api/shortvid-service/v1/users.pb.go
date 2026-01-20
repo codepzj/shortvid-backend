@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v6.33.2
-// source: api/shortvid-service/v1/users.proto
+// source: shortvid-service/v1/users.proto
 
 package v1
 
@@ -24,18 +24,14 @@ const (
 
 type CreateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Nickname      string                 `protobuf:"bytes,1,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	Avatar        string                 `protobuf:"bytes,2,opt,name=avatar,proto3" json:"avatar,omitempty"`
-	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
-	Provider      string                 `protobuf:"bytes,4,opt,name=provider,proto3" json:"provider,omitempty"`
-	ProviderUid   string                 `protobuf:"bytes,5,opt,name=provider_uid,json=providerUid,proto3" json:"provider_uid,omitempty"`
+	IdToken       string                 `protobuf:"bytes,1,opt,name=idToken,proto3" json:"idToken,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateUserRequest) Reset() {
 	*x = CreateUserRequest{}
-	mi := &file_api_shortvid_service_v1_users_proto_msgTypes[0]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -47,7 +43,7 @@ func (x *CreateUserRequest) String() string {
 func (*CreateUserRequest) ProtoMessage() {}
 
 func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_shortvid_service_v1_users_proto_msgTypes[0]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,40 +56,12 @@ func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserRequest.ProtoReflect.Descriptor instead.
 func (*CreateUserRequest) Descriptor() ([]byte, []int) {
-	return file_api_shortvid_service_v1_users_proto_rawDescGZIP(), []int{0}
+	return file_shortvid_service_v1_users_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CreateUserRequest) GetNickname() string {
+func (x *CreateUserRequest) GetIdToken() string {
 	if x != nil {
-		return x.Nickname
-	}
-	return ""
-}
-
-func (x *CreateUserRequest) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
-	}
-	return ""
-}
-
-func (x *CreateUserRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-func (x *CreateUserRequest) GetProvider() string {
-	if x != nil {
-		return x.Provider
-	}
-	return ""
-}
-
-func (x *CreateUserRequest) GetProviderUid() string {
-	if x != nil {
-		return x.ProviderUid
+		return x.IdToken
 	}
 	return ""
 }
@@ -106,7 +74,7 @@ type CreateUserResponse struct {
 
 func (x *CreateUserResponse) Reset() {
 	*x = CreateUserResponse{}
-	mi := &file_api_shortvid_service_v1_users_proto_msgTypes[1]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -118,7 +86,7 @@ func (x *CreateUserResponse) String() string {
 func (*CreateUserResponse) ProtoMessage() {}
 
 func (x *CreateUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_shortvid_service_v1_users_proto_msgTypes[1]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -131,7 +99,7 @@ func (x *CreateUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserResponse.ProtoReflect.Descriptor instead.
 func (*CreateUserResponse) Descriptor() ([]byte, []int) {
-	return file_api_shortvid_service_v1_users_proto_rawDescGZIP(), []int{1}
+	return file_shortvid_service_v1_users_proto_rawDescGZIP(), []int{1}
 }
 
 type GetUserRequest struct {
@@ -143,7 +111,7 @@ type GetUserRequest struct {
 
 func (x *GetUserRequest) Reset() {
 	*x = GetUserRequest{}
-	mi := &file_api_shortvid_service_v1_users_proto_msgTypes[2]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -155,7 +123,7 @@ func (x *GetUserRequest) String() string {
 func (*GetUserRequest) ProtoMessage() {}
 
 func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_shortvid_service_v1_users_proto_msgTypes[2]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -168,7 +136,7 @@ func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserRequest.ProtoReflect.Descriptor instead.
 func (*GetUserRequest) Descriptor() ([]byte, []int) {
-	return file_api_shortvid_service_v1_users_proto_rawDescGZIP(), []int{2}
+	return file_shortvid_service_v1_users_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetUserRequest) GetId() int32 {
@@ -191,7 +159,7 @@ type GetUserResponse struct {
 
 func (x *GetUserResponse) Reset() {
 	*x = GetUserResponse{}
-	mi := &file_api_shortvid_service_v1_users_proto_msgTypes[3]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -203,7 +171,7 @@ func (x *GetUserResponse) String() string {
 func (*GetUserResponse) ProtoMessage() {}
 
 func (x *GetUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_shortvid_service_v1_users_proto_msgTypes[3]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -216,7 +184,7 @@ func (x *GetUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserResponse.ProtoReflect.Descriptor instead.
 func (*GetUserResponse) Descriptor() ([]byte, []int) {
-	return file_api_shortvid_service_v1_users_proto_rawDescGZIP(), []int{3}
+	return file_shortvid_service_v1_users_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetUserResponse) GetNickname() string {
@@ -254,17 +222,13 @@ func (x *GetUserResponse) GetProviderUid() string {
 	return ""
 }
 
-var File_api_shortvid_service_v1_users_proto protoreflect.FileDescriptor
+var File_shortvid_service_v1_users_proto protoreflect.FileDescriptor
 
-const file_api_shortvid_service_v1_users_proto_rawDesc = "" +
+const file_shortvid_service_v1_users_proto_rawDesc = "" +
 	"\n" +
-	"#api/shortvid-service/v1/users.proto\x1a\x1cgoogle/api/annotations.proto\"\x9c\x01\n" +
-	"\x11CreateUserRequest\x12\x1a\n" +
-	"\bnickname\x18\x01 \x01(\tR\bnickname\x12\x16\n" +
-	"\x06avatar\x18\x02 \x01(\tR\x06avatar\x12\x14\n" +
-	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1a\n" +
-	"\bprovider\x18\x04 \x01(\tR\bprovider\x12!\n" +
-	"\fprovider_uid\x18\x05 \x01(\tR\vproviderUid\"\x14\n" +
+	"\x1fshortvid-service/v1/users.proto\x1a\x1cgoogle/api/annotations.proto\"-\n" +
+	"\x11CreateUserRequest\x12\x18\n" +
+	"\aidToken\x18\x01 \x01(\tR\aidToken\"\x14\n" +
 	"\x12CreateUserResponse\" \n" +
 	"\x0eGetUserRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\"\x9a\x01\n" +
@@ -280,25 +244,25 @@ const file_api_shortvid_service_v1_users_proto_rawDesc = "" +
 	"\aGetUser\x12\x0f.GetUserRequest\x1a\x10.GetUserResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/users/{id}B-Z+shortvid-backend/api/shortvid-service/v1;v1b\x06proto3"
 
 var (
-	file_api_shortvid_service_v1_users_proto_rawDescOnce sync.Once
-	file_api_shortvid_service_v1_users_proto_rawDescData []byte
+	file_shortvid_service_v1_users_proto_rawDescOnce sync.Once
+	file_shortvid_service_v1_users_proto_rawDescData []byte
 )
 
-func file_api_shortvid_service_v1_users_proto_rawDescGZIP() []byte {
-	file_api_shortvid_service_v1_users_proto_rawDescOnce.Do(func() {
-		file_api_shortvid_service_v1_users_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_shortvid_service_v1_users_proto_rawDesc), len(file_api_shortvid_service_v1_users_proto_rawDesc)))
+func file_shortvid_service_v1_users_proto_rawDescGZIP() []byte {
+	file_shortvid_service_v1_users_proto_rawDescOnce.Do(func() {
+		file_shortvid_service_v1_users_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_shortvid_service_v1_users_proto_rawDesc), len(file_shortvid_service_v1_users_proto_rawDesc)))
 	})
-	return file_api_shortvid_service_v1_users_proto_rawDescData
+	return file_shortvid_service_v1_users_proto_rawDescData
 }
 
-var file_api_shortvid_service_v1_users_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_api_shortvid_service_v1_users_proto_goTypes = []any{
+var file_shortvid_service_v1_users_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_shortvid_service_v1_users_proto_goTypes = []any{
 	(*CreateUserRequest)(nil),  // 0: CreateUserRequest
 	(*CreateUserResponse)(nil), // 1: CreateUserResponse
 	(*GetUserRequest)(nil),     // 2: GetUserRequest
 	(*GetUserResponse)(nil),    // 3: GetUserResponse
 }
-var file_api_shortvid_service_v1_users_proto_depIdxs = []int32{
+var file_shortvid_service_v1_users_proto_depIdxs = []int32{
 	0, // 0: UsersService.CreateUser:input_type -> CreateUserRequest
 	2, // 1: UsersService.GetUser:input_type -> GetUserRequest
 	1, // 2: UsersService.CreateUser:output_type -> CreateUserResponse
@@ -310,26 +274,26 @@ var file_api_shortvid_service_v1_users_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_api_shortvid_service_v1_users_proto_init() }
-func file_api_shortvid_service_v1_users_proto_init() {
-	if File_api_shortvid_service_v1_users_proto != nil {
+func init() { file_shortvid_service_v1_users_proto_init() }
+func file_shortvid_service_v1_users_proto_init() {
+	if File_shortvid_service_v1_users_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_shortvid_service_v1_users_proto_rawDesc), len(file_api_shortvid_service_v1_users_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shortvid_service_v1_users_proto_rawDesc), len(file_shortvid_service_v1_users_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_api_shortvid_service_v1_users_proto_goTypes,
-		DependencyIndexes: file_api_shortvid_service_v1_users_proto_depIdxs,
-		MessageInfos:      file_api_shortvid_service_v1_users_proto_msgTypes,
+		GoTypes:           file_shortvid_service_v1_users_proto_goTypes,
+		DependencyIndexes: file_shortvid_service_v1_users_proto_depIdxs,
+		MessageInfos:      file_shortvid_service_v1_users_proto_msgTypes,
 	}.Build()
-	File_api_shortvid_service_v1_users_proto = out.File
-	file_api_shortvid_service_v1_users_proto_goTypes = nil
-	file_api_shortvid_service_v1_users_proto_depIdxs = nil
+	File_shortvid_service_v1_users_proto = out.File
+	file_shortvid_service_v1_users_proto_goTypes = nil
+	file_shortvid_service_v1_users_proto_depIdxs = nil
 }

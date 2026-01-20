@@ -48,15 +48,7 @@ components:
         .CreateUserRequest:
             type: object
             properties:
-                nickname:
-                    type: string
-                avatar:
-                    type: string
-                email:
-                    type: string
-                provider:
-                    type: string
-                providerUid:
+                idToken:
                     type: string
         .CreateUserResponse:
             type: object

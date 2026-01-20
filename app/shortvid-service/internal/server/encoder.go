@@ -28,9 +28,9 @@ func ResponseEncoder(w http.ResponseWriter, r *http.Request, v interface{}) erro
 	codec, _ := kratos_http.CodecForRequest(r, "Accept")
 	resp := &httpResponse{
 		Success: true,
-		Code: 200,
-		Msg:  "success",
-		Data: v,
+		Code:    200,
+		Msg:     "success",
+		Data:    v,
 	}
 	data, err := codec.Marshal(resp)
 	if err != nil {
@@ -47,16 +47,16 @@ func ErrorEncoder(w http.ResponseWriter, r *http.Request, err error) {
 	if gs, ok := status.FromError(err); ok {
 		resp = &httpResponse{
 			Success: false,
-			Code: kratos_status.FromGRPCCode(gs.Code()),
-			Msg:  gs.Message(),
-			Data: nil,
+			Code:    kratos_status.FromGRPCCode(gs.Code()),
+			Msg:     gs.Message(),
+			Data:    nil,
 		}
 	} else {
 		resp = &httpResponse{
 			Success: false,
-			Code: http.StatusInternalServerError,
-			Msg:  err.Error(),
-			Data: nil,
+			Code:    http.StatusInternalServerError,
+			Msg:     err.Error(),
+			Data:    nil,
 		}
 	}
 	codec, _ := kratos_http.CodecForRequest(r, "Accept")

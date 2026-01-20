@@ -76,7 +76,8 @@ func main() {
 		"trace.id", tracing.TraceID(),
 		"span.id", tracing.SpanID(),
 	)
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
+	
+	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Firebase, logger)
 	if err != nil {
 		panic(err)
 	}

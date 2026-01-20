@@ -19,6 +19,7 @@ func NewUsersRepo(data *Data) biz.UsersRepo {
 
 func (r *usersRepo) CreateUser(ctx context.Context, user *biz.User) error {
 	return r.data.query.User.WithContext(ctx).Create(&model.User{
+		UserUID:     user.UserUID,
 		Nickname:    user.Nickname,
 		Avatar:      &user.Avatar,
 		Email:       &user.Email,
@@ -29,6 +30,23 @@ func (r *usersRepo) CreateUser(ctx context.Context, user *biz.User) error {
 
 func (r *usersRepo) GetUserByID(ctx context.Context, id int32) (*biz.User, error) {
 	user, err := r.data.query.User.WithContext(ctx).Where(r.data.query.User.ID.Eq(id)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &biz.User{
+		Nickname:    user.Nickname,
+		Avatar:      *user.Avatar,
+		Email:       *user.Email,
+		ProviderUID: *user.ProviderUID,
+		Provider:    *user.Provider,
+	}, nil
+}
+
+func (r *usersRepo) GetUserByEmailAndProvider(ctx context.Context, email string, provider string) (*biz.User, error) {
+	user, err := r.data.query.User.WithContext(ctx).Where(r.data.query.User.Email.Eq(email), r.data.query.User.Provider.Eq(provider)).First()
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
