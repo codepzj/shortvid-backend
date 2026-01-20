@@ -51,8 +51,6 @@ func getLogOutput(format string, logFile string) *os.File {
 
 func parseMysqlLogLevel(logLevel string) logger.LogLevel {
 	switch logLevel {
-	case "debug":
-		return logger.Silent
 	case "info":
 		return logger.Info
 	case "warn":
