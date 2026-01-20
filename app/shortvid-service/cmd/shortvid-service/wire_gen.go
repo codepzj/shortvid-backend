@@ -12,7 +12,6 @@ import (
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/conf"
 	"shortvid-backend/app/shortvid-service/internal/data"
-	"shortvid-backend/app/shortvid-service/internal/data/infra"
 	"shortvid-backend/app/shortvid-service/internal/data/infra/cache"
 	"shortvid-backend/app/shortvid-service/internal/data/infra/db"
 	"shortvid-backend/app/shortvid-service/internal/server"
@@ -29,14 +28,17 @@ import (
 func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, jwt *conf.Jwt, session *conf.Session, logger log.Logger) (*kratos.App, func(), error) {
 	gormDB := db.NewDB(confData)
 	client := cache.NewRedis(confData)
-	authClient := infra.NewFirebaseApp(firebase)
-	dataData, cleanup, err := data.NewData(gormDB, client, authClient, logger)
+	dataData, cleanup, err := data.NewData(gormDB, client, logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	usersRepo := data.NewUsersRepo(dataData)
 	usersUsecase := biz.NewUsersUsecase(logger, usersRepo)
-	firebaseService := service.NewFirebaseService(logger, authClient)
+	firebaseService, err := service.NewFirebaseService(logger, firebase)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
 	jwtService := service.NewJwtService(jwt, logger)
 	userSessionRepo := data.NewUserSessionRepo(dataData)
 	cacheService := service.NewCacheService(client, logger)
