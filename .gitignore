@@ -39,3 +39,12 @@ bin/
 
 # 日志
 logs/
+
+# 文档
+docs/
+
+# 临时文件
+tmp/
+
+# 配置文件
+app/shortvid-service/configs/config.yaml
