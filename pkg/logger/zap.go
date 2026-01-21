@@ -2,7 +2,6 @@ package logger
 
 import (
 	"fmt"
-	"shortvid-backend/app/shortvid-service/internal/conf"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -28,16 +27,16 @@ type Option struct {
 	Compress         bool
 }
 
-func NewOption(c *conf.Log) *Option {
+func NewOption(format string, level string, fullLogFilename string, errorLogFilename string, maxSize int32, maxBackups int32, maxAge int32, compress bool) *Option {
 	return &Option{
-		Format:           c.Format,
-		Level:            c.Level,
-		FullLogFilename:  c.FullLogFilename,
-		ErrorLogFilename: c.ErrorLogFilename,
-		MaxSize:          c.MaxSize,
-		MaxBackups:       c.MaxBackups,
-		MaxAge:           c.MaxAge,
-		Compress:         c.Compress,
+		Format:           format,
+		Level:            level,
+		FullLogFilename:  fullLogFilename,
+		ErrorLogFilename: errorLogFilename,
+		MaxSize:          maxSize,
+		MaxBackups:       maxBackups,
+		MaxAge:           maxAge,
+		Compress:         compress,
 	}
 }
 
