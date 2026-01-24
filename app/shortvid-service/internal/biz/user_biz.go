@@ -20,8 +20,8 @@ type User struct {
 }
 
 type UserProfile struct {
-	ID          int32
-	UserUID     int32
+	ID          int
+	UserUID     int
 	Nickname    string
 	Avatar      string
 	Email       string
@@ -31,10 +31,10 @@ type UserProfile struct {
 
 type UsersRepo interface {
 	CreateUser(ctx context.Context, user *model.User) error
-	GetUserByID(ctx context.Context, id int32) (*model.User, error)
+	GetUserByID(ctx context.Context, id int) (*model.User, error)
 	GetUserByEmailAndProvider(ctx context.Context, email string, provider string) (*model.User, error)
-	GetUserByUserUID(ctx context.Context, userUID int32) (*model.User, error)
-	UpdateLoginInfo(ctx context.Context, userID int32) error
+	GetUserByUserUID(ctx context.Context, userUID int) (*model.User, error)
+	UpdateLoginInfo(ctx context.Context, userID int) error
 }
 
 type UsersUsecase struct {
@@ -96,7 +96,7 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 	}, true, nil
 }
 
-func (uc *UsersUsecase) GetUserByID(ctx context.Context, id int32) (*UserProfile, error) {
+func (uc *UsersUsecase) GetUserByID(ctx context.Context, id int) (*UserProfile, error) {
 	userModel, err := uc.repo.GetUserByID(ctx, id)
 	if err != nil {
 		uc.logger.Log(log.LevelError, "msg", "Get user by id failed", "error", err)
@@ -117,19 +117,19 @@ func (uc *UsersUsecase) GetUserByID(ctx context.Context, id int32) (*UserProfile
 }
 
 // UpdateLoginInfo 更新登录信息
-func (uc *UsersUsecase) UpdateLoginInfo(ctx context.Context, userID int32) error {
+func (uc *UsersUsecase) UpdateLoginInfo(ctx context.Context, userID int) error {
 	return uc.repo.UpdateLoginInfo(ctx, userID)
 }
 
 // generateUniqueUserUID 生成唯一的UserUID (10000-999999999范围)
-func (uc *UsersUsecase) generateUniqueUserUID(ctx context.Context) (int32, error) {
+func (uc *UsersUsecase) generateUniqueUserUID(ctx context.Context) (int, error) {
 	const maxRetries = 10
 	const minUID = 10000
 	const maxUID = 999999999
 
 	for i := range maxRetries {
 		// 生成随机UserUID
-		userUID := int32(rand.Intn(maxUID-minUID+1) + minUID)
+		userUID := rand.Intn(maxUID-minUID+1) + minUID
 
 		// 检查是否已存在
 		existingUser, err := uc.repo.GetUserByUserUID(ctx, userUID)

@@ -3,7 +3,6 @@ package data
 import (
 	"shortvid-backend/app/shortvid-service/internal/data/infra/cache"
 	"shortvid-backend/app/shortvid-service/internal/data/infra/db"
-	"shortvid-backend/app/shortvid-service/internal/data/query"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
@@ -16,7 +15,7 @@ var ProviderSet = wire.NewSet(db.NewDB, cache.NewRedis, NewData, NewUsersRepo, N
 
 // Data .
 type Data struct {
-	query  *query.Query
+	db     *gorm.DB
 	redis  *redis.Client
 	logger log.Logger
 }
@@ -27,7 +26,7 @@ func NewData(db *gorm.DB, redis *redis.Client, logger log.Logger) (*Data, func()
 		logger.Log(log.LevelInfo, "closing the data resources")
 	}
 	return &Data{
-		query:  query.Use(db),
+		db:     db,
 		redis:  redis,
 		logger: logger,
 	}, cleanup, nil

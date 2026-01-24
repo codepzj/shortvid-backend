@@ -19,6 +19,6 @@ func GetSessionUserKey(sessionId string) string {
 }
 
 // GetUserInfoKey 获取用户信息key
-func GetUserInfoKey(userId int32) string {
+func GetUserInfoKey(userId int) string {
 	return fmt.Sprintf(UserInfoKey, userId)
 }

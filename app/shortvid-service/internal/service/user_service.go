@@ -122,7 +122,7 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *v1.LoginFirebaseR
 }
 
 func (s *UsersService) GetUser(ctx context.Context, req *v1.GetUserRequest) (*v1.GetUserResponse, error) {
-	user, err := s.uc.GetUserByID(ctx, req.Id)
+	user, err := s.uc.GetUserByID(ctx, int(req.Id))
 	if err != nil {
 		return nil, err
 	}

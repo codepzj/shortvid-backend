@@ -15,8 +15,8 @@ func NewUserSessionUsecase(repo UserSessionRepo) *UserSessionUsecase {
 
 type UserSessionRepo interface {
 	CreateUserSession(ctx context.Context, userSession *model.UserSession) error
-	FindUserSessionByUserUID(ctx context.Context, userUID int32) ([]*model.UserSession, error)
+	FindUserSessionByUserUID(ctx context.Context, userUID int) ([]*model.UserSession, error)
 	FindUserSessionBySessionID(ctx context.Context, sessionID string) (*model.UserSession, error)
 	DeleteUserSessionBySessionID(ctx context.Context, sessionID string) error
-	DeleteUserSessionByIDs(ctx context.Context, ids []int64) error
+	DeleteUserSessionByIDs(ctx context.Context, ids []int) error
 }

@@ -90,7 +90,7 @@ func (s *UserSessionService) ValidateSession(ctx context.Context, sessionId stri
 }
 
 // LimitUserSession 限制用户会话数量
-func (s *UserSessionService) LimitUserSession(ctx context.Context, userUID int32) error {
+func (s *UserSessionService) LimitUserSession(ctx context.Context, userUID int) error {
 	// 1. 如果未启用限制，直接返回
 	if s.sessionConf == nil || !s.sessionConf.LimitEnabled {
 		return nil
@@ -112,7 +112,7 @@ func (s *UserSessionService) LimitUserSession(ctx context.Context, userUID int32
 	// 4. 会话数量超过限制, 删除最早的会话
 	if len(sessions) > int(limitCount) {
 		deleteSessions := sessions[limitCount:]
-		deleteSessionIds := make([]int64, len(deleteSessions))
+		deleteSessionIds := make([]int, len(deleteSessions))
 		for i := range deleteSessions {
 			deleteSessionIds[i] = deleteSessions[i].ID
 		}

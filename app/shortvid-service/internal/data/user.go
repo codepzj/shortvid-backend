@@ -19,48 +19,50 @@ func NewUsersRepo(data *Data) biz.UsersRepo {
 }
 
 func (r *usersRepo) CreateUser(ctx context.Context, user *model.User) error {
-	return r.data.query.User.WithContext(ctx).Create(user)
+	return r.data.db.WithContext(ctx).Create(user).Error
 }
 
-func (r *usersRepo) GetUserByID(ctx context.Context, id int32) (*model.User, error) {
-	user, err := r.data.query.User.WithContext(ctx).Where(r.data.query.User.ID.Eq(id)).First()
+func (r *usersRepo) GetUserByID(ctx context.Context, id int) (*model.User, error) {
+	var user model.User
+	err := r.data.db.WithContext(ctx).Where("id = ?", id).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }
 
 func (r *usersRepo) GetUserByEmailAndProvider(ctx context.Context, email string, provider string) (*model.User, error) {
-	user, err := r.data.query.User.WithContext(ctx).Where(r.data.query.User.Email.Eq(email), r.data.query.User.Provider.Eq(provider)).First()
+	var user model.User
+	err := r.data.db.WithContext(ctx).Where("email = ? AND provider = ?", email, provider).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }
 
-func (r *usersRepo) GetUserByUserUID(ctx context.Context, userUID int32) (*model.User, error) {
-	user, err := r.data.query.User.WithContext(ctx).Where(r.data.query.User.UserUID.Eq(userUID)).First()
+func (r *usersRepo) GetUserByUserUID(ctx context.Context, userUID int) (*model.User, error) {
+	var user model.User
+	err := r.data.db.WithContext(ctx).Where("user_uid = ?", userUID).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }
 
-func (r *usersRepo) UpdateLoginInfo(ctx context.Context, userID int32) error {
+func (r *usersRepo) UpdateLoginInfo(ctx context.Context, userID int) error {
 	now := time.Now()
-	_, err := r.data.query.User.WithContext(ctx).Where(r.data.query.User.ID.Eq(userID)).Updates(map[string]interface{}{
+	return r.data.db.WithContext(ctx).Model(&model.User{}).Where("id = ?", userID).Updates(map[string]any{
 		"last_login_at": now,
 		"login_count":   gorm.Expr("login_count + 1"),
 		"updated_at":    now,
-	})
-	return err
+	}).Error
 }

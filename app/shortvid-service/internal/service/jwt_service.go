@@ -19,13 +19,13 @@ func NewJwtService(jwtConf *conf.Jwt, logger log.Logger) *JwtService {
 }
 
 type JwtCustomClaims struct {
-	UserUID   int32
+	UserUID   int
 	SessionID string
 	jwt.RegisteredClaims
 }
 
 // GenerateAccessToken 创建access_token
-func (s *JwtService) GenerateAccessToken(userUID int32, sessionID string) (string, error) {
+func (s *JwtService) GenerateAccessToken(userUID int, sessionID string) (string, error) {
 	expiresAt := time.Now().Add(s.GetTokenExpiration())
 	claims := JwtCustomClaims{
 		UserUID:   userUID,
@@ -42,7 +42,7 @@ func (s *JwtService) GenerateAccessToken(userUID int32, sessionID string) (strin
 }
 
 // GenerateRefreshToken 创建refresh_token
-func (s *JwtService) GenerateRefreshToken(userUID int32, sessionID string) (string, error) {
+func (s *JwtService) GenerateRefreshToken(userUID int, sessionID string) (string, error) {
 	expiresAt := time.Now().Add(s.GetRefreshTokenExpiration())
 	claims := JwtCustomClaims{
 		UserUID:   userUID,

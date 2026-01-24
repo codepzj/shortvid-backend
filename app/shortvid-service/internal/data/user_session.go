@@ -18,30 +18,31 @@ func NewUserSessionRepo(data *Data) biz.UserSessionRepo {
 }
 
 func (r *userSessionRepo) CreateUserSession(ctx context.Context, userSession *model.UserSession) error {
-	return r.data.query.UserSession.WithContext(ctx).Create(userSession)
+	return r.data.db.WithContext(ctx).Create(userSession).Error
 }
 
-func (r *userSessionRepo) FindUserSessionByUserUID(ctx context.Context, userUID int32) ([]*model.UserSession, error) {
-	return r.data.query.UserSession.WithContext(ctx).Where(r.data.query.UserSession.UserUID.Eq(userUID)).Find()
+func (r *userSessionRepo) FindUserSessionByUserUID(ctx context.Context, userUID int) ([]*model.UserSession, error) {
+	var sessions []*model.UserSession
+	err := r.data.db.WithContext(ctx).Where("user_uid = ?", userUID).Find(&sessions).Error
+	return sessions, err
 }
 
 func (r *userSessionRepo) FindUserSessionBySessionID(ctx context.Context, sessionID string) (*model.UserSession, error) {
-	session, err := r.data.query.UserSession.WithContext(ctx).Where(r.data.query.UserSession.SessionID.Eq(sessionID)).First()
+	var session model.UserSession
+	err := r.data.db.WithContext(ctx).Where("session_id = ?", sessionID).First(&session).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, err
 	}
-	return session, nil
+	return &session, nil
 }
 
 func (r *userSessionRepo) DeleteUserSessionBySessionID(ctx context.Context, sessionID string) error {
-	_, err := r.data.query.UserSession.WithContext(ctx).Where(r.data.query.UserSession.SessionID.Eq(sessionID)).Delete()
-	return err
+	return r.data.db.WithContext(ctx).Where("session_id = ?", sessionID).Delete(&model.UserSession{}).Error
 }
 
-func (r *userSessionRepo) DeleteUserSessionByIDs(ctx context.Context, ids []int64) error {
-	_, err := r.data.query.UserSession.WithContext(ctx).Where(r.data.query.UserSession.ID.In(ids...)).Delete()
-	return err
+func (r *userSessionRepo) DeleteUserSessionByIDs(ctx context.Context, ids []int) error {
+	return r.data.db.WithContext(ctx).Where("id IN ?", ids).Delete(&model.UserSession{}).Error
 }
