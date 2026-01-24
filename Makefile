@@ -90,11 +90,6 @@ errors:
          --go-errors_out=paths=source_relative:. \
          $(API_PROTO_FILES)
 
-.PHONY: wire
-# generate wire files
-wire:
-	wire ./...
-
 .PHONY: fmt
 # fmt go files
 fmt:

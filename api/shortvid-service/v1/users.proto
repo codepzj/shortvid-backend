@@ -23,6 +23,17 @@ message LoginFirebaseRequest {
 }
 
 message LoginFirebaseResponse {
+    string accessToken = 1;
+    string refreshToken = 2;
+    UserProfile user = 3;
+}
+
+message UserProfile {
+    string nickname = 1;
+    string avatar = 2;
+    string email = 3;
+    string provider = 4;
+    string provider_uid = 5;
 }
 
 message GetUserRequest {

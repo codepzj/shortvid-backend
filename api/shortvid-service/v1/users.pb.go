@@ -68,6 +68,9 @@ func (x *LoginFirebaseRequest) GetIdToken() string {
 
 type LoginFirebaseResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	User          *UserProfile           `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -102,6 +105,103 @@ func (*LoginFirebaseResponse) Descriptor() ([]byte, []int) {
 	return file_shortvid_service_v1_users_proto_rawDescGZIP(), []int{1}
 }
 
+func (x *LoginFirebaseResponse) GetAccessToken() string {
+	if x != nil {
+		return x.AccessToken
+	}
+	return ""
+}
+
+func (x *LoginFirebaseResponse) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
+func (x *LoginFirebaseResponse) GetUser() *UserProfile {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
+type UserProfile struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Nickname      string                 `protobuf:"bytes,1,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	Avatar        string                 `protobuf:"bytes,2,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	Provider      string                 `protobuf:"bytes,4,opt,name=provider,proto3" json:"provider,omitempty"`
+	ProviderUid   string                 `protobuf:"bytes,5,opt,name=provider_uid,json=providerUid,proto3" json:"provider_uid,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserProfile) Reset() {
+	*x = UserProfile{}
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserProfile) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserProfile) ProtoMessage() {}
+
+func (x *UserProfile) ProtoReflect() protoreflect.Message {
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserProfile.ProtoReflect.Descriptor instead.
+func (*UserProfile) Descriptor() ([]byte, []int) {
+	return file_shortvid_service_v1_users_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *UserProfile) GetNickname() string {
+	if x != nil {
+		return x.Nickname
+	}
+	return ""
+}
+
+func (x *UserProfile) GetAvatar() string {
+	if x != nil {
+		return x.Avatar
+	}
+	return ""
+}
+
+func (x *UserProfile) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *UserProfile) GetProvider() string {
+	if x != nil {
+		return x.Provider
+	}
+	return ""
+}
+
+func (x *UserProfile) GetProviderUid() string {
+	if x != nil {
+		return x.ProviderUid
+	}
+	return ""
+}
+
 type GetUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -111,7 +211,7 @@ type GetUserRequest struct {
 
 func (x *GetUserRequest) Reset() {
 	*x = GetUserRequest{}
-	mi := &file_shortvid_service_v1_users_proto_msgTypes[2]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -123,7 +223,7 @@ func (x *GetUserRequest) String() string {
 func (*GetUserRequest) ProtoMessage() {}
 
 func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shortvid_service_v1_users_proto_msgTypes[2]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -136,7 +236,7 @@ func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserRequest.ProtoReflect.Descriptor instead.
 func (*GetUserRequest) Descriptor() ([]byte, []int) {
-	return file_shortvid_service_v1_users_proto_rawDescGZIP(), []int{2}
+	return file_shortvid_service_v1_users_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetUserRequest) GetId() int32 {
@@ -159,7 +259,7 @@ type GetUserResponse struct {
 
 func (x *GetUserResponse) Reset() {
 	*x = GetUserResponse{}
-	mi := &file_shortvid_service_v1_users_proto_msgTypes[3]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -171,7 +271,7 @@ func (x *GetUserResponse) String() string {
 func (*GetUserResponse) ProtoMessage() {}
 
 func (x *GetUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_shortvid_service_v1_users_proto_msgTypes[3]
+	mi := &file_shortvid_service_v1_users_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -184,7 +284,7 @@ func (x *GetUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserResponse.ProtoReflect.Descriptor instead.
 func (*GetUserResponse) Descriptor() ([]byte, []int) {
-	return file_shortvid_service_v1_users_proto_rawDescGZIP(), []int{3}
+	return file_shortvid_service_v1_users_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetUserResponse) GetNickname() string {
@@ -228,8 +328,17 @@ const file_shortvid_service_v1_users_proto_rawDesc = "" +
 	"\n" +
 	"\x1fshortvid-service/v1/users.proto\x1a\x1cgoogle/api/annotations.proto\"0\n" +
 	"\x14LoginFirebaseRequest\x12\x18\n" +
-	"\aidToken\x18\x01 \x01(\tR\aidToken\"\x17\n" +
-	"\x15LoginFirebaseResponse\" \n" +
+	"\aidToken\x18\x01 \x01(\tR\aidToken\"\x7f\n" +
+	"\x15LoginFirebaseResponse\x12 \n" +
+	"\vaccessToken\x18\x01 \x01(\tR\vaccessToken\x12\"\n" +
+	"\frefreshToken\x18\x02 \x01(\tR\frefreshToken\x12 \n" +
+	"\x04user\x18\x03 \x01(\v2\f.UserProfileR\x04user\"\x96\x01\n" +
+	"\vUserProfile\x12\x1a\n" +
+	"\bnickname\x18\x01 \x01(\tR\bnickname\x12\x16\n" +
+	"\x06avatar\x18\x02 \x01(\tR\x06avatar\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1a\n" +
+	"\bprovider\x18\x04 \x01(\tR\bprovider\x12!\n" +
+	"\fprovider_uid\x18\x05 \x01(\tR\vproviderUid\" \n" +
 	"\x0eGetUserRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\"\x9a\x01\n" +
 	"\x0fGetUserResponse\x12\x1a\n" +
@@ -254,23 +363,25 @@ func file_shortvid_service_v1_users_proto_rawDescGZIP() []byte {
 	return file_shortvid_service_v1_users_proto_rawDescData
 }
 
-var file_shortvid_service_v1_users_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_shortvid_service_v1_users_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_shortvid_service_v1_users_proto_goTypes = []any{
 	(*LoginFirebaseRequest)(nil),  // 0: LoginFirebaseRequest
 	(*LoginFirebaseResponse)(nil), // 1: LoginFirebaseResponse
-	(*GetUserRequest)(nil),        // 2: GetUserRequest
-	(*GetUserResponse)(nil),       // 3: GetUserResponse
+	(*UserProfile)(nil),           // 2: UserProfile
+	(*GetUserRequest)(nil),        // 3: GetUserRequest
+	(*GetUserResponse)(nil),       // 4: GetUserResponse
 }
 var file_shortvid_service_v1_users_proto_depIdxs = []int32{
-	0, // 0: UsersService.LoginFirebase:input_type -> LoginFirebaseRequest
-	2, // 1: UsersService.GetUser:input_type -> GetUserRequest
-	1, // 2: UsersService.LoginFirebase:output_type -> LoginFirebaseResponse
-	3, // 3: UsersService.GetUser:output_type -> GetUserResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	2, // 0: LoginFirebaseResponse.user:type_name -> UserProfile
+	0, // 1: UsersService.LoginFirebase:input_type -> LoginFirebaseRequest
+	3, // 2: UsersService.GetUser:input_type -> GetUserRequest
+	1, // 3: UsersService.LoginFirebase:output_type -> LoginFirebaseResponse
+	4, // 4: UsersService.GetUser:output_type -> GetUserResponse
+	3, // [3:5] is the sub-list for method output_type
+	1, // [1:3] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_shortvid_service_v1_users_proto_init() }
@@ -284,7 +395,7 @@ func file_shortvid_service_v1_users_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shortvid_service_v1_users_proto_rawDesc), len(file_shortvid_service_v1_users_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

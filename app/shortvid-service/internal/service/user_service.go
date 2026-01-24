@@ -73,14 +73,14 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *v1.LoginFirebaseR
 	sessionID := uuid.NewString()
 
 	// 6. 生成accessToken
-	_, err = s.jwtService.GenerateAccessToken(user.UserUID, sessionID)
+	accessToken, err := s.jwtService.GenerateAccessToken(user.UserUID, sessionID)
 	if err != nil {
 		s.logger.Log(log.LevelError, "msg", "Generate access token failed", "error", err)
 		return nil, err
 	}
 
 	// 7. 生成refreshToken
-	_, err = s.jwtService.GenerateRefreshToken(user.UserUID, sessionID)
+	refreshToken, err := s.jwtService.GenerateRefreshToken(user.UserUID, sessionID)
 	if err != nil {
 		s.logger.Log(log.LevelError, "msg", "Generate refresh token failed", "error", err)
 		return nil, err
@@ -116,9 +116,20 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *v1.LoginFirebaseR
 	if isNew {
 		s.logger.Log(log.LevelInfo, "msg", "user is new")
 	} else {
-		s.logger.Log(log.LevelInfo, "msg", "user is found", "user", user)
+		s.logger.Log(log.LevelInfo, "msg", "user already esist", "user", user)
 	}
-	return &v1.LoginFirebaseResponse{}, nil
+
+	return &v1.LoginFirebaseResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		User: &v1.UserProfile{
+			Nickname:    user.Nickname,
+			Avatar:      user.Avatar,
+			Email:       user.Email,
+			Provider:    user.Provider,
+			ProviderUid: user.ProviderUID,
+		},
+	}, nil
 }
 
 func (s *UsersService) GetUser(ctx context.Context, req *v1.GetUserRequest) (*v1.GetUserResponse, error) {

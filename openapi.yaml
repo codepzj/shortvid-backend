@@ -65,6 +65,25 @@ components:
                     type: string
         .LoginFirebaseResponse:
             type: object
-            properties: {}
+            properties:
+                accessToken:
+                    type: string
+                refreshToken:
+                    type: string
+                user:
+                    $ref: '#/components/schemas/.UserProfile'
+        .UserProfile:
+            type: object
+            properties:
+                nickname:
+                    type: string
+                avatar:
+                    type: string
+                email:
+                    type: string
+                provider:
+                    type: string
+                providerUid:
+                    type: string
 tags:
     - name: UsersService
