@@ -30,6 +30,7 @@ type Bootstrap struct {
 	Firebase      *Firebase              `protobuf:"bytes,4,opt,name=firebase,proto3" json:"firebase,omitempty"`
 	Jwt           *Jwt                   `protobuf:"bytes,5,opt,name=jwt,proto3" json:"jwt,omitempty"`
 	Session       *Session               `protobuf:"bytes,6,opt,name=session,proto3" json:"session,omitempty"`
+	Minio         *Minio                 `protobuf:"bytes,7,opt,name=minio,proto3" json:"minio,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -102,6 +103,13 @@ func (x *Bootstrap) GetJwt() *Jwt {
 func (x *Bootstrap) GetSession() *Session {
 	if x != nil {
 		return x.Session
+	}
+	return nil
+}
+
+func (x *Bootstrap) GetMinio() *Minio {
+	if x != nil {
+		return x.Minio
 	}
 	return nil
 }
@@ -490,6 +498,74 @@ func (x *Session) GetLimitCount() int32 {
 	return 0
 }
 
+type Minio struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Endpoint      string                 `protobuf:"bytes,1,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
+	AccessKey     string                 `protobuf:"bytes,2,opt,name=accessKey,proto3" json:"accessKey,omitempty"`
+	SecretKey     string                 `protobuf:"bytes,3,opt,name=secretKey,proto3" json:"secretKey,omitempty"`
+	UseSSL        bool                   `protobuf:"varint,4,opt,name=useSSL,proto3" json:"useSSL,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Minio) Reset() {
+	*x = Minio{}
+	mi := &file_conf_conf_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Minio) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Minio) ProtoMessage() {}
+
+func (x *Minio) ProtoReflect() protoreflect.Message {
+	mi := &file_conf_conf_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Minio.ProtoReflect.Descriptor instead.
+func (*Minio) Descriptor() ([]byte, []int) {
+	return file_conf_conf_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *Minio) GetEndpoint() string {
+	if x != nil {
+		return x.Endpoint
+	}
+	return ""
+}
+
+func (x *Minio) GetAccessKey() string {
+	if x != nil {
+		return x.AccessKey
+	}
+	return ""
+}
+
+func (x *Minio) GetSecretKey() string {
+	if x != nil {
+		return x.SecretKey
+	}
+	return ""
+}
+
+func (x *Minio) GetUseSSL() bool {
+	if x != nil {
+		return x.UseSSL
+	}
+	return false
+}
+
 type Server_HTTP struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Network       string                 `protobuf:"bytes,1,opt,name=network,proto3" json:"network,omitempty"`
@@ -501,7 +577,7 @@ type Server_HTTP struct {
 
 func (x *Server_HTTP) Reset() {
 	*x = Server_HTTP{}
-	mi := &file_conf_conf_proto_msgTypes[7]
+	mi := &file_conf_conf_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -513,7 +589,7 @@ func (x *Server_HTTP) String() string {
 func (*Server_HTTP) ProtoMessage() {}
 
 func (x *Server_HTTP) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[7]
+	mi := &file_conf_conf_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -561,7 +637,7 @@ type Server_GRPC struct {
 
 func (x *Server_GRPC) Reset() {
 	*x = Server_GRPC{}
-	mi := &file_conf_conf_proto_msgTypes[8]
+	mi := &file_conf_conf_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -573,7 +649,7 @@ func (x *Server_GRPC) String() string {
 func (*Server_GRPC) ProtoMessage() {}
 
 func (x *Server_GRPC) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[8]
+	mi := &file_conf_conf_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -624,7 +700,7 @@ type Data_Database struct {
 
 func (x *Data_Database) Reset() {
 	*x = Data_Database{}
-	mi := &file_conf_conf_proto_msgTypes[9]
+	mi := &file_conf_conf_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -636,7 +712,7 @@ func (x *Data_Database) String() string {
 func (*Data_Database) ProtoMessage() {}
 
 func (x *Data_Database) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[9]
+	mi := &file_conf_conf_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -709,7 +785,7 @@ type Data_Redis struct {
 
 func (x *Data_Redis) Reset() {
 	*x = Data_Redis{}
-	mi := &file_conf_conf_proto_msgTypes[10]
+	mi := &file_conf_conf_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -721,7 +797,7 @@ func (x *Data_Redis) String() string {
 func (*Data_Redis) ProtoMessage() {}
 
 func (x *Data_Redis) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[10]
+	mi := &file_conf_conf_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -791,14 +867,15 @@ var File_conf_conf_proto protoreflect.FileDescriptor
 const file_conf_conf_proto_rawDesc = "" +
 	"\n" +
 	"\x0fconf/conf.proto\x12\n" +
-	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"\x84\x02\n" +
+	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"\xad\x02\n" +
 	"\tBootstrap\x12*\n" +
 	"\x06server\x18\x01 \x01(\v2\x12.kratos.api.ServerR\x06server\x12$\n" +
 	"\x04data\x18\x02 \x01(\v2\x10.kratos.api.DataR\x04data\x12!\n" +
 	"\x03log\x18\x03 \x01(\v2\x0f.kratos.api.LogR\x03log\x120\n" +
 	"\bfirebase\x18\x04 \x01(\v2\x14.kratos.api.FirebaseR\bfirebase\x12!\n" +
 	"\x03jwt\x18\x05 \x01(\v2\x0f.kratos.api.JwtR\x03jwt\x12-\n" +
-	"\asession\x18\x06 \x01(\v2\x13.kratos.api.SessionR\asession\"\xb8\x02\n" +
+	"\asession\x18\x06 \x01(\v2\x13.kratos.api.SessionR\asession\x12'\n" +
+	"\x05minio\x18\a \x01(\v2\x11.kratos.api.MinioR\x05minio\"\xb8\x02\n" +
 	"\x06Server\x12+\n" +
 	"\x04http\x18\x01 \x01(\v2\x17.kratos.api.Server.HTTPR\x04http\x12+\n" +
 	"\x04grpc\x18\x02 \x01(\v2\x17.kratos.api.Server.GRPCR\x04grpc\x1ai\n" +
@@ -853,7 +930,12 @@ const file_conf_conf_proto_rawDesc = "" +
 	"\x06secure\x18\x02 \x01(\bR\x06secure\x12#\n" +
 	"\rlimit_enabled\x18\x03 \x01(\bR\flimitEnabled\x12\x1f\n" +
 	"\vlimit_count\x18\x04 \x01(\x05R\n" +
-	"limitCountB:Z8shortvid-backend/app/shortvid-service/internal/conf;confb\x06proto3"
+	"limitCount\"w\n" +
+	"\x05Minio\x12\x1a\n" +
+	"\bendpoint\x18\x01 \x01(\tR\bendpoint\x12\x1c\n" +
+	"\taccessKey\x18\x02 \x01(\tR\taccessKey\x12\x1c\n" +
+	"\tsecretKey\x18\x03 \x01(\tR\tsecretKey\x12\x16\n" +
+	"\x06useSSL\x18\x04 \x01(\bR\x06useSSLB:Z8shortvid-backend/app/shortvid-service/internal/conf;confb\x06proto3"
 
 var (
 	file_conf_conf_proto_rawDescOnce sync.Once
@@ -867,7 +949,7 @@ func file_conf_conf_proto_rawDescGZIP() []byte {
 	return file_conf_conf_proto_rawDescData
 }
 
-var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_conf_conf_proto_goTypes = []any{
 	(*Bootstrap)(nil),           // 0: kratos.api.Bootstrap
 	(*Server)(nil),              // 1: kratos.api.Server
@@ -876,11 +958,12 @@ var file_conf_conf_proto_goTypes = []any{
 	(*Firebase)(nil),            // 4: kratos.api.Firebase
 	(*Jwt)(nil),                 // 5: kratos.api.Jwt
 	(*Session)(nil),             // 6: kratos.api.Session
-	(*Server_HTTP)(nil),         // 7: kratos.api.Server.HTTP
-	(*Server_GRPC)(nil),         // 8: kratos.api.Server.GRPC
-	(*Data_Database)(nil),       // 9: kratos.api.Data.Database
-	(*Data_Redis)(nil),          // 10: kratos.api.Data.Redis
-	(*durationpb.Duration)(nil), // 11: google.protobuf.Duration
+	(*Minio)(nil),               // 7: kratos.api.Minio
+	(*Server_HTTP)(nil),         // 8: kratos.api.Server.HTTP
+	(*Server_GRPC)(nil),         // 9: kratos.api.Server.GRPC
+	(*Data_Database)(nil),       // 10: kratos.api.Data.Database
+	(*Data_Redis)(nil),          // 11: kratos.api.Data.Redis
+	(*durationpb.Duration)(nil), // 12: google.protobuf.Duration
 }
 var file_conf_conf_proto_depIdxs = []int32{
 	1,  // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
@@ -889,22 +972,23 @@ var file_conf_conf_proto_depIdxs = []int32{
 	4,  // 3: kratos.api.Bootstrap.firebase:type_name -> kratos.api.Firebase
 	5,  // 4: kratos.api.Bootstrap.jwt:type_name -> kratos.api.Jwt
 	6,  // 5: kratos.api.Bootstrap.session:type_name -> kratos.api.Session
-	7,  // 6: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
-	8,  // 7: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
-	9,  // 8: kratos.api.Data.database:type_name -> kratos.api.Data.Database
-	10, // 9: kratos.api.Data.redis:type_name -> kratos.api.Data.Redis
-	11, // 10: kratos.api.Jwt.access_token_expires_in:type_name -> google.protobuf.Duration
-	11, // 11: kratos.api.Jwt.refresh_token_expires_in:type_name -> google.protobuf.Duration
-	11, // 12: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
-	11, // 13: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
-	11, // 14: kratos.api.Data.Database.slow_sql_threshold:type_name -> google.protobuf.Duration
-	11, // 15: kratos.api.Data.Redis.read_timeout:type_name -> google.protobuf.Duration
-	11, // 16: kratos.api.Data.Redis.write_timeout:type_name -> google.protobuf.Duration
-	17, // [17:17] is the sub-list for method output_type
-	17, // [17:17] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	7,  // 6: kratos.api.Bootstrap.minio:type_name -> kratos.api.Minio
+	8,  // 7: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
+	9,  // 8: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
+	10, // 9: kratos.api.Data.database:type_name -> kratos.api.Data.Database
+	11, // 10: kratos.api.Data.redis:type_name -> kratos.api.Data.Redis
+	12, // 11: kratos.api.Jwt.access_token_expires_in:type_name -> google.protobuf.Duration
+	12, // 12: kratos.api.Jwt.refresh_token_expires_in:type_name -> google.protobuf.Duration
+	12, // 13: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
+	12, // 14: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
+	12, // 15: kratos.api.Data.Database.slow_sql_threshold:type_name -> google.protobuf.Duration
+	12, // 16: kratos.api.Data.Redis.read_timeout:type_name -> google.protobuf.Duration
+	12, // 17: kratos.api.Data.Redis.write_timeout:type_name -> google.protobuf.Duration
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_conf_conf_proto_init() }
@@ -918,7 +1002,7 @@ func file_conf_conf_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_conf_conf_proto_rawDesc), len(file_conf_conf_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

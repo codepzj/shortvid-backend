@@ -12,6 +12,7 @@ message Bootstrap {
   Firebase firebase = 4;
   Jwt jwt = 5;
   Session session = 6;
+  Minio minio = 7;
 }
 
 message Server {
@@ -78,4 +79,11 @@ message Session {
   bool secure = 2;
   bool limit_enabled = 3;
   int32 limit_count = 4;
+}
+
+message Minio {
+  string endpoint = 1;
+  string accessKey = 2;
+  string secretKey = 3;
+  bool useSSL = 4;
 }

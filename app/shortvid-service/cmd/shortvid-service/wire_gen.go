@@ -14,6 +14,7 @@ import (
 	"shortvid-backend/app/shortvid-service/internal/data"
 	"shortvid-backend/app/shortvid-service/internal/data/infra/cache"
 	"shortvid-backend/app/shortvid-service/internal/data/infra/db"
+	"shortvid-backend/app/shortvid-service/internal/data/infra/storage"
 	"shortvid-backend/app/shortvid-service/internal/server"
 	"shortvid-backend/app/shortvid-service/internal/service"
 )
@@ -25,10 +26,11 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, jwt *conf.Jwt, session *conf.Session, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, jwt *conf.Jwt, session *conf.Session, minio *conf.Minio, logger log.Logger) (*kratos.App, func(), error) {
 	gormDB := db.NewDB(confData)
 	client := cache.NewRedis(confData)
-	dataData, cleanup, err := data.NewData(gormDB, client, logger)
+	minioClient := storage.NewMinioClient(minio)
+	dataData, cleanup, err := data.NewData(gormDB, client, minioClient, logger)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -28,10 +28,9 @@ init:
 .PHONY: config
 # generate internal proto
 config:
-	protoc --proto_path=./internal \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./internal \
-	       $(INTERNAL_PROTO_FILES)
+	@for dir in app/*/ ; do \
+		[ -f "$${dir}Makefile" ] && $(MAKE) -C "$$dir" config; \
+	done
 
 .PHONY: api
 # generate api proto

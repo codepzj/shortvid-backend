@@ -29,7 +29,6 @@ func NewDB(c *conf.Data) *gorm.DB {
 	)
 	if err != nil {
 		log.Fatalf("Connect MySQL failed: %v", err)
-		panic(err)
 	}
 	log.Printf("MySQL connect success...")
 	return db
