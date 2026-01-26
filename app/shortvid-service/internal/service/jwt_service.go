@@ -1,12 +1,17 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"shortvid-backend/app/shortvid-service/internal/conf"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/golang-jwt/jwt/v5"
+)
+
+const (
+	ClaimsContextKey = "claims"
 )
 
 type JwtService struct {
@@ -64,12 +69,8 @@ func (s *JwtService) ValidateToken(jwtStr string) (*JwtCustomClaims, error) {
 	token, err := jwt.ParseWithClaims(jwtStr, claims, func(token *jwt.Token) (any, error) {
 		return []byte(s.jwtConf.SecretKey), nil
 	})
-	if err != nil {
-		// 如果过期, 返回自定义错误
-		if !token.Valid {
-			return nil, errors.New("token expired")
-		}
-		return nil, err
+	if err != nil || !token.Valid {
+		return nil, errors.New("token invalid")
 	}
 	return claims, nil
 }
@@ -103,10 +104,27 @@ func (s *JwtService) ValidateToken(jwtStr string) (*JwtCustomClaims, error) {
 // 	return access_token, refresh_token, claims, nil
 // }
 
+// 从ctx中设置claims
+func (s *JwtService) SetClaimsFromContext(ctx context.Context, claims *JwtCustomClaims) context.Context {
+	ctxWithClaims := context.WithValue(ctx, ClaimsContextKey, claims)
+	return ctxWithClaims
+}
+
+// 从ctx中获取claims
+func (s *JwtService) GetClaimsFromContext(ctx context.Context) (*JwtCustomClaims, error) {
+	claims, ok := ctx.Value(ClaimsContextKey).(*JwtCustomClaims)
+	if !ok {
+		return nil, errors.New("no claims in context")
+	}
+	return claims, nil
+}
+
+// 获取token过期时间
 func (s *JwtService) GetTokenExpiration() time.Duration {
 	return s.jwtConf.AccessTokenExpiresIn.AsDuration()
 }
 
+// 获取refresh_token过期时间
 func (s *JwtService) GetRefreshTokenExpiration() time.Duration {
 	return s.jwtConf.RefreshTokenExpiresIn.AsDuration()
 }

@@ -132,6 +132,7 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *v1.LoginFirebaseR
 	}, nil
 }
 
+// GetUser 根据ID查询用户
 func (s *UsersService) GetUser(ctx context.Context, req *v1.GetUserRequest) (*v1.GetUserResponse, error) {
 	user, err := s.uc.GetUserByID(ctx, int(req.Id))
 	if err != nil {
@@ -144,4 +145,13 @@ func (s *UsersService) GetUser(ctx context.Context, req *v1.GetUserRequest) (*v1
 		Provider:    user.Provider,
 		ProviderUid: user.ProviderUID,
 	}, nil
+}
+
+// GetUserByUID 根据UID查询用户
+func (s *UsersService) GetUserByUID(ctx context.Context, uid int) (*biz.UserProfile, error) {
+	user, err := s.uc.GetUserByUID(ctx, uid)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

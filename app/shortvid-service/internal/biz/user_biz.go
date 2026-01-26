@@ -46,6 +46,7 @@ func NewUsersUsecase(logger log.Logger, repo UsersRepo) *UsersUsecase {
 	return &UsersUsecase{logger: logger, repo: repo}
 }
 
+// FindOrCreateUser 查询或创建用户
 func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*UserProfile, bool, error) {
 	existingUserModel, err := uc.repo.GetUserByEmailAndProvider(ctx, user.Email, user.Provider)
 	if err != nil {
@@ -96,10 +97,32 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 	}, true, nil
 }
 
+// GetUserByID 根据ID查询用户
 func (uc *UsersUsecase) GetUserByID(ctx context.Context, id int) (*UserProfile, error) {
 	userModel, err := uc.repo.GetUserByID(ctx, id)
 	if err != nil {
 		uc.logger.Log(log.LevelError, "msg", "Get user by id failed", "error", err)
+		return nil, err
+	}
+	if userModel == nil {
+		return nil, v1.ErrorUserNotFound("user not found")
+	}
+	return &UserProfile{
+		ID:          userModel.ID,
+		UserUID:     userModel.UserUID,
+		Nickname:    userModel.Nickname,
+		Avatar:      userModel.Avatar,
+		Email:       userModel.Email,
+		Provider:    userModel.Provider,
+		ProviderUID: userModel.ProviderUID,
+	}, nil
+}
+
+// GetUserByUID 根据UID查询用户
+func (uc *UsersUsecase) GetUserByUID(ctx context.Context, uid int) (*UserProfile, error) {
+	userModel, err := uc.repo.GetUserByUserUID(ctx, uid)
+	if err != nil {
+		uc.logger.Log(log.LevelError, "msg", "Get user by uid failed", "error", err)
 		return nil, err
 	}
 	if userModel == nil {
