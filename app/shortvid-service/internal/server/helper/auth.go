@@ -10,7 +10,6 @@ import (
 
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
-	"github.com/go-kratos/kratos/v2/transport"
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
 
@@ -24,19 +23,13 @@ func RequireAuthMiddleware(userSvc *service.UsersService, jwtSvc *service.JwtSer
 func RequireAuth(userSvc *service.UsersService, jwtSvc *service.JwtService) middleware.Middleware {
 	return func(next middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req any) (any, error) {
-			tr, ok := transport.FromServerContext(ctx)
+			hr, ok := khttp.RequestFromServerContext(ctx)
 			if !ok {
-				return nil, errors.New("no transport")
-			}
-
-			// 获取http transport
-			ht, ok := tr.(*khttp.Transport)
-			if !ok {
-				return nil, errors.New("no http transport")
+				return nil, errors.New("get http request failed")
 			}
 
 			// 开发环境绕过机制
-			userUID := ht.Request().Header.Get("X-USER-UID")
+			userUID := hr.Header.Get("X-USER-UID")
 			if userUID != "" {
 				userUIDInt, err := strconv.Atoi(userUID)
 				if err != nil {
@@ -53,7 +46,7 @@ func RequireAuth(userSvc *service.UsersService, jwtSvc *service.JwtService) midd
 				return next(ctx, req)
 			}
 
-			authorization := ht.Request().Header.Get("Authorization")
+			authorization := hr.Header.Get("Authorization")
 
 			if authorization == "" {
 				return nil, errors.New("no authorization")

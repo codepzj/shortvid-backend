@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
+	mysqlDriver "github.com/go-sql-driver/mysql"
 )
 
 type User struct {
@@ -65,15 +66,9 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 		}, false, nil
 	}
 
-	// 生成唯一的UserUID
-	userUID, err := uc.generateUniqueUserUID(ctx)
-	if err != nil {
-		uc.logger.Log(log.LevelError, "msg", "Generate unique UserUID failed", "error", err)
-		return nil, false, err
-	}
-
+	maxCount := 10
 	userModel := &model.User{
-		UserUID:     userUID,
+		UserUID:     0,
 		Nickname:    user.Nickname,
 		Avatar:      user.Avatar,
 		Email:       user.Email,
@@ -81,20 +76,31 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 		Provider:    user.Provider,
 		LastLoginAt: time.Now(),
 	}
-	err = uc.repo.CreateUser(ctx, userModel)
-	if err != nil {
-		uc.logger.Log(log.LevelError, "msg", "Create user failed", "error", err)
-		return nil, false, err
+	for range maxCount {
+		// 生成唯一的UserUID
+		userModel.UserUID = uc.generateUniqueUserUID()
+		err := uc.repo.CreateUser(ctx, userModel)
+
+		if err != nil {
+			var mysqlErr *mysqlDriver.MySQLError
+			if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
+				uc.logger.Log(log.LevelInfo, "msg", "UserUID already exists, retrying", "userUID", userModel.UserUID)
+				continue
+			}
+			uc.logger.Log(log.LevelError, "msg", "Create user failed", "error", err)
+			return nil, false, err
+		}
+		return &UserProfile{
+			ID:          userModel.ID,
+			UserUID:     userModel.UserUID,
+			Nickname:    userModel.Nickname,
+			Avatar:      userModel.Avatar,
+			Email:       userModel.Email,
+			ProviderUID: userModel.ProviderUID,
+			Provider:    userModel.Provider,
+		}, true, nil
 	}
-	return &UserProfile{
-		ID:          userModel.ID,
-		UserUID:     userModel.UserUID,
-		Nickname:    userModel.Nickname,
-		Avatar:      userModel.Avatar,
-		Email:       userModel.Email,
-		ProviderUID: userModel.ProviderUID,
-		Provider:    userModel.Provider,
-	}, true, nil
+	return nil, false, errors.New("create user failed after max retries")
 }
 
 // GetUserByID 根据ID查询用户
@@ -145,28 +151,8 @@ func (uc *UsersUsecase) UpdateLoginInfo(ctx context.Context, userID int) error {
 }
 
 // generateUniqueUserUID 生成唯一的UserUID (10000-999999999范围)
-func (uc *UsersUsecase) generateUniqueUserUID(ctx context.Context) (int, error) {
-	const maxRetries = 10
+func (uc *UsersUsecase) generateUniqueUserUID() int {
 	const minUID = 10000
 	const maxUID = 999999999
-
-	for i := range maxRetries {
-		// 生成随机UserUID
-		userUID := rand.Intn(maxUID-minUID+1) + minUID
-
-		// 检查是否已存在
-		existingUser, err := uc.repo.GetUserByUserUID(ctx, userUID)
-		if err != nil {
-			return 0, err
-		}
-
-		// 如果不存在，返回这个UserUID
-		if existingUser == nil {
-			return userUID, nil
-		}
-
-		uc.logger.Log(log.LevelWarn, "msg", "Generated UserUID already exists, retrying", "userUID", userUID, "attempt", i+1)
-	}
-
-	return 0, errors.New("failed to generate unique UserUID after max retries")
+	return rand.Intn(maxUID-minUID+1) + minUID
 }

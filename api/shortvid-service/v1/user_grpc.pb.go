@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.0
 // - protoc             v6.33.2
-// source: shortvid-service/v1/users.proto
+// source: shortvid-service/v1/user.proto
 
 package v1
 
@@ -21,14 +21,19 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	UsersService_LoginFirebase_FullMethodName = "/UsersService/LoginFirebase"
 	UsersService_GetUser_FullMethodName       = "/UsersService/GetUser"
+	UsersService_GetMyUser_FullMethodName     = "/UsersService/GetMyUser"
 )
 
 // UsersServiceClient is the client API for UsersService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UsersServiceClient interface {
+	// firebase登录
 	LoginFirebase(ctx context.Context, in *LoginFirebaseRequest, opts ...grpc.CallOption) (*LoginFirebaseResponse, error)
+	// 通过id获取用户信息
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	// 获取自己的用户信息
+	GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...grpc.CallOption) (*GetMyUserResponse, error)
 }
 
 type usersServiceClient struct {
@@ -59,12 +64,26 @@ func (c *usersServiceClient) GetUser(ctx context.Context, in *GetUserRequest, op
 	return out, nil
 }
 
+func (c *usersServiceClient) GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...grpc.CallOption) (*GetMyUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMyUserResponse)
+	err := c.cc.Invoke(ctx, UsersService_GetMyUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsersServiceServer is the server API for UsersService service.
 // All implementations must embed UnimplementedUsersServiceServer
 // for forward compatibility.
 type UsersServiceServer interface {
+	// firebase登录
 	LoginFirebase(context.Context, *LoginFirebaseRequest) (*LoginFirebaseResponse, error)
+	// 通过id获取用户信息
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	// 获取自己的用户信息
+	GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error)
 	mustEmbedUnimplementedUsersServiceServer()
 }
 
@@ -80,6 +99,9 @@ func (UnimplementedUsersServiceServer) LoginFirebase(context.Context, *LoginFire
 }
 func (UnimplementedUsersServiceServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedUsersServiceServer) GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMyUser not implemented")
 }
 func (UnimplementedUsersServiceServer) mustEmbedUnimplementedUsersServiceServer() {}
 func (UnimplementedUsersServiceServer) testEmbeddedByValue()                      {}
@@ -138,6 +160,24 @@ func _UsersService_GetUser_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UsersService_GetMyUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServiceServer).GetMyUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UsersService_GetMyUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServiceServer).GetMyUser(ctx, req.(*GetMyUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UsersService_ServiceDesc is the grpc.ServiceDesc for UsersService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -153,7 +193,11 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetUser",
 			Handler:    _UsersService_GetUser_Handler,
 		},
+		{
+			MethodName: "GetMyUser",
+			Handler:    _UsersService_GetMyUser_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "shortvid-service/v1/users.proto",
+	Metadata: "shortvid-service/v1/user.proto",
 }

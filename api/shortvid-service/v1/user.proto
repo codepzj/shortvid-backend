@@ -5,15 +5,25 @@ option go_package = "shortvid-backend/api/shortvid-service/v1;v1";
 import "google/api/annotations.proto";
 
 service UsersService {
+    // firebase登录
     rpc LoginFirebase(LoginFirebaseRequest) returns (LoginFirebaseResponse){
         option (google.api.http) = {
             post: "/api/v1/login/firebase"
             body: "*"
         };    
     }
+    // 通过id获取用户信息
     rpc GetUser(GetUserRequest) returns (GetUserResponse){
         option (google.api.http) = {
-            get: "/api/v1/users/{id}"
+            post: "/api/v1/user"
+            body: "*"
+        };
+    }
+    // 获取自己的用户信息
+    rpc GetMyUser(GetMyUserRequest) returns (GetMyUserResponse){
+        option (google.api.http) = {
+            post: "/api/v1/user/me"
+            body: "*"
         };
     }
 }
@@ -36,14 +46,26 @@ message UserProfile {
     string provider_uid = 5;
 }
 
+message UserDTO {
+    int32 id = 1;
+    string nickname = 2;
+    string avatar = 3;
+    string email = 4;
+    string provider = 5;
+    string provider_uid = 6;
+}
+
 message GetUserRequest {
     int32 id = 1;
 }
 
 message GetUserResponse {
-    string nickname = 1;
-    string avatar = 2;
-    string email = 3;
-    string provider = 4;
-    string provider_uid = 5;
+    UserDTO user = 1;
+}
+
+message GetMyUserRequest {
+}
+
+message GetMyUserResponse {
+    UserDTO user = 1;
 }

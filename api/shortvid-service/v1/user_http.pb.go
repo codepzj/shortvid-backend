@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-http v2.9.2
 // - protoc             v6.33.2
-// source: shortvid-service/v1/users.proto
+// source: shortvid-service/v1/user.proto
 
 package v1
 
@@ -19,18 +19,24 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationUsersServiceGetMyUser = "/UsersService/GetMyUser"
 const OperationUsersServiceGetUser = "/UsersService/GetUser"
 const OperationUsersServiceLoginFirebase = "/UsersService/LoginFirebase"
 
 type UsersServiceHTTPServer interface {
+	// GetMyUser 获取自己的用户信息
+	GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error)
+	// GetUser 通过id获取用户信息
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	// LoginFirebase firebase登录
 	LoginFirebase(context.Context, *LoginFirebaseRequest) (*LoginFirebaseResponse, error)
 }
 
 func RegisterUsersServiceHTTPServer(s *http.Server, srv UsersServiceHTTPServer) {
 	r := s.Route("/")
 	r.POST("/api/v1/login/firebase", _UsersService_LoginFirebase0_HTTP_Handler(srv))
-	r.GET("/api/v1/users/{id}", _UsersService_GetUser0_HTTP_Handler(srv))
+	r.POST("/api/v1/user", _UsersService_GetUser0_HTTP_Handler(srv))
+	r.POST("/api/v1/user/me", _UsersService_GetMyUser0_HTTP_Handler(srv))
 }
 
 func _UsersService_LoginFirebase0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx http.Context) error {
@@ -58,10 +64,10 @@ func _UsersService_LoginFirebase0_HTTP_Handler(srv UsersServiceHTTPServer) func(
 func _UsersService_GetUser0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetUserRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationUsersServiceGetUser)
@@ -77,8 +83,34 @@ func _UsersService_GetUser0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx ht
 	}
 }
 
+func _UsersService_GetMyUser0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetMyUserRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUsersServiceGetMyUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetMyUser(ctx, req.(*GetMyUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetMyUserResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type UsersServiceHTTPClient interface {
+	// GetMyUser 获取自己的用户信息
+	GetMyUser(ctx context.Context, req *GetMyUserRequest, opts ...http.CallOption) (rsp *GetMyUserResponse, err error)
+	// GetUser 通过id获取用户信息
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserResponse, err error)
+	// LoginFirebase firebase登录
 	LoginFirebase(ctx context.Context, req *LoginFirebaseRequest, opts ...http.CallOption) (rsp *LoginFirebaseResponse, err error)
 }
 
@@ -90,19 +122,35 @@ func NewUsersServiceHTTPClient(client *http.Client) UsersServiceHTTPClient {
 	return &UsersServiceHTTPClientImpl{client}
 }
 
-func (c *UsersServiceHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*GetUserResponse, error) {
-	var out GetUserResponse
-	pattern := "/api/v1/users/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationUsersServiceGetUser))
+// GetMyUser 获取自己的用户信息
+func (c *UsersServiceHTTPClientImpl) GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...http.CallOption) (*GetMyUserResponse, error) {
+	var out GetMyUserResponse
+	pattern := "/api/v1/user/me"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUsersServiceGetMyUser))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &out, nil
 }
 
+// GetUser 通过id获取用户信息
+func (c *UsersServiceHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*GetUserResponse, error) {
+	var out GetUserResponse
+	pattern := "/api/v1/user"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUsersServiceGetUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// LoginFirebase firebase登录
 func (c *UsersServiceHTTPClientImpl) LoginFirebase(ctx context.Context, in *LoginFirebaseRequest, opts ...http.CallOption) (*LoginFirebaseResponse, error) {
 	var out LoginFirebaseResponse
 	pattern := "/api/v1/login/firebase"

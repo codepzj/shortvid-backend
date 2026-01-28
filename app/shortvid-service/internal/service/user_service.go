@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"errors"
-	v1 "shortvid-backend/api/shortvid-service/v1"
+	pb "shortvid-backend/api/shortvid-service/v1"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/data/model"
 	"time"
@@ -13,7 +13,7 @@ import (
 )
 
 type UsersService struct {
-	v1.UnimplementedUsersServiceServer
+	pb.UnimplementedUsersServiceServer
 
 	logger             log.Logger
 	uc                 *biz.UsersUsecase
@@ -34,7 +34,7 @@ func NewUsersService(logger log.Logger, uc *biz.UsersUsecase, firebaseService *F
 	}
 }
 
-func (s *UsersService) LoginFirebase(ctx context.Context, req *v1.LoginFirebaseRequest) (*v1.LoginFirebaseResponse, error) {
+func (s *UsersService) LoginFirebase(ctx context.Context, req *pb.LoginFirebaseRequest) (*pb.LoginFirebaseResponse, error) {
 	// 1. 验证IDToken
 	token, err := s.firebaseService.VertifyIDToken(ctx, req.IdToken)
 	if err != nil {
@@ -119,10 +119,10 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *v1.LoginFirebaseR
 		s.logger.Log(log.LevelInfo, "msg", "user already esist", "user", user)
 	}
 
-	return &v1.LoginFirebaseResponse{
+	return &pb.LoginFirebaseResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-		User: &v1.UserProfile{
+		User: &pb.UserProfile{
 			Nickname:    user.Nickname,
 			Avatar:      user.Avatar,
 			Email:       user.Email,
@@ -133,17 +133,41 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *v1.LoginFirebaseR
 }
 
 // GetUser 根据ID查询用户
-func (s *UsersService) GetUser(ctx context.Context, req *v1.GetUserRequest) (*v1.GetUserResponse, error) {
+func (s *UsersService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	user, err := s.uc.GetUserByID(ctx, int(req.Id))
 	if err != nil {
 		return nil, err
 	}
-	return &v1.GetUserResponse{
-		Nickname:    user.Nickname,
-		Avatar:      user.Avatar,
-		Email:       user.Email,
-		Provider:    user.Provider,
-		ProviderUid: user.ProviderUID,
+	return &pb.GetUserResponse{
+		User: &pb.UserDTO{
+			Id:        int32(user.ID),
+			Nickname:  user.Nickname,
+			Avatar:    user.Avatar,
+			Email:     user.Email,
+			Provider:  user.Provider,
+			ProviderUid: user.ProviderUID,
+		},
+	}, nil
+}
+
+func (s *UsersService) GetMyUser(ctx context.Context, req *pb.GetMyUserRequest) (*pb.GetMyUserResponse, error) {
+	claims, err := s.jwtService.GetClaimsFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+	user, err := s.GetUserByUID(ctx, claims.UserUID)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.GetMyUserResponse{
+		User: &pb.UserDTO{
+			Id:        int32(user.ID),
+			Nickname:  user.Nickname,
+			Avatar:    user.Avatar,
+			Email:     user.Email,
+			Provider:  user.Provider,
+			ProviderUid: user.ProviderUID,
+		},
 	}, nil
 }
 
