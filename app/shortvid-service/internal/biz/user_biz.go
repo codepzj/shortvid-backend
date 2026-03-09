@@ -21,18 +21,17 @@ type User struct {
 }
 
 type UserProfile struct {
-	ID          int
-	UserUID     int
-	Nickname    string
-	Avatar      string
+	ID       int
+	UserUID  int
+	Nickname string
+	Avatar   string
 }
 
 type UsersRepo interface {
 	CreateUser(ctx context.Context, user *model.User) error
-	GetUserByID(ctx context.Context, id int) (*model.User, error)
 	GetUserByEmailAndProvider(ctx context.Context, email string, provider string) (*model.User, error)
 	GetUserByUserUID(ctx context.Context, userUID int) (*model.User, error)
-	UpdateLoginInfo(ctx context.Context, userID int) error
+	UpdateLoginInfo(ctx context.Context, userUID int) error
 }
 
 type UsersUsecase struct {
@@ -46,17 +45,17 @@ func NewUsersUsecase(logger log.Logger, repo UsersRepo) *UsersUsecase {
 
 // FindOrCreateUser 查询或创建用户
 func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*UserProfile, bool, error) {
-	existingUserModel, err := uc.repo.GetUserByEmailAndProvider(ctx, user.Email, user.Provider)
+	existUser, err := uc.repo.GetUserByEmailAndProvider(ctx, user.Email, user.Provider)
 	if err != nil {
 		uc.logger.Log(log.LevelError, "msg", "Get user by email and provider failed", "error", err)
 		return nil, false, err
 	}
-	if existingUserModel != nil {
+	if existUser != nil {
 		return &UserProfile{
-			ID:          existingUserModel.ID,
-			UserUID:     existingUserModel.UserUID,
-			Nickname:    existingUserModel.Nickname,
-			Avatar:      existingUserModel.Avatar,
+			ID:       existUser.ID,
+			UserUID:  existUser.UserUID,
+			Nickname: existUser.Nickname,
+			Avatar:   existUser.Avatar,
 		}, false, nil
 	}
 
@@ -78,35 +77,17 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 				uc.logger.Log(log.LevelInfo, "msg", "UserUID already exists, retrying", "userUID", userModel.UserUID)
 				continue
 			}
-			uc.logger.Log(log.LevelError, "msg", "Create user failed", "error", err)
+			uc.logger.Log(log.LevelWarn, "msg", "Create user failed", "error", err)
 			return nil, false, err
 		}
 		return &UserProfile{
-			ID:          userModel.ID,
-			UserUID:     userModel.UserUID,
-			Nickname:    userModel.Nickname,
-			Avatar:      userModel.Avatar,
+			ID:       userModel.ID,
+			UserUID:  userModel.UserUID,
+			Nickname: userModel.Nickname,
+			Avatar:   userModel.Avatar,
 		}, true, nil
 	}
 	return nil, false, errors.New("create user failed after max retries")
-}
-
-// GetUserByID 根据ID查询用户
-func (uc *UsersUsecase) GetUserByID(ctx context.Context, id int) (*UserProfile, error) {
-	userModel, err := uc.repo.GetUserByID(ctx, id)
-	if err != nil {
-		uc.logger.Log(log.LevelError, "msg", "Get user by id failed", "error", err)
-		return nil, err
-	}
-	if userModel == nil {
-		return nil, v1.ErrorUserNotFound("user not found")
-	}
-	return &UserProfile{
-		ID:          userModel.ID,
-		UserUID:     userModel.UserUID,
-		Nickname:    userModel.Nickname,
-		Avatar:      userModel.Avatar,
-	}, nil
 }
 
 // GetUserByUserUID 根据UserUID查询用户
@@ -120,16 +101,16 @@ func (uc *UsersUsecase) GetUserByUserUID(ctx context.Context, userUID int) (*Use
 		return nil, v1.ErrorUserNotFound("user not found")
 	}
 	return &UserProfile{
-		ID:          userModel.ID,
-		UserUID:     userModel.UserUID,
-		Nickname:    userModel.Nickname,
-		Avatar:      userModel.Avatar,
+		ID:       userModel.ID,
+		UserUID:  userModel.UserUID,
+		Nickname: userModel.Nickname,
+		Avatar:   userModel.Avatar,
 	}, nil
 }
 
 // UpdateLoginInfo 更新登录信息
-func (uc *UsersUsecase) UpdateLoginInfo(ctx context.Context, userID int) error {
-	return uc.repo.UpdateLoginInfo(ctx, userID)
+func (uc *UsersUsecase) UpdateLoginInfo(ctx context.Context, userUID int) error {
+	return uc.repo.UpdateLoginInfo(ctx, userUID)
 }
 
 // generateUniqueUserUID 生成唯一的UserUID (10000-999999999范围)
