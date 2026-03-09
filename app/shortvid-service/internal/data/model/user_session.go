@@ -17,7 +17,7 @@ type UserSession struct {
 	SessionID string    `gorm:"column:session_id"` // 会话ID
 	IP        string    `gorm:"column:ip"`         // IP
 	UserAgent string    `gorm:"column:user_agent"` // 用户代理
-	Platform  string    `gorm:"column:platform"`   // 平台
+
 	ExpiresAt time.Time `gorm:"column:expires_at"` // 过期时间
 }
 

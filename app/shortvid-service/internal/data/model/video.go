@@ -20,7 +20,7 @@ type Video struct {
 	CustomTags  string `gorm:"column:custom_tags"` // 自定义标签
 	LikeCount   int    `gorm:"column:like_count"`  // 点赞数
 	ViewCount   int    `gorm:"column:view_count"`  // 浏览数
-	Status      int    `gorm:"column:status"`      // 1-上传中, 2-处理中, 3-审核中, 4-发布成功, 5-拒绝发布, 6-系统失败, 7-封禁
+	Status      int    `gorm:"column:status"`      // 1-上传中, 2-处理中, 3-审核中, 4-发布成功, 5-发布失败, 6-封禁
 }
 
 func (Video) TableName() string {

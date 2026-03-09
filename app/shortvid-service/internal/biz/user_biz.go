@@ -25,9 +25,6 @@ type UserProfile struct {
 	UserUID     int
 	Nickname    string
 	Avatar      string
-	Email       string
-	Provider    string
-	ProviderUID string
 }
 
 type UsersRepo interface {
@@ -60,9 +57,6 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 			UserUID:     existingUserModel.UserUID,
 			Nickname:    existingUserModel.Nickname,
 			Avatar:      existingUserModel.Avatar,
-			Email:       existingUserModel.Email,
-			ProviderUID: existingUserModel.ProviderUID,
-			Provider:    existingUserModel.Provider,
 		}, false, nil
 	}
 
@@ -71,9 +65,6 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 		UserUID:     0,
 		Nickname:    user.Nickname,
 		Avatar:      user.Avatar,
-		Email:       user.Email,
-		ProviderUID: user.ProviderUID,
-		Provider:    user.Provider,
 		LastLoginAt: time.Now(),
 	}
 	for range maxCount {
@@ -95,9 +86,6 @@ func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, user *User) (*User
 			UserUID:     userModel.UserUID,
 			Nickname:    userModel.Nickname,
 			Avatar:      userModel.Avatar,
-			Email:       userModel.Email,
-			ProviderUID: userModel.ProviderUID,
-			Provider:    userModel.Provider,
 		}, true, nil
 	}
 	return nil, false, errors.New("create user failed after max retries")
@@ -118,17 +106,14 @@ func (uc *UsersUsecase) GetUserByID(ctx context.Context, id int) (*UserProfile, 
 		UserUID:     userModel.UserUID,
 		Nickname:    userModel.Nickname,
 		Avatar:      userModel.Avatar,
-		Email:       userModel.Email,
-		Provider:    userModel.Provider,
-		ProviderUID: userModel.ProviderUID,
 	}, nil
 }
 
-// GetUserByUID 根据UID查询用户
-func (uc *UsersUsecase) GetUserByUID(ctx context.Context, uid int) (*UserProfile, error) {
-	userModel, err := uc.repo.GetUserByUserUID(ctx, uid)
+// GetUserByUserUID 根据UserUID查询用户
+func (uc *UsersUsecase) GetUserByUserUID(ctx context.Context, userUID int) (*UserProfile, error) {
+	userModel, err := uc.repo.GetUserByUserUID(ctx, userUID)
 	if err != nil {
-		uc.logger.Log(log.LevelError, "msg", "Get user by uid failed", "error", err)
+		uc.logger.Log(log.LevelError, "msg", "Get user by userUid failed", "error", err)
 		return nil, err
 	}
 	if userModel == nil {
@@ -139,9 +124,6 @@ func (uc *UsersUsecase) GetUserByUID(ctx context.Context, uid int) (*UserProfile
 		UserUID:     userModel.UserUID,
 		Nickname:    userModel.Nickname,
 		Avatar:      userModel.Avatar,
-		Email:       userModel.Email,
-		Provider:    userModel.Provider,
-		ProviderUID: userModel.ProviderUID,
 	}, nil
 }
 

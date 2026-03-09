@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,9 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UsersService_LoginFirebase_FullMethodName = "/UsersService/LoginFirebase"
-	UsersService_GetUser_FullMethodName       = "/UsersService/GetUser"
-	UsersService_GetMyUser_FullMethodName     = "/UsersService/GetMyUser"
+	UsersService_LoginFirebase_FullMethodName  = "/UsersService/LoginFirebase"
+	UsersService_GetUserProfile_FullMethodName = "/UsersService/GetUserProfile"
+	UsersService_UserInfo_FullMethodName       = "/UsersService/UserInfo"
 )
 
 // UsersServiceClient is the client API for UsersService service.
@@ -30,10 +31,10 @@ const (
 type UsersServiceClient interface {
 	// firebase登录
 	LoginFirebase(ctx context.Context, in *LoginFirebaseRequest, opts ...grpc.CallOption) (*LoginFirebaseResponse, error)
-	// 通过id获取用户信息
-	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	// 通过userUid获取用户信息
+	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error)
 	// 获取自己的用户信息
-	GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...grpc.CallOption) (*GetMyUserResponse, error)
+	UserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfoResponse, error)
 }
 
 type usersServiceClient struct {
@@ -54,20 +55,20 @@ func (c *usersServiceClient) LoginFirebase(ctx context.Context, in *LoginFirebas
 	return out, nil
 }
 
-func (c *usersServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
+func (c *usersServiceClient) GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserResponse)
-	err := c.cc.Invoke(ctx, UsersService_GetUser_FullMethodName, in, out, cOpts...)
+	out := new(GetUserProfileResponse)
+	err := c.cc.Invoke(ctx, UsersService_GetUserProfile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *usersServiceClient) GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...grpc.CallOption) (*GetMyUserResponse, error) {
+func (c *usersServiceClient) UserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfoResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMyUserResponse)
-	err := c.cc.Invoke(ctx, UsersService_GetMyUser_FullMethodName, in, out, cOpts...)
+	out := new(UserInfoResponse)
+	err := c.cc.Invoke(ctx, UsersService_UserInfo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,10 +81,10 @@ func (c *usersServiceClient) GetMyUser(ctx context.Context, in *GetMyUserRequest
 type UsersServiceServer interface {
 	// firebase登录
 	LoginFirebase(context.Context, *LoginFirebaseRequest) (*LoginFirebaseResponse, error)
-	// 通过id获取用户信息
-	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	// 通过userUid获取用户信息
+	GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
 	// 获取自己的用户信息
-	GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error)
+	UserInfo(context.Context, *emptypb.Empty) (*UserInfoResponse, error)
 	mustEmbedUnimplementedUsersServiceServer()
 }
 
@@ -97,11 +98,11 @@ type UnimplementedUsersServiceServer struct{}
 func (UnimplementedUsersServiceServer) LoginFirebase(context.Context, *LoginFirebaseRequest) (*LoginFirebaseResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method LoginFirebase not implemented")
 }
-func (UnimplementedUsersServiceServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUser not implemented")
+func (UnimplementedUsersServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUserProfile not implemented")
 }
-func (UnimplementedUsersServiceServer) GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetMyUser not implemented")
+func (UnimplementedUsersServiceServer) UserInfo(context.Context, *emptypb.Empty) (*UserInfoResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UserInfo not implemented")
 }
 func (UnimplementedUsersServiceServer) mustEmbedUnimplementedUsersServiceServer() {}
 func (UnimplementedUsersServiceServer) testEmbeddedByValue()                      {}
@@ -142,38 +143,38 @@ func _UsersService_LoginFirebase_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UsersService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserRequest)
+func _UsersService_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).GetUser(ctx, in)
+		return srv.(UsersServiceServer).GetUserProfile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UsersService_GetUser_FullMethodName,
+		FullMethod: UsersService_GetUserProfile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).GetUser(ctx, req.(*GetUserRequest))
+		return srv.(UsersServiceServer).GetUserProfile(ctx, req.(*GetUserProfileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UsersService_GetMyUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMyUserRequest)
+func _UsersService_UserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).GetMyUser(ctx, in)
+		return srv.(UsersServiceServer).UserInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UsersService_GetMyUser_FullMethodName,
+		FullMethod: UsersService_UserInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).GetMyUser(ctx, req.(*GetMyUserRequest))
+		return srv.(UsersServiceServer).UserInfo(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -190,12 +191,12 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UsersService_LoginFirebase_Handler,
 		},
 		{
-			MethodName: "GetUser",
-			Handler:    _UsersService_GetUser_Handler,
+			MethodName: "GetUserProfile",
+			Handler:    _UsersService_GetUserProfile_Handler,
 		},
 		{
-			MethodName: "GetMyUser",
-			Handler:    _UsersService_GetMyUser_Handler,
+			MethodName: "UserInfo",
+			Handler:    _UsersService_UserInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

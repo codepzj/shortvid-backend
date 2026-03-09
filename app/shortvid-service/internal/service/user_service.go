@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 type UsersService struct {
@@ -90,9 +91,6 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *pb.LoginFirebaseR
 	session := &model.UserSession{
 		UserUID:   user.UserUID,
 		SessionID: sessionID,
-		IP:        "127.0.0.1", // TODO: 从请求中获取真实IP
-		UserAgent: "Unknown",   // TODO: 从请求中获取User-Agent
-		Platform:  "Unknown",   // TODO: 从请求中获取平台信息
 		ExpiresAt: time.Now().Add(s.jwtService.GetRefreshTokenExpiration()),
 	}
 	if err := s.userSessionService.CreateUserSession(ctx, session); err != nil {
@@ -123,57 +121,49 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *pb.LoginFirebaseR
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		User: &pb.UserProfile{
-			Nickname:    user.Nickname,
-			Avatar:      user.Avatar,
-			Email:       user.Email,
-			Provider:    user.Provider,
-			ProviderUid: user.ProviderUID,
+			Nickname: user.Nickname,
+			Avatar:   user.Avatar,
 		},
 	}, nil
 }
 
-// GetUser 根据ID查询用户
-func (s *UsersService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
-	user, err := s.uc.GetUserByID(ctx, int(req.Id))
+// GetUserProfile 根据userUid查询用户信息
+func (s *UsersService) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
+	user, err := s.uc.GetUserByUserUID(ctx, int(req.UserUid))
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetUserResponse{
-		User: &pb.UserDTO{
-			Id:        int32(user.ID),
-			Nickname:  user.Nickname,
-			Avatar:    user.Avatar,
-			Email:     user.Email,
-			Provider:  user.Provider,
-			ProviderUid: user.ProviderUID,
+	return &pb.GetUserProfileResponse{
+		UserInfo: &pb.UserProfile{
+			UserUid:  int32(user.UserUID),
+			Nickname: user.Nickname,
+			Avatar:   user.Avatar,
 		},
 	}, nil
 }
 
-func (s *UsersService) GetMyUser(ctx context.Context, req *pb.GetMyUserRequest) (*pb.GetMyUserResponse, error) {
+func (s *UsersService) UserInfo(ctx context.Context, req *emptypb.Empty) (*pb.UserInfoResponse, error) {
 	claims, err := s.jwtService.GetClaimsFromContext(ctx)
 	if err != nil {
 		return nil, err
 	}
-	user, err := s.GetUserByUID(ctx, claims.UserUID)
+	user, err := s.uc.GetUserByUserUID(ctx, claims.UserUID)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetMyUserResponse{
-		User: &pb.UserDTO{
-			Id:        int32(user.ID),
-			Nickname:  user.Nickname,
-			Avatar:    user.Avatar,
-			Email:     user.Email,
-			Provider:  user.Provider,
-			ProviderUid: user.ProviderUID,
+	return &pb.UserInfoResponse{
+		UserInfo: &pb.UserProfile{
+			Id:       int32(user.ID),
+			UserUid:  int32(user.UserUID),
+			Nickname: user.Nickname,
+			Avatar:   user.Avatar,
 		},
 	}, nil
 }
 
 // GetUserByUID 根据UID查询用户
-func (s *UsersService) GetUserByUID(ctx context.Context, uid int) (*biz.UserProfile, error) {
-	user, err := s.uc.GetUserByUID(ctx, uid)
+func (s *UsersService) GetUserByUserUID(ctx context.Context, userUID int) (*biz.UserProfile, error) {
+	user, err := s.uc.GetUserByUserUID(ctx, userUID)
 	if err != nil {
 		return nil, err
 	}

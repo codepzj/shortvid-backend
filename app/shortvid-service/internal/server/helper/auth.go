@@ -35,7 +35,7 @@ func RequireAuth(userSvc *service.UsersService, jwtSvc *service.JwtService) midd
 				if err != nil {
 					return nil, err
 				}
-				user, err := userSvc.GetUserByUID(ctx, userUIDInt)
+				user, err := userSvc.GetUserByUserUID(ctx, userUIDInt)
 				if err != nil {
 					return nil, err
 				}

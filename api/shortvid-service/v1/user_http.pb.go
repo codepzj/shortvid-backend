@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,24 +20,24 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationUsersServiceGetMyUser = "/UsersService/GetMyUser"
-const OperationUsersServiceGetUser = "/UsersService/GetUser"
+const OperationUsersServiceGetUserProfile = "/UsersService/GetUserProfile"
 const OperationUsersServiceLoginFirebase = "/UsersService/LoginFirebase"
+const OperationUsersServiceUserInfo = "/UsersService/UserInfo"
 
 type UsersServiceHTTPServer interface {
-	// GetMyUser 获取自己的用户信息
-	GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error)
-	// GetUser 通过id获取用户信息
-	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	// GetUserProfile 通过userUid获取用户信息
+	GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
 	// LoginFirebase firebase登录
 	LoginFirebase(context.Context, *LoginFirebaseRequest) (*LoginFirebaseResponse, error)
+	// UserInfo 获取自己的用户信息
+	UserInfo(context.Context, *emptypb.Empty) (*UserInfoResponse, error)
 }
 
 func RegisterUsersServiceHTTPServer(s *http.Server, srv UsersServiceHTTPServer) {
 	r := s.Route("/")
 	r.POST("/api/v1/login/firebase", _UsersService_LoginFirebase0_HTTP_Handler(srv))
-	r.POST("/api/v1/user", _UsersService_GetUser0_HTTP_Handler(srv))
-	r.POST("/api/v1/user/me", _UsersService_GetMyUser0_HTTP_Handler(srv))
+	r.POST("/api/v1/user/profile", _UsersService_GetUserProfile0_HTTP_Handler(srv))
+	r.POST("/api/v1/user/info", _UsersService_UserInfo0_HTTP_Handler(srv))
 }
 
 func _UsersService_LoginFirebase0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx http.Context) error {
@@ -61,57 +62,57 @@ func _UsersService_LoginFirebase0_HTTP_Handler(srv UsersServiceHTTPServer) func(
 	}
 }
 
-func _UsersService_GetUser0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx http.Context) error {
+func _UsersService_GetUserProfile0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetUserRequest
+		var in GetUserProfileRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUsersServiceGetUser)
+		http.SetOperation(ctx, OperationUsersServiceGetUserProfile)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUser(ctx, req.(*GetUserRequest))
+			return srv.GetUserProfile(ctx, req.(*GetUserProfileRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetUserResponse)
+		reply := out.(*GetUserProfileResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _UsersService_GetMyUser0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx http.Context) error {
+func _UsersService_UserInfo0_HTTP_Handler(srv UsersServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetMyUserRequest
+		var in emptypb.Empty
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUsersServiceGetMyUser)
+		http.SetOperation(ctx, OperationUsersServiceUserInfo)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetMyUser(ctx, req.(*GetMyUserRequest))
+			return srv.UserInfo(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetMyUserResponse)
+		reply := out.(*UserInfoResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
 type UsersServiceHTTPClient interface {
-	// GetMyUser 获取自己的用户信息
-	GetMyUser(ctx context.Context, req *GetMyUserRequest, opts ...http.CallOption) (rsp *GetMyUserResponse, err error)
-	// GetUser 通过id获取用户信息
-	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserResponse, err error)
+	// GetUserProfile 通过userUid获取用户信息
+	GetUserProfile(ctx context.Context, req *GetUserProfileRequest, opts ...http.CallOption) (rsp *GetUserProfileResponse, err error)
 	// LoginFirebase firebase登录
 	LoginFirebase(ctx context.Context, req *LoginFirebaseRequest, opts ...http.CallOption) (rsp *LoginFirebaseResponse, err error)
+	// UserInfo 获取自己的用户信息
+	UserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *UserInfoResponse, err error)
 }
 
 type UsersServiceHTTPClientImpl struct {
@@ -122,26 +123,12 @@ func NewUsersServiceHTTPClient(client *http.Client) UsersServiceHTTPClient {
 	return &UsersServiceHTTPClientImpl{client}
 }
 
-// GetMyUser 获取自己的用户信息
-func (c *UsersServiceHTTPClientImpl) GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...http.CallOption) (*GetMyUserResponse, error) {
-	var out GetMyUserResponse
-	pattern := "/api/v1/user/me"
+// GetUserProfile 通过userUid获取用户信息
+func (c *UsersServiceHTTPClientImpl) GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...http.CallOption) (*GetUserProfileResponse, error) {
+	var out GetUserProfileResponse
+	pattern := "/api/v1/user/profile"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationUsersServiceGetMyUser))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-// GetUser 通过id获取用户信息
-func (c *UsersServiceHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*GetUserResponse, error) {
-	var out GetUserResponse
-	pattern := "/api/v1/user"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationUsersServiceGetUser))
+	opts = append(opts, http.Operation(OperationUsersServiceGetUserProfile))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -156,6 +143,20 @@ func (c *UsersServiceHTTPClientImpl) LoginFirebase(ctx context.Context, in *Logi
 	pattern := "/api/v1/login/firebase"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUsersServiceLoginFirebase))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// UserInfo 获取自己的用户信息
+func (c *UsersServiceHTTPClientImpl) UserInfo(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*UserInfoResponse, error) {
+	var out UserInfoResponse
+	pattern := "/api/v1/user/info"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUsersServiceUserInfo))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
