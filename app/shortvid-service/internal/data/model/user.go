@@ -6,6 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
+type UserStatus int8
+
+const (
+	UserStatusNormal UserStatus = 1
+	UserStatusBanned UserStatus = 2
+)
+
 // User 用户模型
 type User struct {
 	ID        int            `gorm:"primaryKey;autoIncrement"` // 主键ID
@@ -13,17 +20,17 @@ type User struct {
 	UpdatedAt time.Time      `gorm:"column:updated_at"`        // 更新时间
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at"`        // 删除时间
 
-	UserUID  int    `gorm:"unique;column:user_uid"` // 用户唯一ID
-	Nickname string `gorm:"column:nickname"`        // 昵称
-	Avatar   string `gorm:"column:avatar"`          // 头像
+	UID      int    `gorm:"unique;column:uid"` // 用户唯一ID
+	Nickname string `gorm:"column:nickname"`   // 昵称
+	Avatar   string `gorm:"column:avatar"`     // 头像
 
 	Country   string `gorm:"column:country"`    // 国家
 	IP        string `gorm:"column:ip"`         // IP
 	UserAgent string `gorm:"column:user_agent"` // UserAgent
 
-	LastLoginAt time.Time `gorm:"column:last_login_at"` // 最后登录时间
-	LoginCount  int       `gorm:"column:login_count"`   // 登录次数
-	Status      int       `gorm:"column:status"`        // 状态: 1: 正常, 2: 禁用
+	LastLoginAt time.Time  `gorm:"column:last_login_at"` // 最后登录时间
+	LoginCount  int        `gorm:"column:login_count"`   // 登录次数
+	Status      UserStatus `gorm:"column:status"`        // 状态: 1: 正常, 2: 禁用
 }
 
 func (User) TableName() string {

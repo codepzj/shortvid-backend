@@ -13,8 +13,8 @@ import (
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
-type UsersService struct {
-	pb.UnimplementedUsersServiceServer
+type UserService struct {
+	pb.UnimplementedUserServiceServer
 
 	logger             log.Logger
 	uc                 *biz.UsersUsecase
@@ -24,8 +24,8 @@ type UsersService struct {
 	cacheService       *CacheService
 }
 
-func NewUsersService(logger log.Logger, uc *biz.UsersUsecase, firebaseService *FirebaseService, jwtService *JwtService, userSessionService *UserSessionService, cacheService *CacheService) *UsersService {
-	return &UsersService{
+func NewUserService(logger log.Logger, uc *biz.UsersUsecase, firebaseService *FirebaseService, jwtService *JwtService, userSessionService *UserSessionService, cacheService *CacheService) *UserService {
+	return &UserService{
 		logger:             logger,
 		uc:                 uc,
 		firebaseService:    firebaseService,
@@ -35,7 +35,7 @@ func NewUsersService(logger log.Logger, uc *biz.UsersUsecase, firebaseService *F
 	}
 }
 
-func (s *UsersService) LoginFirebase(ctx context.Context, req *pb.LoginFirebaseRequest) (*pb.LoginFirebaseResponse, error) {
+func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRequest) (*pb.FirebaseLoginResponse, error) {
 	// 1. 验证IDToken
 	token, err := s.firebaseService.VertifyIDToken(ctx, req.IdToken)
 	if err != nil {
@@ -53,12 +53,12 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *pb.LoginFirebaseR
 	}
 
 	// 3. 查找或创建用户
-	user, isNew, err := s.uc.FindOrCreateUser(ctx, &biz.User{
+	user, isNew, err := s.uc.FirebaseFindOrCreateUser(ctx, &biz.User{
 		Nickname:    firebaseUser.DisplayName,
 		Avatar:      firebaseUser.PhotoURL,
 		Email:       firebaseUser.Email,
-		ProviderUID: providerUID,
 		Provider:    "firebase",
+		ProviderUID: providerUID,
 	})
 	if err != nil {
 		return nil, err
@@ -74,14 +74,14 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *pb.LoginFirebaseR
 	sessionID := uuid.NewString()
 
 	// 6. 生成accessToken
-	accessToken, err := s.jwtService.GenerateAccessToken(user.UserUID, sessionID)
+	accessToken, err := s.jwtService.GenerateAccessToken(user.UID, sessionID)
 	if err != nil {
 		s.logger.Log(log.LevelError, "msg", "Generate access token failed", "error", err)
 		return nil, err
 	}
 
 	// 7. 生成refreshToken
-	refreshToken, err := s.jwtService.GenerateRefreshToken(user.UserUID, sessionID)
+	refreshToken, err := s.jwtService.GenerateRefreshToken(user.UID, sessionID)
 	if err != nil {
 		s.logger.Log(log.LevelError, "msg", "Generate refresh token failed", "error", err)
 		return nil, err
@@ -89,7 +89,7 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *pb.LoginFirebaseR
 
 	// 8. 创建用户会话session
 	session := &model.UserSession{
-		UserUID:   user.UserUID,
+		UID:       user.UID,
 		SessionID: sessionID,
 		ExpiresAt: time.Now().Add(s.jwtService.GetRefreshTokenExpiration()),
 	}
@@ -99,14 +99,14 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *pb.LoginFirebaseR
 	}
 
 	// 9. 限制会话数量
-	if err := s.userSessionService.LimitUserSession(ctx, user.UserUID); err != nil {
+	if err := s.userSessionService.LimitUserSession(ctx, user.UID); err != nil {
 		s.logger.Log(log.LevelError, "msg", "Limit user session failed", "error", err)
 		return nil, err
 	}
 
 	// 10. 将用户会话缓存到redis中
 	expiration := s.jwtService.GetTokenExpiration()
-	if err := s.cacheService.SetUserSession(ctx, user.UserUID, sessionID, expiration); err != nil {
+	if err := s.cacheService.SetUserSession(ctx, user.UID, sessionID, expiration); err != nil {
 		s.logger.Log(log.LevelError, "msg", "Set user session failed", "error", err)
 	}
 
@@ -117,7 +117,7 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *pb.LoginFirebaseR
 		s.logger.Log(log.LevelInfo, "msg", "user already esist", "user", user)
 	}
 
-	return &pb.LoginFirebaseResponse{
+	return &pb.FirebaseLoginResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		User: &pb.UserProfile{
@@ -128,33 +128,33 @@ func (s *UsersService) LoginFirebase(ctx context.Context, req *pb.LoginFirebaseR
 }
 
 // GetUserProfile 根据userUid查询用户信息
-func (s *UsersService) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
-	user, err := s.uc.GetUserByUserUID(ctx, int(req.UserUid))
+func (s *UserService) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
+	user, err := s.uc.GetUserByUID(ctx, int(req.Uid))
 	if err != nil {
 		return nil, err
 	}
 	return &pb.GetUserProfileResponse{
-		UserInfo: &pb.UserProfile{
-			UserUid:  int32(user.UserUID),
+		User: &pb.UserProfile{
+			Uid:      int32(user.UID),
 			Nickname: user.Nickname,
 			Avatar:   user.Avatar,
 		},
 	}, nil
 }
 
-func (s *UsersService) UserInfo(ctx context.Context, req *emptypb.Empty) (*pb.UserInfoResponse, error) {
+func (s *UserService) UserInfo(ctx context.Context, req *emptypb.Empty) (*pb.UserInfoResponse, error) {
 	claims, err := s.jwtService.GetClaimsFromContext(ctx)
 	if err != nil {
 		return nil, err
 	}
-	user, err := s.uc.GetUserByUserUID(ctx, claims.UserUID)
+	user, err := s.uc.GetUserByUID(ctx, claims.UID)
 	if err != nil {
 		return nil, err
 	}
 	return &pb.UserInfoResponse{
-		UserInfo: &pb.UserProfile{
+		User: &pb.UserProfile{
 			Id:       int32(user.ID),
-			UserUid:  int32(user.UserUID),
+			Uid:      int32(user.UID),
 			Nickname: user.Nickname,
 			Avatar:   user.Avatar,
 		},
@@ -162,8 +162,8 @@ func (s *UsersService) UserInfo(ctx context.Context, req *emptypb.Empty) (*pb.Us
 }
 
 // GetUserByUID 根据UID查询用户
-func (s *UsersService) GetUserByUserUID(ctx context.Context, userUID int) (*biz.UserProfile, error) {
-	user, err := s.uc.GetUserByUserUID(ctx, userUID)
+func (s *UserService) GetUserByUID(ctx context.Context, userUID int) (*biz.UserProfile, error) {
+	user, err := s.uc.GetUserByUID(ctx, userUID)
 	if err != nil {
 		return nil, err
 	}

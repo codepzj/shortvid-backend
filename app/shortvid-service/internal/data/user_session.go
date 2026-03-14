@@ -21,9 +21,9 @@ func (r *userSessionRepo) CreateUserSession(ctx context.Context, userSession *mo
 	return r.data.db.WithContext(ctx).Create(userSession).Error
 }
 
-func (r *userSessionRepo) FindUserSessionByUserUID(ctx context.Context, userUID int) ([]*model.UserSession, error) {
+func (r *userSessionRepo) FindUserSessionByUID(ctx context.Context, UID int) ([]*model.UserSession, error) {
 	var sessions []*model.UserSession
-	err := r.data.db.WithContext(ctx).Where("user_uid = ?", userUID).Find(&sessions).Error
+	err := r.data.db.WithContext(ctx).Where("uid = ?", UID).Find(&sessions).Error
 	return sessions, err
 }
 

@@ -13,7 +13,7 @@ type Account struct {
 	UpdatedAt time.Time      `gorm:"column:updated_at"`        // 更新时间
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at"`        // 删除时间
 
-	UserUID int `gorm:"column:user_uid"` // 用户唯一ID
+	UID int `gorm:"column:uid"` // 用户唯一ID
 
 	Email    string `gorm:"column:email"`    // 邮箱
 	Password string `gorm:"column:password"` // 密码(bcrypt)

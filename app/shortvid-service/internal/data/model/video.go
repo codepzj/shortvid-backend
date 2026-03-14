@@ -12,8 +12,9 @@ type Video struct {
 	UpdatedAt time.Time      `gorm:"column:updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at"`
 
-	VGroup      string `gorm:"column:vgroup"`      // 视频底层分组
-	UserUID     int    `gorm:"column:user_uid"`    // 用户UID
+	VGroup string `gorm:"column:vgroup"` // 视频底层分组
+	UID    int    `gorm:"column:uid"`    // 用户UID
+
 	Description string `gorm:"column:description"` // 视频描述
 	Category    string `gorm:"column:category"`    // 视频分类
 	Tags        string `gorm:"column:tags"`        // 视频标签

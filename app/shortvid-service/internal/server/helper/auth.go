@@ -13,14 +13,14 @@ import (
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
 
-func RequireAuthMiddleware(userSvc *service.UsersService, jwtSvc *service.JwtService) middleware.Middleware {
+func RequireAuthMiddleware(userSvc *service.UserService, jwtSvc *service.JwtService) middleware.Middleware {
 	return selector.Server(
 		RequireAuth(userSvc, jwtSvc),
 	).Match(NewWhiteListMatcher()).Build()
 }
 
 // RequireAuth 需要认证的接口
-func RequireAuth(userSvc *service.UsersService, jwtSvc *service.JwtService) middleware.Middleware {
+func RequireAuth(userSvc *service.UserService, jwtSvc *service.JwtService) middleware.Middleware {
 	return func(next middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req any) (any, error) {
 			hr, ok := khttp.RequestFromServerContext(ctx)
@@ -29,18 +29,18 @@ func RequireAuth(userSvc *service.UsersService, jwtSvc *service.JwtService) midd
 			}
 
 			// 开发环境绕过机制
-			userUID := hr.Header.Get("X-USER-UID")
-			if userUID != "" {
-				userUIDInt, err := strconv.Atoi(userUID)
+			UID := hr.Header.Get("X-USER-UID")
+			if UID != "" {
+				UIDInt, err := strconv.Atoi(UID)
 				if err != nil {
 					return nil, err
 				}
-				user, err := userSvc.GetUserByUserUID(ctx, userUIDInt)
+				user, err := userSvc.GetUserByUID(ctx, UIDInt)
 				if err != nil {
 					return nil, err
 				}
 				ctx = jwtSvc.SetClaimsFromContext(ctx, &service.JwtCustomClaims{
-					UserUID:   user.UserUID,
+					UID:       user.UID,
 					SessionID: "",
 				})
 				return next(ctx, req)
@@ -74,7 +74,7 @@ func RequireAuth(userSvc *service.UsersService, jwtSvc *service.JwtService) midd
 func NewWhiteListMatcher() selector.MatchFunc {
 	// 路由白名单
 	whiteList := make(map[string]struct{})
-	whiteList[v1.OperationUsersServiceLoginFirebase] = struct{}{}
+	whiteList[v1.OperationUserServiceLoginFirebase] = struct{}{}
 	return func(ctx context.Context, operation string) bool {
 		_, ok := whiteList[operation]
 		if ok {

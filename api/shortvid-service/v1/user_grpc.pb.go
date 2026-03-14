@@ -20,183 +20,187 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UsersService_LoginFirebase_FullMethodName  = "/UsersService/LoginFirebase"
-	UsersService_GetUserProfile_FullMethodName = "/UsersService/GetUserProfile"
-	UsersService_UserInfo_FullMethodName       = "/UsersService/UserInfo"
+	UserService_LoginFirebase_FullMethodName  = "/UserService/LoginFirebase"
+	UserService_GetUserProfile_FullMethodName = "/UserService/GetUserProfile"
+	UserService_UserInfo_FullMethodName       = "/UserService/UserInfo"
 )
 
-// UsersServiceClient is the client API for UsersService service.
+// UserServiceClient is the client API for UserService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UsersServiceClient interface {
+//
+// 用户服务
+type UserServiceClient interface {
 	// firebase登录
-	LoginFirebase(ctx context.Context, in *LoginFirebaseRequest, opts ...grpc.CallOption) (*LoginFirebaseResponse, error)
-	// 通过userUid获取用户信息
+	LoginFirebase(ctx context.Context, in *FirebaseLoginRequest, opts ...grpc.CallOption) (*FirebaseLoginResponse, error)
+	// 通过uid获取用户信息
 	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error)
 	// 获取自己的用户信息
 	UserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfoResponse, error)
 }
 
-type usersServiceClient struct {
+type userServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewUsersServiceClient(cc grpc.ClientConnInterface) UsersServiceClient {
-	return &usersServiceClient{cc}
+func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
+	return &userServiceClient{cc}
 }
 
-func (c *usersServiceClient) LoginFirebase(ctx context.Context, in *LoginFirebaseRequest, opts ...grpc.CallOption) (*LoginFirebaseResponse, error) {
+func (c *userServiceClient) LoginFirebase(ctx context.Context, in *FirebaseLoginRequest, opts ...grpc.CallOption) (*FirebaseLoginResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoginFirebaseResponse)
-	err := c.cc.Invoke(ctx, UsersService_LoginFirebase_FullMethodName, in, out, cOpts...)
+	out := new(FirebaseLoginResponse)
+	err := c.cc.Invoke(ctx, UserService_LoginFirebase_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *usersServiceClient) GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error) {
+func (c *userServiceClient) GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserProfileResponse)
-	err := c.cc.Invoke(ctx, UsersService_GetUserProfile_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserService_GetUserProfile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *usersServiceClient) UserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfoResponse, error) {
+func (c *userServiceClient) UserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfoResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserInfoResponse)
-	err := c.cc.Invoke(ctx, UsersService_UserInfo_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserService_UserInfo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// UsersServiceServer is the server API for UsersService service.
-// All implementations must embed UnimplementedUsersServiceServer
+// UserServiceServer is the server API for UserService service.
+// All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
-type UsersServiceServer interface {
+//
+// 用户服务
+type UserServiceServer interface {
 	// firebase登录
-	LoginFirebase(context.Context, *LoginFirebaseRequest) (*LoginFirebaseResponse, error)
-	// 通过userUid获取用户信息
+	LoginFirebase(context.Context, *FirebaseLoginRequest) (*FirebaseLoginResponse, error)
+	// 通过uid获取用户信息
 	GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
 	// 获取自己的用户信息
 	UserInfo(context.Context, *emptypb.Empty) (*UserInfoResponse, error)
-	mustEmbedUnimplementedUsersServiceServer()
+	mustEmbedUnimplementedUserServiceServer()
 }
 
-// UnimplementedUsersServiceServer must be embedded to have
+// UnimplementedUserServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedUsersServiceServer struct{}
+type UnimplementedUserServiceServer struct{}
 
-func (UnimplementedUsersServiceServer) LoginFirebase(context.Context, *LoginFirebaseRequest) (*LoginFirebaseResponse, error) {
+func (UnimplementedUserServiceServer) LoginFirebase(context.Context, *FirebaseLoginRequest) (*FirebaseLoginResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method LoginFirebase not implemented")
 }
-func (UnimplementedUsersServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error) {
+func (UnimplementedUserServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserProfile not implemented")
 }
-func (UnimplementedUsersServiceServer) UserInfo(context.Context, *emptypb.Empty) (*UserInfoResponse, error) {
+func (UnimplementedUserServiceServer) UserInfo(context.Context, *emptypb.Empty) (*UserInfoResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UserInfo not implemented")
 }
-func (UnimplementedUsersServiceServer) mustEmbedUnimplementedUsersServiceServer() {}
-func (UnimplementedUsersServiceServer) testEmbeddedByValue()                      {}
+func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
+func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
 
-// UnsafeUsersServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UsersServiceServer will
+// UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserServiceServer will
 // result in compilation errors.
-type UnsafeUsersServiceServer interface {
-	mustEmbedUnimplementedUsersServiceServer()
+type UnsafeUserServiceServer interface {
+	mustEmbedUnimplementedUserServiceServer()
 }
 
-func RegisterUsersServiceServer(s grpc.ServiceRegistrar, srv UsersServiceServer) {
-	// If the following call panics, it indicates UnimplementedUsersServiceServer was
+func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
+	// If the following call panics, it indicates UnimplementedUserServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&UsersService_ServiceDesc, srv)
+	s.RegisterService(&UserService_ServiceDesc, srv)
 }
 
-func _UsersService_LoginFirebase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginFirebaseRequest)
+func _UserService_LoginFirebase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FirebaseLoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).LoginFirebase(ctx, in)
+		return srv.(UserServiceServer).LoginFirebase(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UsersService_LoginFirebase_FullMethodName,
+		FullMethod: UserService_LoginFirebase_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).LoginFirebase(ctx, req.(*LoginFirebaseRequest))
+		return srv.(UserServiceServer).LoginFirebase(ctx, req.(*FirebaseLoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UsersService_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).GetUserProfile(ctx, in)
+		return srv.(UserServiceServer).GetUserProfile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UsersService_GetUserProfile_FullMethodName,
+		FullMethod: UserService_GetUserProfile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).GetUserProfile(ctx, req.(*GetUserProfileRequest))
+		return srv.(UserServiceServer).GetUserProfile(ctx, req.(*GetUserProfileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UsersService_UserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_UserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).UserInfo(ctx, in)
+		return srv.(UserServiceServer).UserInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UsersService_UserInfo_FullMethodName,
+		FullMethod: UserService_UserInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).UserInfo(ctx, req.(*emptypb.Empty))
+		return srv.(UserServiceServer).UserInfo(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// UsersService_ServiceDesc is the grpc.ServiceDesc for UsersService service.
+// UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var UsersService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "UsersService",
-	HandlerType: (*UsersServiceServer)(nil),
+var UserService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "UserService",
+	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "LoginFirebase",
-			Handler:    _UsersService_LoginFirebase_Handler,
+			Handler:    _UserService_LoginFirebase_Handler,
 		},
 		{
 			MethodName: "GetUserProfile",
-			Handler:    _UsersService_GetUserProfile_Handler,
+			Handler:    _UserService_GetUserProfile_Handler,
 		},
 		{
 			MethodName: "UserInfo",
-			Handler:    _UsersService_UserInfo_Handler,
+			Handler:    _UserService_UserInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

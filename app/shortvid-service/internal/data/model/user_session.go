@@ -13,10 +13,10 @@ type UserSession struct {
 	UpdatedAt time.Time      `gorm:"column:updated_at"`        // 更新时间
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at"`        // 删除时间
 
-	UserUID   int       `gorm:"column:user_uid"`   // 用户ID
-	SessionID string    `gorm:"column:session_id"` // 会话ID
-	IP        string    `gorm:"column:ip"`         // IP
-	UserAgent string    `gorm:"column:user_agent"` // 用户代理
+	UID       int    `gorm:"column:uid"`        // 用户ID
+	SessionID string `gorm:"column:session_id"` // 会话ID
+	IP        string `gorm:"column:ip"`         // IP
+	UserAgent string `gorm:"column:user_agent"` // 用户代理
 
 	ExpiresAt time.Time `gorm:"column:expires_at"` // 过期时间
 }

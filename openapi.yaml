@@ -24,17 +24,17 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/.UploadFileReply'
-    /api/v1/login/firebase:
+    /api/v1/firebase/login:
         post:
             tags:
-                - UsersService
+                - UserService
             description: firebase登录
-            operationId: UsersService_LoginFirebase
+            operationId: UserService_LoginFirebase
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/.LoginFirebaseRequest'
+                            $ref: '#/components/schemas/.FirebaseLoginRequest'
                 required: true
             responses:
                 "200":
@@ -42,13 +42,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/.LoginFirebaseResponse'
+                                $ref: '#/components/schemas/.FirebaseLoginResponse'
     /api/v1/user/info:
         post:
             tags:
-                - UsersService
+                - UserService
             description: 获取自己的用户信息
-            operationId: UsersService_UserInfo
+            operationId: UserService_UserInfo
             requestBody:
                 content:
                     application/json: {}
@@ -63,9 +63,9 @@ paths:
     /api/v1/user/profile:
         post:
             tags:
-                - UsersService
-            description: 通过userUid获取用户信息
-            operationId: UsersService_GetUserProfile
+                - UserService
+            description: 通过uid获取用户信息
+            operationId: UserService_GetUserProfile
             requestBody:
                 content:
                     application/json:
@@ -81,23 +81,13 @@ paths:
                                 $ref: '#/components/schemas/.GetUserProfileResponse'
 components:
     schemas:
-        .GetUserProfileRequest:
-            type: object
-            properties:
-                userUid:
-                    type: integer
-                    format: int32
-        .GetUserProfileResponse:
-            type: object
-            properties:
-                userInfo:
-                    $ref: '#/components/schemas/.UserProfile'
-        .LoginFirebaseRequest:
+        .FirebaseLoginRequest:
             type: object
             properties:
                 idToken:
                     type: string
-        .LoginFirebaseResponse:
+            description: firebase登录请求体
+        .FirebaseLoginResponse:
             type: object
             properties:
                 accessToken:
@@ -106,6 +96,20 @@ components:
                     type: string
                 user:
                     $ref: '#/components/schemas/.UserProfile'
+            description: firebase登录响应体
+        .GetUserProfileRequest:
+            type: object
+            properties:
+                uid:
+                    type: integer
+                    format: int32
+            description: 获取用户资料请求体
+        .GetUserProfileResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/.UserProfile'
+            description: 用户资料响应体
         .UploadFileReply:
             type: object
             properties: {}
@@ -115,15 +119,16 @@ components:
         .UserInfoResponse:
             type: object
             properties:
-                userInfo:
+                user:
                     $ref: '#/components/schemas/.UserProfile'
+            description: 用户信息响应
         .UserProfile:
             type: object
             properties:
                 id:
                     type: integer
                     format: int32
-                userUid:
+                uid:
                     type: integer
                     format: int32
                 nickname:
@@ -136,6 +141,8 @@ components:
                     type: string
                 providerUid:
                     type: string
+            description: 用户资料
 tags:
     - name: File
-    - name: UsersService
+    - name: UserService
+      description: 用户服务

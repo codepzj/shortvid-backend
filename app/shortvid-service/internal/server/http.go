@@ -12,7 +12,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(cs *conf.Server, cj *conf.Jwt, userSvc *service.UsersService, jwtSvc *service.JwtService, fileSvc *service.FileService, logger log.Logger) *http.Server {
+func NewHTTPServer(cs *conf.Server, cj *conf.Jwt, userSvc *service.UserService, jwtSvc *service.JwtService, fileSvc *service.FileService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -42,7 +42,7 @@ func NewHTTPServer(cs *conf.Server, cj *conf.Jwt, userSvc *service.UsersService,
 	srv := http.NewServer(opts...)
 	
 	// 用户服务
-	v1.RegisterUsersServiceHTTPServer(srv, userSvc)
+	v1.RegisterUserServiceHTTPServer(srv, userSvc)
 	// 文件服务
 	v1.RegisterFileHTTPServer(srv, fileSvc)
 	return srv

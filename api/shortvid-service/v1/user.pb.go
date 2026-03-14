@@ -23,27 +23,28 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type LoginFirebaseRequest struct {
+// firebase登录请求体
+type FirebaseLoginRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	IdToken       string                 `protobuf:"bytes,1,opt,name=idToken,proto3" json:"idToken,omitempty"`
+	IdToken       string                 `protobuf:"bytes,1,opt,name=id_token,json=idToken,proto3" json:"id_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LoginFirebaseRequest) Reset() {
-	*x = LoginFirebaseRequest{}
+func (x *FirebaseLoginRequest) Reset() {
+	*x = FirebaseLoginRequest{}
 	mi := &file_shortvid_service_v1_user_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoginFirebaseRequest) String() string {
+func (x *FirebaseLoginRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoginFirebaseRequest) ProtoMessage() {}
+func (*FirebaseLoginRequest) ProtoMessage() {}
 
-func (x *LoginFirebaseRequest) ProtoReflect() protoreflect.Message {
+func (x *FirebaseLoginRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_shortvid_service_v1_user_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,41 +56,42 @@ func (x *LoginFirebaseRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoginFirebaseRequest.ProtoReflect.Descriptor instead.
-func (*LoginFirebaseRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use FirebaseLoginRequest.ProtoReflect.Descriptor instead.
+func (*FirebaseLoginRequest) Descriptor() ([]byte, []int) {
 	return file_shortvid_service_v1_user_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *LoginFirebaseRequest) GetIdToken() string {
+func (x *FirebaseLoginRequest) GetIdToken() string {
 	if x != nil {
 		return x.IdToken
 	}
 	return ""
 }
 
-type LoginFirebaseResponse struct {
+// firebase登录响应体
+type FirebaseLoginResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccessToken   string                 `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
-	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
 	User          *UserProfile           `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LoginFirebaseResponse) Reset() {
-	*x = LoginFirebaseResponse{}
+func (x *FirebaseLoginResponse) Reset() {
+	*x = FirebaseLoginResponse{}
 	mi := &file_shortvid_service_v1_user_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoginFirebaseResponse) String() string {
+func (x *FirebaseLoginResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoginFirebaseResponse) ProtoMessage() {}
+func (*FirebaseLoginResponse) ProtoMessage() {}
 
-func (x *LoginFirebaseResponse) ProtoReflect() protoreflect.Message {
+func (x *FirebaseLoginResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_shortvid_service_v1_user_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -101,41 +103,42 @@ func (x *LoginFirebaseResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoginFirebaseResponse.ProtoReflect.Descriptor instead.
-func (*LoginFirebaseResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use FirebaseLoginResponse.ProtoReflect.Descriptor instead.
+func (*FirebaseLoginResponse) Descriptor() ([]byte, []int) {
 	return file_shortvid_service_v1_user_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *LoginFirebaseResponse) GetAccessToken() string {
+func (x *FirebaseLoginResponse) GetAccessToken() string {
 	if x != nil {
 		return x.AccessToken
 	}
 	return ""
 }
 
-func (x *LoginFirebaseResponse) GetRefreshToken() string {
+func (x *FirebaseLoginResponse) GetRefreshToken() string {
 	if x != nil {
 		return x.RefreshToken
 	}
 	return ""
 }
 
-func (x *LoginFirebaseResponse) GetUser() *UserProfile {
+func (x *FirebaseLoginResponse) GetUser() *UserProfile {
 	if x != nil {
 		return x.User
 	}
 	return nil
 }
 
+// 用户资料
 type UserProfile struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserUid       int32                  `protobuf:"varint,2,opt,name=userUid,proto3" json:"userUid,omitempty"`
+	Uid           int32                  `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
 	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	Avatar        string                 `protobuf:"bytes,4,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
 	Provider      string                 `protobuf:"bytes,6,opt,name=provider,proto3" json:"provider,omitempty"`
-	ProviderUid   string                 `protobuf:"bytes,7,opt,name=providerUid,proto3" json:"providerUid,omitempty"`
+	ProviderUid   string                 `protobuf:"bytes,7,opt,name=provider_uid,json=providerUid,proto3" json:"provider_uid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -177,9 +180,9 @@ func (x *UserProfile) GetId() int32 {
 	return 0
 }
 
-func (x *UserProfile) GetUserUid() int32 {
+func (x *UserProfile) GetUid() int32 {
 	if x != nil {
-		return x.UserUid
+		return x.Uid
 	}
 	return 0
 }
@@ -219,9 +222,10 @@ func (x *UserProfile) GetProviderUid() string {
 	return ""
 }
 
+// 获取用户资料请求体
 type GetUserProfileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserUid       int32                  `protobuf:"varint,1,opt,name=userUid,proto3" json:"userUid,omitempty"`
+	Uid           int32                  `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -256,16 +260,17 @@ func (*GetUserProfileRequest) Descriptor() ([]byte, []int) {
 	return file_shortvid_service_v1_user_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetUserProfileRequest) GetUserUid() int32 {
+func (x *GetUserProfileRequest) GetUid() int32 {
 	if x != nil {
-		return x.UserUid
+		return x.Uid
 	}
 	return 0
 }
 
+// 用户资料响应体
 type GetUserProfileResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserInfo      *UserProfile           `protobuf:"bytes,1,opt,name=userInfo,proto3" json:"userInfo,omitempty"`
+	User          *UserProfile           `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -300,16 +305,17 @@ func (*GetUserProfileResponse) Descriptor() ([]byte, []int) {
 	return file_shortvid_service_v1_user_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetUserProfileResponse) GetUserInfo() *UserProfile {
+func (x *GetUserProfileResponse) GetUser() *UserProfile {
 	if x != nil {
-		return x.UserInfo
+		return x.User
 	}
 	return nil
 }
 
+// 用户信息响应
 type UserInfoResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserInfo      *UserProfile           `protobuf:"bytes,1,opt,name=userInfo,proto3" json:"userInfo,omitempty"`
+	User          *UserProfile           `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -344,9 +350,9 @@ func (*UserInfoResponse) Descriptor() ([]byte, []int) {
 	return file_shortvid_service_v1_user_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *UserInfoResponse) GetUserInfo() *UserProfile {
+func (x *UserInfoResponse) GetUser() *UserProfile {
 	if x != nil {
-		return x.UserInfo
+		return x.User
 	}
 	return nil
 }
@@ -355,29 +361,29 @@ var File_shortvid_service_v1_user_proto protoreflect.FileDescriptor
 
 const file_shortvid_service_v1_user_proto_rawDesc = "" +
 	"\n" +
-	"\x1eshortvid-service/v1/user.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/api/annotations.proto\"0\n" +
-	"\x14LoginFirebaseRequest\x12\x18\n" +
-	"\aidToken\x18\x01 \x01(\tR\aidToken\"\x7f\n" +
-	"\x15LoginFirebaseResponse\x12 \n" +
-	"\vaccessToken\x18\x01 \x01(\tR\vaccessToken\x12\"\n" +
-	"\frefreshToken\x18\x02 \x01(\tR\frefreshToken\x12 \n" +
-	"\x04user\x18\x03 \x01(\v2\f.UserProfileR\x04user\"\xbf\x01\n" +
+	"\x1eshortvid-service/v1/user.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/api/annotations.proto\"1\n" +
+	"\x14FirebaseLoginRequest\x12\x19\n" +
+	"\bid_token\x18\x01 \x01(\tR\aidToken\"\x81\x01\n" +
+	"\x15FirebaseLoginResponse\x12!\n" +
+	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\x12 \n" +
+	"\x04user\x18\x03 \x01(\v2\f.UserProfileR\x04user\"\xb8\x01\n" +
 	"\vUserProfile\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x18\n" +
-	"\auserUid\x18\x02 \x01(\x05R\auserUid\x12\x1a\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x10\n" +
+	"\x03uid\x18\x02 \x01(\x05R\x03uid\x12\x1a\n" +
 	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x16\n" +
 	"\x06avatar\x18\x04 \x01(\tR\x06avatar\x12\x14\n" +
 	"\x05email\x18\x05 \x01(\tR\x05email\x12\x1a\n" +
-	"\bprovider\x18\x06 \x01(\tR\bprovider\x12 \n" +
-	"\vproviderUid\x18\a \x01(\tR\vproviderUid\"1\n" +
-	"\x15GetUserProfileRequest\x12\x18\n" +
-	"\auserUid\x18\x01 \x01(\x05R\auserUid\"B\n" +
-	"\x16GetUserProfileResponse\x12(\n" +
-	"\buserInfo\x18\x01 \x01(\v2\f.UserProfileR\buserInfo\"<\n" +
-	"\x10UserInfoResponse\x12(\n" +
-	"\buserInfo\x18\x01 \x01(\v2\f.UserProfileR\buserInfo2\xaa\x02\n" +
-	"\fUsersService\x12a\n" +
-	"\rLoginFirebase\x12\x15.LoginFirebaseRequest\x1a\x16.LoginFirebaseResponse\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/login/firebase\x12b\n" +
+	"\bprovider\x18\x06 \x01(\tR\bprovider\x12!\n" +
+	"\fprovider_uid\x18\a \x01(\tR\vproviderUid\")\n" +
+	"\x15GetUserProfileRequest\x12\x10\n" +
+	"\x03uid\x18\x01 \x01(\x05R\x03uid\":\n" +
+	"\x16GetUserProfileResponse\x12 \n" +
+	"\x04user\x18\x01 \x01(\v2\f.UserProfileR\x04user\"4\n" +
+	"\x10UserInfoResponse\x12 \n" +
+	"\x04user\x18\x01 \x01(\v2\f.UserProfileR\x04user2\xa9\x02\n" +
+	"\vUserService\x12a\n" +
+	"\rLoginFirebase\x12\x15.FirebaseLoginRequest\x1a\x16.FirebaseLoginResponse\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/firebase/login\x12b\n" +
 	"\x0eGetUserProfile\x12\x16.GetUserProfileRequest\x1a\x17.GetUserProfileResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/user/profile\x12S\n" +
 	"\bUserInfo\x12\x16.google.protobuf.Empty\x1a\x11.UserInfoResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/api/v1/user/infoB-Z+shortvid-backend/api/shortvid-service/v1;v1b\x06proto3"
 
@@ -395,8 +401,8 @@ func file_shortvid_service_v1_user_proto_rawDescGZIP() []byte {
 
 var file_shortvid_service_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_shortvid_service_v1_user_proto_goTypes = []any{
-	(*LoginFirebaseRequest)(nil),   // 0: LoginFirebaseRequest
-	(*LoginFirebaseResponse)(nil),  // 1: LoginFirebaseResponse
+	(*FirebaseLoginRequest)(nil),   // 0: FirebaseLoginRequest
+	(*FirebaseLoginResponse)(nil),  // 1: FirebaseLoginResponse
 	(*UserProfile)(nil),            // 2: UserProfile
 	(*GetUserProfileRequest)(nil),  // 3: GetUserProfileRequest
 	(*GetUserProfileResponse)(nil), // 4: GetUserProfileResponse
@@ -404,15 +410,15 @@ var file_shortvid_service_v1_user_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),          // 6: google.protobuf.Empty
 }
 var file_shortvid_service_v1_user_proto_depIdxs = []int32{
-	2, // 0: LoginFirebaseResponse.user:type_name -> UserProfile
-	2, // 1: GetUserProfileResponse.userInfo:type_name -> UserProfile
-	2, // 2: UserInfoResponse.userInfo:type_name -> UserProfile
-	0, // 3: UsersService.LoginFirebase:input_type -> LoginFirebaseRequest
-	3, // 4: UsersService.GetUserProfile:input_type -> GetUserProfileRequest
-	6, // 5: UsersService.UserInfo:input_type -> google.protobuf.Empty
-	1, // 6: UsersService.LoginFirebase:output_type -> LoginFirebaseResponse
-	4, // 7: UsersService.GetUserProfile:output_type -> GetUserProfileResponse
-	5, // 8: UsersService.UserInfo:output_type -> UserInfoResponse
+	2, // 0: FirebaseLoginResponse.user:type_name -> UserProfile
+	2, // 1: GetUserProfileResponse.user:type_name -> UserProfile
+	2, // 2: UserInfoResponse.user:type_name -> UserProfile
+	0, // 3: UserService.LoginFirebase:input_type -> FirebaseLoginRequest
+	3, // 4: UserService.GetUserProfile:input_type -> GetUserProfileRequest
+	6, // 5: UserService.UserInfo:input_type -> google.protobuf.Empty
+	1, // 6: UserService.LoginFirebase:output_type -> FirebaseLoginResponse
+	4, // 7: UserService.GetUserProfile:output_type -> GetUserProfileResponse
+	5, // 8: UserService.UserInfo:output_type -> UserInfoResponse
 	6, // [6:9] is the sub-list for method output_type
 	3, // [3:6] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

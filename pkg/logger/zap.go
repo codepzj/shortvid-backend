@@ -17,26 +17,24 @@ type Logger struct {
 }
 
 type Option struct {
-	Format           string
-	Level            string
-	FullLogFilename  string
-	ErrorLogFilename string
-	MaxSize          int32
-	MaxBackups       int32
-	MaxAge           int32
-	Compress         bool
+	Format     string
+	Level      string
+	LogFile    string
+	MaxSize    int32
+	MaxBackups int32
+	MaxAge     int32
+	Compress   bool
 }
 
-func NewOption(format string, level string, fullLogFilename string, errorLogFilename string, maxSize int32, maxBackups int32, maxAge int32, compress bool) *Option {
+func NewOption(format string, level string, logFile string, maxSize int32, maxBackups int32, maxAge int32, compress bool) *Option {
 	return &Option{
-		Format:           format,
-		Level:            level,
-		FullLogFilename:  fullLogFilename,
-		ErrorLogFilename: errorLogFilename,
-		MaxSize:          maxSize,
-		MaxBackups:       maxBackups,
-		MaxAge:           maxAge,
-		Compress:         compress,
+		Format:     format,
+		Level:      level,
+		LogFile:    logFile,
+		MaxSize:    maxSize,
+		MaxBackups: maxBackups,
+		MaxAge:     maxAge,
+		Compress:   compress,
 	}
 }
 
@@ -48,7 +46,7 @@ func NewZapLogger(opts *Option) *Logger {
 		encoder = zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
 	}
 
-	core := zapcore.NewCore(encoder, getFullLogWriter(opts), parseLogLevel(opts.Level))
+	core := zapcore.NewCore(encoder, getLogWriter(opts), parseLogLevel(opts.Level))
 
 	return &Logger{log: zap.New(core), msgKey: log.DefaultMessageKey}
 }

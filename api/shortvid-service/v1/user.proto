@@ -5,15 +5,16 @@ option go_package = "shortvid-backend/api/shortvid-service/v1;v1";
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
 
-service UsersService {
+// 用户服务
+service UserService {
     // firebase登录
-    rpc LoginFirebase(LoginFirebaseRequest) returns (LoginFirebaseResponse){
+    rpc LoginFirebase(FirebaseLoginRequest) returns (FirebaseLoginResponse){
         option (google.api.http) = {
-            post: "/api/v1/login/firebase"
+            post: "/api/v1/firebase/login"
             body: "*"
         };    
     }
-    // 通过userUid获取用户信息
+    // 通过uid获取用户信息
     rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse){
         option (google.api.http) = {
             post: "/api/v1/user/profile"
@@ -29,34 +30,40 @@ service UsersService {
     }
 }
 
-message LoginFirebaseRequest {
-    string idToken = 1;
+// firebase登录请求体
+message FirebaseLoginRequest {
+    string id_token = 1;
 }
 
-message LoginFirebaseResponse {
-    string accessToken = 1;
-    string refreshToken = 2;
+// firebase登录响应体
+message FirebaseLoginResponse {
+    string access_token = 1;
+    string refresh_token = 2;
     UserProfile user = 3;
 }
 
+// 用户资料
 message UserProfile {
     int32 id = 1;
-    int32 userUid = 2;
+    int32 uid = 2;
     string nickname = 3;
     string avatar = 4;
     string email = 5;
     string provider = 6;
-    string providerUid = 7;
+    string provider_uid = 7;
 }
 
+// 获取用户资料请求体
 message GetUserProfileRequest {
-    int32 userUid = 1;
+    int32 uid = 1;
 }
 
+// 用户资料响应体
 message GetUserProfileResponse {
-    UserProfile userInfo = 1;
+    UserProfile user = 1;
 }
 
+// 用户信息响应
 message UserInfoResponse {
-    UserProfile userInfo = 1;
+    UserProfile user = 1;
 }

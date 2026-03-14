@@ -23,14 +23,14 @@ func parseLogLevel(level string) zapcore.Level {
 }
 
 // 全量日志
-func getFullLogWriter(option *Option) zapcore.WriteSyncer {
-	fullLogger := &lumberjack.Logger{
-		Filename:   option.FullLogFilename, // 日志文件路径
-		MaxSize:    int(option.MaxSize),    // 单个文件最大 10MB
-		MaxBackups: int(option.MaxBackups), // 保留 5 个旧文件
-		MaxAge:     int(option.MaxAge),     // 保留 30 天
-		Compress:   option.Compress,        // 启用压缩
+func getLogWriter(opt *Option) zapcore.WriteSyncer {
+	logger := &lumberjack.Logger{
+		Filename:   opt.LogFile,
+		MaxSize:    int(opt.MaxSize),
+		MaxBackups: int(opt.MaxBackups),
+		MaxAge:     int(opt.MaxAge),
+		Compress:   opt.Compress,
 	}
-	ws := io.MultiWriter(fullLogger, os.Stdout)
+	ws := io.MultiWriter(logger, os.Stdout)
 	return zapcore.AddSync(ws)
 }

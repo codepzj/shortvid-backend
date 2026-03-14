@@ -219,17 +219,16 @@ func (x *Data) GetRedis() *Data_Redis {
 }
 
 type Log struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Format           string                 `protobuf:"bytes,1,opt,name=format,proto3" json:"format,omitempty"`
-	Level            string                 `protobuf:"bytes,2,opt,name=level,proto3" json:"level,omitempty"`
-	FullLogFilename  string                 `protobuf:"bytes,3,opt,name=full_log_filename,json=fullLogFilename,proto3" json:"full_log_filename,omitempty"`
-	ErrorLogFilename string                 `protobuf:"bytes,4,opt,name=error_log_filename,json=errorLogFilename,proto3" json:"error_log_filename,omitempty"`
-	MaxSize          int32                  `protobuf:"varint,5,opt,name=max_size,json=maxSize,proto3" json:"max_size,omitempty"`
-	MaxBackups       int32                  `protobuf:"varint,6,opt,name=max_backups,json=maxBackups,proto3" json:"max_backups,omitempty"`
-	MaxAge           int32                  `protobuf:"varint,7,opt,name=max_age,json=maxAge,proto3" json:"max_age,omitempty"`
-	Compress         bool                   `protobuf:"varint,8,opt,name=compress,proto3" json:"compress,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Format        string                 `protobuf:"bytes,1,opt,name=format,proto3" json:"format,omitempty"`
+	Level         string                 `protobuf:"bytes,2,opt,name=level,proto3" json:"level,omitempty"`
+	LogFile       string                 `protobuf:"bytes,3,opt,name=log_file,json=logFile,proto3" json:"log_file,omitempty"`
+	MaxSize       int32                  `protobuf:"varint,4,opt,name=max_size,json=maxSize,proto3" json:"max_size,omitempty"`
+	MaxBackups    int32                  `protobuf:"varint,5,opt,name=max_backups,json=maxBackups,proto3" json:"max_backups,omitempty"`
+	MaxAge        int32                  `protobuf:"varint,6,opt,name=max_age,json=maxAge,proto3" json:"max_age,omitempty"`
+	Compress      bool                   `protobuf:"varint,7,opt,name=compress,proto3" json:"compress,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Log) Reset() {
@@ -276,16 +275,9 @@ func (x *Log) GetLevel() string {
 	return ""
 }
 
-func (x *Log) GetFullLogFilename() string {
+func (x *Log) GetLogFile() string {
 	if x != nil {
-		return x.FullLogFilename
-	}
-	return ""
-}
-
-func (x *Log) GetErrorLogFilename() string {
-	if x != nil {
-		return x.ErrorLogFilename
+		return x.LogFile
 	}
 	return ""
 }
@@ -906,17 +898,16 @@ const file_conf_conf_proto_rawDesc = "" +
 	"\n" +
 	"key_prefix\x18\x05 \x01(\tR\tkeyPrefix\x12<\n" +
 	"\fread_timeout\x18\x06 \x01(\v2\x19.google.protobuf.DurationR\vreadTimeout\x12>\n" +
-	"\rwrite_timeout\x18\a \x01(\v2\x19.google.protobuf.DurationR\fwriteTimeout\"\xfe\x01\n" +
+	"\rwrite_timeout\x18\a \x01(\v2\x19.google.protobuf.DurationR\fwriteTimeout\"\xbf\x01\n" +
 	"\x03Log\x12\x16\n" +
 	"\x06format\x18\x01 \x01(\tR\x06format\x12\x14\n" +
-	"\x05level\x18\x02 \x01(\tR\x05level\x12*\n" +
-	"\x11full_log_filename\x18\x03 \x01(\tR\x0ffullLogFilename\x12,\n" +
-	"\x12error_log_filename\x18\x04 \x01(\tR\x10errorLogFilename\x12\x19\n" +
-	"\bmax_size\x18\x05 \x01(\x05R\amaxSize\x12\x1f\n" +
-	"\vmax_backups\x18\x06 \x01(\x05R\n" +
+	"\x05level\x18\x02 \x01(\tR\x05level\x12\x19\n" +
+	"\blog_file\x18\x03 \x01(\tR\alogFile\x12\x19\n" +
+	"\bmax_size\x18\x04 \x01(\x05R\amaxSize\x12\x1f\n" +
+	"\vmax_backups\x18\x05 \x01(\x05R\n" +
 	"maxBackups\x12\x17\n" +
-	"\amax_age\x18\a \x01(\x05R\x06maxAge\x12\x1a\n" +
-	"\bcompress\x18\b \x01(\bR\bcompress\"5\n" +
+	"\amax_age\x18\x06 \x01(\x05R\x06maxAge\x12\x1a\n" +
+	"\bcompress\x18\a \x01(\bR\bcompress\"5\n" +
 	"\bFirebase\x12)\n" +
 	"\x10credentials_json\x18\x01 \x01(\tR\x0fcredentialsJson\"\xe2\x01\n" +
 	"\x03Jwt\x12\x16\n" +

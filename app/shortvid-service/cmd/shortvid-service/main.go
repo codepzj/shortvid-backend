@@ -68,7 +68,7 @@ func main() {
 	}
 
 	// zap 封装的日志
-	logger := log.With(logger.NewZapLogger(logger.NewOption(bc.Log.Format, bc.Log.Level, bc.Log.FullLogFilename, bc.Log.ErrorLogFilename, bc.Log.MaxSize, bc.Log.MaxBackups, bc.Log.MaxAge, bc.Log.Compress)),
+	logger := log.With(logger.NewZapLogger(logger.NewOption(bc.Log.Format, bc.Log.Level, bc.Log.LogFile, bc.Log.MaxSize, bc.Log.MaxBackups, bc.Log.MaxAge, bc.Log.Compress)),
 		"caller", log.DefaultCaller,
 		"service.id", id,
 		"service.name", Name,

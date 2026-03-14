@@ -20,11 +20,11 @@ func NewCacheService(cache *redis.Client, logger log.Logger) *CacheService {
 }
 
 // SetUserSession 设置用户会话
-// sessionID:userUID映射[string] & sessionID:session映射[hash]
-func (s *CacheService) SetUserSession(ctx context.Context, userUID int, sessionID string, expiration time.Duration) error {
-	// 1. 设置sessionID和userUID的映射关系
+// sessionID:UID映射[string] & sessionID:session映射[hash]
+func (s *CacheService) SetUserSession(ctx context.Context, UID int, sessionID string, expiration time.Duration) error {
+	// 1. 设置sessionID和UID的映射关系
 	sessionUserKey := cache.GetSessionUserKey(sessionID)
-	err := s.cache.Set(ctx, sessionUserKey, userUID, expiration).Err()
+	err := s.cache.Set(ctx, sessionUserKey, UID, expiration).Err()
 	if err != nil {
 		s.logger.Log(log.LevelError, "msg", "Set session user failed", "error", err)
 		return err
@@ -34,7 +34,7 @@ func (s *CacheService) SetUserSession(ctx context.Context, userUID int, sessionI
 	userSessionKey := cache.GetUserSessionKey(sessionID)
 	pipe := s.cache.Pipeline()
 	sessionData := map[string]any{
-		"user_uid":   userUID,
+		"uid":   UID,
 		"session_id": sessionID,
 		"created_at": time.Now().Unix(),
 	}

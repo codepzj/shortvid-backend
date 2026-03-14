@@ -82,7 +82,7 @@ func (s *UserSessionService) ValidateSession(ctx context.Context, sessionId stri
 	}
 	// 4. 回填缓存
 	expiration := s.jwtService.GetTokenExpiration()
-	if err := s.cacheService.SetUserSession(ctx, session.UserUID, sessionId, expiration); err != nil {
+	if err := s.cacheService.SetUserSession(ctx, session.UID, sessionId, expiration); err != nil {
 		s.logger.Log(log.LevelError, "msg", "Set user session failed", "error", err)
 		return err
 	}
@@ -90,7 +90,7 @@ func (s *UserSessionService) ValidateSession(ctx context.Context, sessionId stri
 }
 
 // LimitUserSession 限制用户会话数量
-func (s *UserSessionService) LimitUserSession(ctx context.Context, userUID int) error {
+func (s *UserSessionService) LimitUserSession(ctx context.Context, UID int) error {
 	// 1. 如果未启用限制，直接返回
 	if s.sessionConf == nil || !s.sessionConf.LimitEnabled {
 		return nil
@@ -104,7 +104,7 @@ func (s *UserSessionService) LimitUserSession(ctx context.Context, userUID int) 
 	}
 
 	// 3. 查询用户会话
-	sessions, err := s.userSessionRepo.FindUserSessionByUserUID(ctx, userUID)
+	sessions, err := s.userSessionRepo.FindUserSessionByUID(ctx, UID)
 	if err != nil {
 		s.logger.Log(log.LevelError, "msg", "Find user session by user id failed", "error", err)
 		return err

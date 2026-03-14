@@ -7,8 +7,6 @@
 package main
 
 import (
-	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/conf"
 	"shortvid-backend/app/shortvid-service/internal/data"
@@ -17,9 +15,10 @@ import (
 	"shortvid-backend/app/shortvid-service/internal/data/infra/storage"
 	"shortvid-backend/app/shortvid-service/internal/server"
 	"shortvid-backend/app/shortvid-service/internal/service"
-)
 
-import (
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/log"
+
 	_ "go.uber.org/automaxprocs"
 )
 
@@ -34,8 +33,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Fireba
 	if err != nil {
 		return nil, nil, err
 	}
-	usersRepo := data.NewUsersRepo(dataData)
-	usersUsecase := biz.NewUsersUsecase(logger, usersRepo)
+	usersRepo := data.NewUserRepo(dataData)
+	accountRepo := data.NewAccountRepo(dataData)
+	usersUsecase := biz.NewUsersUsecase(logger, usersRepo, accountRepo)
 	firebaseService, err := service.NewFirebaseService(logger, firebase)
 	if err != nil {
 		cleanup()
@@ -45,10 +45,10 @@ func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Fireba
 	userSessionRepo := data.NewUserSessionRepo(dataData)
 	cacheService := service.NewCacheService(client, logger)
 	userSessionService := service.NewUserSessionService(logger, session, userSessionRepo, cacheService, jwtService)
-	usersService := service.NewUsersService(logger, usersUsecase, firebaseService, jwtService, userSessionService, cacheService)
-	grpcServer := server.NewGRPCServer(confServer, usersService, logger)
+	userService := service.NewUserService(logger, usersUsecase, firebaseService, jwtService, userSessionService, cacheService)
+	grpcServer := server.NewGRPCServer(confServer, userService, logger)
 	fileService := service.NewFileService(logger)
-	httpServer := server.NewHTTPServer(confServer, jwt, usersService, jwtService, fileService, logger)
+	httpServer := server.NewHTTPServer(confServer, jwt, userService, jwtService, fileService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

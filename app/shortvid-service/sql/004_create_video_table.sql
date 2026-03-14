@@ -8,7 +8,7 @@ CREATE TABLE video (
     `vgroup` varchar(255) NOT NULL COMMENT '视频底层分组',
 
     -- 视频信息
-    `user_uid` int(11) NOT NULL COMMENT '用户id',
+    `uid` int(11) NOT NULL COMMENT '用户id',
     `description` varchar(255) NOT NULL COMMENT '视频描述',
     `category` varchar(255) NOT NULL COMMENT '视频分类',
     `tags` varchar(255) NOT NULL COMMENT '视频标签',

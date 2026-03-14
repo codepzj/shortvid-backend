@@ -5,7 +5,7 @@ CREATE TABLE `user` (
     `deleted_at` DATETIME(3) DEFAULT NULL COMMENT '删除时间',
 
     -- 用户信息
-    `user_uid` int(11) NOT NULL COMMENT '用户唯一ID',
+    `uid` int(11) NOT NULL COMMENT '用户唯一ID',
     `nickname` varchar(255) NOT NULL COMMENT '昵称',
     `avatar` varchar(500) DEFAULT NULL COMMENT '头像',
 
@@ -20,5 +20,5 @@ CREATE TABLE `user` (
     
     `status` int(11) NOT NULL DEFAULT 1 COMMENT '状态', -- 1: 正常, 2: 禁用
     PRIMARY KEY (`id`),
-    UNIQUE KEY `user_uid` (`user_uid`)
+    UNIQUE KEY `uniq_uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
