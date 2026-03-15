@@ -53,7 +53,7 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 	}
 
 	// 3. 查找或创建用户
-	user, isNew, err := s.uc.FirebaseFindOrCreateUser(ctx, &biz.User{
+	user, isNew, err := s.uc.FirebaseFindOrCreateUser(ctx, &biz.UserDTO{
 		Nickname:    firebaseUser.DisplayName,
 		Avatar:      firebaseUser.PhotoURL,
 		Email:       firebaseUser.Email,
@@ -162,7 +162,7 @@ func (s *UserService) UserInfo(ctx context.Context, req *emptypb.Empty) (*pb.Use
 }
 
 // GetUserByUID 根据UID查询用户
-func (s *UserService) GetUserByUID(ctx context.Context, userUID int) (*biz.UserProfile, error) {
+func (s *UserService) GetUserByUID(ctx context.Context, userUID int) (*biz.UserProfileVO, error) {
 	user, err := s.uc.GetUserByUID(ctx, userUID)
 	if err != nil {
 		return nil, err

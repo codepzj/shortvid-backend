@@ -3,10 +3,12 @@ package biz
 import (
 	"context"
 	"shortvid-backend/app/shortvid-service/internal/data/model"
+
+	"gorm.io/gorm"
 )
 
 type AccountRepo interface {
-	CreateAccount(ctx context.Context, account *model.Account) error
+	CreateAccountWithTx(ctx context.Context, tx *gorm.DB, account *model.Account) error
 	GetByEmailAndProvider(ctx context.Context, email string, provider string) (*model.Account, error)
 }
 

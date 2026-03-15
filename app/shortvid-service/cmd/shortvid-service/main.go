@@ -81,6 +81,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	// 释放基础设施资源
 	defer cleanup()
 
 	// start and wait for stop signal

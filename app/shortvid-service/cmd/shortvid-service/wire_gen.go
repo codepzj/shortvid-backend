@@ -7,6 +7,8 @@
 package main
 
 import (
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/log"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/conf"
 	"shortvid-backend/app/shortvid-service/internal/data"
@@ -15,10 +17,9 @@ import (
 	"shortvid-backend/app/shortvid-service/internal/data/infra/storage"
 	"shortvid-backend/app/shortvid-service/internal/server"
 	"shortvid-backend/app/shortvid-service/internal/service"
+)
 
-	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
-
+import (
 	_ "go.uber.org/automaxprocs"
 )
 
@@ -33,9 +34,10 @@ func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Fireba
 	if err != nil {
 		return nil, nil, err
 	}
+	txRepo := data.NewTxRepo(dataData)
 	usersRepo := data.NewUserRepo(dataData)
 	accountRepo := data.NewAccountRepo(dataData)
-	usersUsecase := biz.NewUsersUsecase(logger, usersRepo, accountRepo)
+	usersUsecase := biz.NewUsersUsecase(logger, txRepo, usersRepo, accountRepo)
 	firebaseService, err := service.NewFirebaseService(logger, firebase)
 	if err != nil {
 		cleanup()
