@@ -7,17 +7,17 @@ import (
 	"gorm.io/gorm"
 )
 
-type TxRepo struct {
+type txRepo struct {
 	data *Data
 }
 
 func NewTxRepo(data *Data) biz.TxRepo {
-	return &TxRepo{
+	return &txRepo{
 		data: data,
 	}
 }
 
-func (r *TxRepo) ExecFunc(fn func(tx *gorm.DB) error) error {
+func (r *txRepo) ExecFunc(fn func(tx *gorm.DB) error) error {
 	err := r.data.db.Transaction(func(tx *gorm.DB) error {
 		return fn(tx)
 	})

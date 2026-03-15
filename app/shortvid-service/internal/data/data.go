@@ -35,8 +35,3 @@ func NewData(db *gorm.DB, redis *redis.Client, minio *minio.Client, logger log.L
 		logger: logger,
 	}, cleanup, nil
 }
-
-// 全局DB对象(暴露用于事务)
-func (data *Data) GetDB() *gorm.DB {
-	return data.db
-}

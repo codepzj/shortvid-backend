@@ -40,7 +40,7 @@ func NewHTTPServer(cs *conf.Server, cj *conf.Jwt, userSvc *service.UserService, 
 	))
 
 	srv := http.NewServer(opts...)
-	
+
 	// 用户服务
 	v1.RegisterUserServiceHTTPServer(srv, userSvc)
 	// 文件服务

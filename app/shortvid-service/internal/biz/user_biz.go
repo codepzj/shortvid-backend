@@ -94,7 +94,6 @@ func (uc *UsersUsecase) FirebaseFindOrCreateUser(ctx context.Context, dto *UserD
 		ProviderUID: dto.ProviderUID,
 	}
 	err = uc.txRepo.ExecFunc(func(tx *gorm.DB) error {
-
 		maxCount := 10
 		for range maxCount {
 			// 生成唯一的UID
