@@ -50,9 +50,9 @@ func (r *userRepo) GetUserByUID(ctx context.Context, UID int) (*model.User, erro
 	return &user, nil
 }
 
-func (r *userRepo) UpdateLoginInfo(ctx context.Context, userUID int) error {
+func (r *userRepo) UpdateLoginInfo(ctx context.Context, UID int) error {
 	now := time.Now()
-	return r.data.db.WithContext(ctx).Model(&model.User{}).Where("uid = ?", userUID).Updates(map[string]any{
+	return r.data.db.WithContext(ctx).Model(&model.User{}).Where("uid = ?", UID).Updates(map[string]any{
 		"last_login_at": now,
 		"login_count":   gorm.Expr("login_count + 1"),
 		"updated_at":    now,

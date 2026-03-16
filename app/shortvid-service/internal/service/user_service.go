@@ -65,8 +65,8 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 	}
 
 	// 4. 更新登录信息
-	if err := s.uc.UpdateLoginInfo(ctx, user.ID); err != nil {
-		s.logger.Log(log.LevelError, "msg", "Update login info failed", "error", err)
+	if err := s.uc.UpdateLoginInfo(ctx, user.UID); err != nil {
+		s.logger.Log(log.LevelError, "msg", "update login info failed", "error", err)
 		return nil, err
 	}
 
@@ -76,14 +76,14 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 	// 6. 生成accessToken
 	accessToken, err := s.jwtService.GenerateAccessToken(user.UID, sessionID)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Generate access token failed", "error", err)
+		s.logger.Log(log.LevelError, "msg", "generate access token failed", "error", err)
 		return nil, err
 	}
 
 	// 7. 生成refreshToken
 	refreshToken, err := s.jwtService.GenerateRefreshToken(user.UID, sessionID)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Generate refresh token failed", "error", err)
+		s.logger.Log(log.LevelError, "msg", "generate refresh token failed", "error", err)
 		return nil, err
 	}
 
@@ -94,7 +94,7 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 		ExpiresAt: time.Now().Add(s.jwtService.GetRefreshTokenExpiration()),
 	}
 	if err := s.userSessionService.CreateUserSession(ctx, session); err != nil {
-		s.logger.Log(log.LevelError, "msg", "Create user session failed", "error", err)
+		s.logger.Log(log.LevelError, "msg", "create user session failed", "error", err)
 		return nil, err
 	}
 
@@ -107,7 +107,7 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 	// 10. 将用户会话缓存到redis中
 	expiration := s.jwtService.GetTokenExpiration()
 	if err := s.cacheService.SetUserSession(ctx, user.UID, sessionID, expiration); err != nil {
-		s.logger.Log(log.LevelError, "msg", "Set user session failed", "error", err)
+		s.logger.Log(log.LevelError, "msg", "set user session failed", "error", err)
 	}
 
 	// 11. 如果用户是新用户，则记录日志
@@ -121,8 +121,13 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		User: &pb.UserProfile{
-			Nickname: user.Nickname,
-			Avatar:   user.Avatar,
+			Id:          int32(user.UID),
+			Uid:         int32(user.UID),
+			Nickname:    user.Nickname,
+			Avatar:      user.Avatar,
+			Email:       user.Email,
+			Provider:    user.Provider,
+			ProviderUid: user.ProviderUID,
 		},
 	}, nil
 }
