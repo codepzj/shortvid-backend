@@ -4,6 +4,7 @@ option go_package = "shortvid-backend/api/shortvid-service/v1;v1";
 
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
+import "validate/validate.proto";
 
 // 用户服务
 service UserService {
@@ -55,7 +56,7 @@ message UserProfile {
 
 // 获取用户资料请求体
 message GetUserProfileRequest {
-    int32 uid = 1;
+    int32 uid = 1 [(validate.rules).int32 = {gt: 0}];
 }
 
 // 用户资料响应体

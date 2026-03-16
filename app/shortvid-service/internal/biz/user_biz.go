@@ -143,7 +143,7 @@ func (uc *UsersUsecase) FirebaseFindOrCreateUser(ctx context.Context, dto *UserD
 func (uc *UsersUsecase) GetUserByUID(ctx context.Context, UID int) (*UserProfileVO, error) {
 	user, err := uc.repo.GetUserByUID(ctx, UID)
 	if err != nil {
-		uc.logger.Log(log.LevelError, "msg", "Get user by userUid failed", "error", err)
+		uc.logger.Log(log.LevelError, "msg", "Get user by uid failed", "error", err)
 		return nil, err
 	}
 	if user == nil {

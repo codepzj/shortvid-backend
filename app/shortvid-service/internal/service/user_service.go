@@ -10,6 +10,8 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -132,12 +134,20 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 	}, nil
 }
 
-// GetUserProfile 根据userUid查询用户信息
+// GetUserProfile 根据uid查询用户信息
 func (s *UserService) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
+	if err := req.Validate(); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid GetUserProfileRequest: %v", err)
+	}
+
 	user, err := s.uc.GetUserByUID(ctx, int(req.Uid))
 	if err != nil {
 		return nil, err
 	}
+	if user == nil {
+		return nil, status.Error(codes.NotFound, "user not found")
+	}
+
 	return &pb.GetUserProfileResponse{
 		User: &pb.UserProfile{
 			Uid:      int32(user.UID),

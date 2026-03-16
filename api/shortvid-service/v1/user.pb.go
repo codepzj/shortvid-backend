@@ -7,6 +7,7 @@
 package v1
 
 import (
+	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -361,7 +362,7 @@ var File_shortvid_service_v1_user_proto protoreflect.FileDescriptor
 
 const file_shortvid_service_v1_user_proto_rawDesc = "" +
 	"\n" +
-	"\x1eshortvid-service/v1/user.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/api/annotations.proto\"1\n" +
+	"\x1eshortvid-service/v1/user.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"1\n" +
 	"\x14FirebaseLoginRequest\x12\x19\n" +
 	"\bid_token\x18\x01 \x01(\tR\aidToken\"\x81\x01\n" +
 	"\x15FirebaseLoginResponse\x12!\n" +
@@ -375,9 +376,9 @@ const file_shortvid_service_v1_user_proto_rawDesc = "" +
 	"\x06avatar\x18\x04 \x01(\tR\x06avatar\x12\x14\n" +
 	"\x05email\x18\x05 \x01(\tR\x05email\x12\x1a\n" +
 	"\bprovider\x18\x06 \x01(\tR\bprovider\x12!\n" +
-	"\fprovider_uid\x18\a \x01(\tR\vproviderUid\")\n" +
-	"\x15GetUserProfileRequest\x12\x10\n" +
-	"\x03uid\x18\x01 \x01(\x05R\x03uid\":\n" +
+	"\fprovider_uid\x18\a \x01(\tR\vproviderUid\"2\n" +
+	"\x15GetUserProfileRequest\x12\x19\n" +
+	"\x03uid\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x03uid\":\n" +
 	"\x16GetUserProfileResponse\x12 \n" +
 	"\x04user\x18\x01 \x01(\v2\f.UserProfileR\x04user\"4\n" +
 	"\x10UserInfoResponse\x12 \n" +
