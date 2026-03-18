@@ -136,10 +136,6 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 
 // GetUserProfile 根据uid查询用户信息
 func (s *UserService) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
-	if err := req.Validate(); err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid GetUserProfileRequest: %v", err)
-	}
-
 	user, err := s.uc.GetUserByUID(ctx, int(req.Uid))
 	if err != nil {
 		return nil, err
@@ -177,8 +173,8 @@ func (s *UserService) UserInfo(ctx context.Context, req *emptypb.Empty) (*pb.Use
 }
 
 // GetUserByUID 根据UID查询用户
-func (s *UserService) GetUserByUID(ctx context.Context, userUID int) (*biz.UserProfileVO, error) {
-	user, err := s.uc.GetUserByUID(ctx, userUID)
+func (s *UserService) GetUserByUID(ctx context.Context, uid int) (*biz.UserProfileVO, error) {
+	user, err := s.uc.GetUserByUID(ctx, uid)
 	if err != nil {
 		return nil, err
 	}

@@ -19,7 +19,6 @@ func RequireAuthMiddleware(userSvc *service.UserService, jwtSvc *service.JwtServ
 	).Match(NewWhiteListMatcher()).Build()
 }
 
-// RequireAuth 需要认证的接口
 func RequireAuth(userSvc *service.UserService, jwtSvc *service.JwtService) middleware.Middleware {
 	return func(next middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req any) (any, error) {

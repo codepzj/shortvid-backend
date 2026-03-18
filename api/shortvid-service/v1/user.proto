@@ -15,6 +15,13 @@ service UserService {
             body: "*"
         };    
     }
+    // github登录
+    rpc LoginGithub (GithubLoginRequest) returns (GithubLoginResponse){
+        option (google.api.http) = {
+            post: "/api/v1/github/login"
+            body: "*"
+        };
+    }
     // 通过uid获取用户信息
     rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse){
         option (google.api.http) = {
@@ -38,6 +45,16 @@ message FirebaseLoginRequest {
 
 // firebase登录响应体
 message FirebaseLoginResponse {
+    string access_token = 1;
+    string refresh_token = 2;
+    UserProfile user = 3;
+}
+
+message GithubLoginRequest {
+    
+}
+
+message GithubLoginResponse {
     string access_token = 1;
     string refresh_token = 2;
     UserProfile user = 3;

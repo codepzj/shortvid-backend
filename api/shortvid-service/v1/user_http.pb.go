@@ -22,6 +22,7 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationUserServiceGetUserProfile = "/UserService/GetUserProfile"
 const OperationUserServiceLoginFirebase = "/UserService/LoginFirebase"
+const OperationUserServiceLoginGithub = "/UserService/LoginGithub"
 const OperationUserServiceUserInfo = "/UserService/UserInfo"
 
 type UserServiceHTTPServer interface {
@@ -29,6 +30,8 @@ type UserServiceHTTPServer interface {
 	GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
 	// LoginFirebase firebase登录
 	LoginFirebase(context.Context, *FirebaseLoginRequest) (*FirebaseLoginResponse, error)
+	// LoginGithub github登录
+	LoginGithub(context.Context, *GithubLoginRequest) (*GithubLoginResponse, error)
 	// UserInfo 获取自己的用户信息
 	UserInfo(context.Context, *emptypb.Empty) (*UserInfoResponse, error)
 }
@@ -36,6 +39,7 @@ type UserServiceHTTPServer interface {
 func RegisterUserServiceHTTPServer(s *http.Server, srv UserServiceHTTPServer) {
 	r := s.Route("/")
 	r.POST("/api/v1/firebase/login", _UserService_LoginFirebase0_HTTP_Handler(srv))
+	r.POST("/api/v1/github/login", _UserService_LoginGithub0_HTTP_Handler(srv))
 	r.POST("/api/v1/user/profile", _UserService_GetUserProfile0_HTTP_Handler(srv))
 	r.POST("/api/v1/user/info", _UserService_UserInfo0_HTTP_Handler(srv))
 }
@@ -58,6 +62,28 @@ func _UserService_LoginFirebase0_HTTP_Handler(srv UserServiceHTTPServer) func(ct
 			return err
 		}
 		reply := out.(*FirebaseLoginResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _UserService_LoginGithub0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GithubLoginRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserServiceLoginGithub)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.LoginGithub(ctx, req.(*GithubLoginRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GithubLoginResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -111,6 +137,8 @@ type UserServiceHTTPClient interface {
 	GetUserProfile(ctx context.Context, req *GetUserProfileRequest, opts ...http.CallOption) (rsp *GetUserProfileResponse, err error)
 	// LoginFirebase firebase登录
 	LoginFirebase(ctx context.Context, req *FirebaseLoginRequest, opts ...http.CallOption) (rsp *FirebaseLoginResponse, err error)
+	// LoginGithub github登录
+	LoginGithub(ctx context.Context, req *GithubLoginRequest, opts ...http.CallOption) (rsp *GithubLoginResponse, err error)
 	// UserInfo 获取自己的用户信息
 	UserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *UserInfoResponse, err error)
 }
@@ -143,6 +171,20 @@ func (c *UserServiceHTTPClientImpl) LoginFirebase(ctx context.Context, in *Fireb
 	pattern := "/api/v1/firebase/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserServiceLoginFirebase))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// LoginGithub github登录
+func (c *UserServiceHTTPClientImpl) LoginGithub(ctx context.Context, in *GithubLoginRequest, opts ...http.CallOption) (*GithubLoginResponse, error) {
+	var out GithubLoginResponse
+	pattern := "/api/v1/github/login"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserServiceLoginGithub))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
