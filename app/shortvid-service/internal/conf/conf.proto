@@ -10,9 +10,10 @@ message Bootstrap {
   Data data = 2;
   Log log = 3;
   Firebase firebase = 4;
-  Jwt jwt = 5;
-  Session session = 6;
-  Minio minio = 7;
+  Github github = 5;
+  Jwt jwt = 6;
+  Session session = 7;
+  Minio minio = 8;
 }
 
 message Server {
@@ -64,6 +65,11 @@ message Log {
 
 message Firebase {
   string credentials_json = 1;
+}
+
+message Github {
+  string client_id = 1;
+  string client_secret = 2;
 }
 
 message Jwt {

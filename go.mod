@@ -14,6 +14,7 @@ require (
 	github.com/redis/go-redis/v9 v9.17.2
 	go.uber.org/automaxprocs v1.5.1
 	go.uber.org/zap v1.27.1
+	golang.org/x/oauth2 v0.36.0
 	google.golang.org/api v0.231.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20250505200425-f936aa4a68b2
 	google.golang.org/grpc v1.72.0
@@ -82,7 +83,6 @@ require (
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/crypto v0.47.0 // indirect
 	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394 // indirect
-	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
 	google.golang.org/appengine/v2 v2.0.6 // indirect
 	google.golang.org/genproto v0.0.0-20250505200425-f936aa4a68b2 // indirect

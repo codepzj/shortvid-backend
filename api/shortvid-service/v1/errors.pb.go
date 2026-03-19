@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v6.33.2
-// source: shortvid-service/v1/errors.proto
+// source: api/shortvid-service/v1/errors.proto
 
 package v1
 
@@ -50,11 +50,11 @@ func (x ErrorReason) String() string {
 }
 
 func (ErrorReason) Descriptor() protoreflect.EnumDescriptor {
-	return file_shortvid_service_v1_errors_proto_enumTypes[0].Descriptor()
+	return file_api_shortvid_service_v1_errors_proto_enumTypes[0].Descriptor()
 }
 
 func (ErrorReason) Type() protoreflect.EnumType {
-	return &file_shortvid_service_v1_errors_proto_enumTypes[0]
+	return &file_api_shortvid_service_v1_errors_proto_enumTypes[0]
 }
 
 func (x ErrorReason) Number() protoreflect.EnumNumber {
@@ -63,34 +63,34 @@ func (x ErrorReason) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ErrorReason.Descriptor instead.
 func (ErrorReason) EnumDescriptor() ([]byte, []int) {
-	return file_shortvid_service_v1_errors_proto_rawDescGZIP(), []int{0}
+	return file_api_shortvid_service_v1_errors_proto_rawDescGZIP(), []int{0}
 }
 
-var File_shortvid_service_v1_errors_proto protoreflect.FileDescriptor
+var File_api_shortvid_service_v1_errors_proto protoreflect.FileDescriptor
 
-const file_shortvid_service_v1_errors_proto_rawDesc = "" +
+const file_api_shortvid_service_v1_errors_proto_rawDesc = "" +
 	"\n" +
-	" shortvid-service/v1/errors.proto\x1a\x13errors/errors.proto*-\n" +
+	"$api/shortvid-service/v1/errors.proto\x1a\x13errors/errors.proto*-\n" +
 	"\vErrorReason\x12\x18\n" +
 	"\x0eUSER_NOT_FOUND\x10\x00\x1a\x04\xa8E\x94\x03\x1a\x04\xa0E\xf4\x03B-Z+shortvid-backend/api/shortvid-service/v1;v1b\x06proto3"
 
 var (
-	file_shortvid_service_v1_errors_proto_rawDescOnce sync.Once
-	file_shortvid_service_v1_errors_proto_rawDescData []byte
+	file_api_shortvid_service_v1_errors_proto_rawDescOnce sync.Once
+	file_api_shortvid_service_v1_errors_proto_rawDescData []byte
 )
 
-func file_shortvid_service_v1_errors_proto_rawDescGZIP() []byte {
-	file_shortvid_service_v1_errors_proto_rawDescOnce.Do(func() {
-		file_shortvid_service_v1_errors_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_shortvid_service_v1_errors_proto_rawDesc), len(file_shortvid_service_v1_errors_proto_rawDesc)))
+func file_api_shortvid_service_v1_errors_proto_rawDescGZIP() []byte {
+	file_api_shortvid_service_v1_errors_proto_rawDescOnce.Do(func() {
+		file_api_shortvid_service_v1_errors_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_shortvid_service_v1_errors_proto_rawDesc), len(file_api_shortvid_service_v1_errors_proto_rawDesc)))
 	})
-	return file_shortvid_service_v1_errors_proto_rawDescData
+	return file_api_shortvid_service_v1_errors_proto_rawDescData
 }
 
-var file_shortvid_service_v1_errors_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_shortvid_service_v1_errors_proto_goTypes = []any{
+var file_api_shortvid_service_v1_errors_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_api_shortvid_service_v1_errors_proto_goTypes = []any{
 	(ErrorReason)(0), // 0: ErrorReason
 }
-var file_shortvid_service_v1_errors_proto_depIdxs = []int32{
+var file_api_shortvid_service_v1_errors_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -98,26 +98,26 @@ var file_shortvid_service_v1_errors_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_shortvid_service_v1_errors_proto_init() }
-func file_shortvid_service_v1_errors_proto_init() {
-	if File_shortvid_service_v1_errors_proto != nil {
+func init() { file_api_shortvid_service_v1_errors_proto_init() }
+func file_api_shortvid_service_v1_errors_proto_init() {
+	if File_api_shortvid_service_v1_errors_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shortvid_service_v1_errors_proto_rawDesc), len(file_shortvid_service_v1_errors_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_shortvid_service_v1_errors_proto_rawDesc), len(file_api_shortvid_service_v1_errors_proto_rawDesc)),
 			NumEnums:      1,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_shortvid_service_v1_errors_proto_goTypes,
-		DependencyIndexes: file_shortvid_service_v1_errors_proto_depIdxs,
-		EnumInfos:         file_shortvid_service_v1_errors_proto_enumTypes,
+		GoTypes:           file_api_shortvid_service_v1_errors_proto_goTypes,
+		DependencyIndexes: file_api_shortvid_service_v1_errors_proto_depIdxs,
+		EnumInfos:         file_api_shortvid_service_v1_errors_proto_enumTypes,
 	}.Build()
-	File_shortvid_service_v1_errors_proto = out.File
-	file_shortvid_service_v1_errors_proto_goTypes = nil
-	file_shortvid_service_v1_errors_proto_depIdxs = nil
+	File_api_shortvid_service_v1_errors_proto = out.File
+	file_api_shortvid_service_v1_errors_proto_goTypes = nil
+	file_api_shortvid_service_v1_errors_proto_depIdxs = nil
 }

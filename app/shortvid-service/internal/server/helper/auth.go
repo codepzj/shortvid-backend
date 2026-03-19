@@ -5,6 +5,7 @@ import (
 	"errors"
 	v1 "shortvid-backend/api/shortvid-service/v1"
 	"shortvid-backend/app/shortvid-service/internal/service"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -12,6 +13,12 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
+
+// 路由白名单
+var authWhiteList = []string{
+	v1.OperationUserServiceLoginFirebase,
+	v1.OperationUserServiceLoginGithub,
+}
 
 func RequireAuthMiddleware(userSvc *service.UserService, jwtSvc *service.JwtService) middleware.Middleware {
 	return selector.Server(
@@ -71,13 +78,9 @@ func RequireAuth(userSvc *service.UserService, jwtSvc *service.JwtService) middl
 
 // NewWhiteListMatcher 白名单跳过鉴权
 func NewWhiteListMatcher() selector.MatchFunc {
-	// 路由白名单
-	whiteList := make(map[string]struct{})
-	whiteList[v1.OperationUserServiceLoginFirebase] = struct{}{}
 	return func(ctx context.Context, operation string) bool {
-		_, ok := whiteList[operation]
-		if ok {
-			return false
+		if slices.Contains(authWhiteList, operation) {
+			return false // 不走鉴权中间件
 		}
 		return true
 	}

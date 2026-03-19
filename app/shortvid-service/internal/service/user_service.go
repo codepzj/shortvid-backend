@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	pb "shortvid-backend/api/shortvid-service/v1"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/data/model"
@@ -21,16 +22,18 @@ type UserService struct {
 	logger             log.Logger
 	uc                 *biz.UsersUsecase
 	firebaseService    *FirebaseService
+	githubService      *GithubService
 	jwtService         *JwtService
 	userSessionService *UserSessionService
 	cacheService       *CacheService
 }
 
-func NewUserService(logger log.Logger, uc *biz.UsersUsecase, firebaseService *FirebaseService, jwtService *JwtService, userSessionService *UserSessionService, cacheService *CacheService) *UserService {
+func NewUserService(logger log.Logger, uc *biz.UsersUsecase, firebaseService *FirebaseService, githubService *GithubService, jwtService *JwtService, userSessionService *UserSessionService, cacheService *CacheService) *UserService {
 	return &UserService{
 		logger:             logger,
 		uc:                 uc,
 		firebaseService:    firebaseService,
+		githubService:      githubService,
 		jwtService:         jwtService,
 		userSessionService: userSessionService,
 		cacheService:       cacheService,
@@ -150,6 +153,19 @@ func (s *UserService) GetUserProfile(ctx context.Context, req *pb.GetUserProfile
 			Nickname: user.Nickname,
 			Avatar:   user.Avatar,
 		},
+	}, nil
+}
+
+func (s *UserService) LoginGithub(ctx context.Context, req *pb.GithubLoginRequest) (*pb.GithubLoginResponse, error) {
+	code := req.Code
+	fmt.Println("code", code)
+
+	s.githubService.GetGithubUserInfo(ctx, code)
+
+	return &pb.GithubLoginResponse{
+		AccessToken:  "432",
+		RefreshToken: "5ewr",
+		User:         &pb.UserProfile{},
 	}, nil
 }
 
