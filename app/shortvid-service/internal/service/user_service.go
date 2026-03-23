@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 	pb "shortvid-backend/api/shortvid-service/v1"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/data/model"
@@ -158,9 +157,11 @@ func (s *UserService) GetUserProfile(ctx context.Context, req *pb.GetUserProfile
 
 func (s *UserService) LoginGithub(ctx context.Context, req *pb.GithubLoginRequest) (*pb.GithubLoginResponse, error) {
 	code := req.Code
-	fmt.Println("code", code)
 
-	s.githubService.GetGithubUserInfo(ctx, code)
+	err := s.githubService.GetGithubUserInfo(ctx, code)
+	if err != nil {
+		return nil, err
+	}
 
 	return &pb.GithubLoginResponse{
 		AccessToken:  "432",
