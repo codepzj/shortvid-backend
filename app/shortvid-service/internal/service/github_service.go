@@ -2,8 +2,7 @@ package service
 
 import (
 	"context"
-	"errors"
-	"fmt"
+	"io"
 	"net/http"
 	"shortvid-backend/app/shortvid-service/internal/conf"
 
@@ -29,9 +28,12 @@ func (s *GithubService) GetGithubUserInfo(ctx context.Context, code string) erro
 	cfg := oauth2.Config{
 		ClientID:     s.ghCfg.ClientId,
 		ClientSecret: s.ghCfg.ClientSecret,
+		RedirectURL:  "http://localhost:5173/login/github/callback",
 		Scopes:       []string{"user"},
 		Endpoint:     github.Endpoint,
 	}
+
+	s.logger.Log(log.LevelDebug, "cfg", cfg, "code", code)
 
 	// 通过code获取accessToken
 	accessToken, err := cfg.Exchange(ctx, code)
@@ -41,21 +43,23 @@ func (s *GithubService) GetGithubUserInfo(ctx context.Context, code string) erro
 	}
 	s.logger.Log(log.LevelDebug, "accessToken", accessToken)
 
-	client := cfg.Client(ctx, accessToken)
-
-	resp, err := client.Get("https://api.github.com/user")
+	userURL := "https://api.github.com/user"
+	req, err := http.NewRequest("GET", userURL, nil)
 	if err != nil {
-		s.logger.Log(log.LevelError, "error", "call github user info api failed")
+		return err
+	}
+	req.Header.Add("Authorization", "Bearer "+accessToken.AccessToken)
+	req.Header.Add("User-Agent", "Go OAuth App") // GitHub API requires a User-Agent header
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		s.logger.Log(log.LevelError, "code", resp.StatusCode, "error", "get github user info failed")
-		return errors.New("get github user info failed")
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
 	}
-
-	fmt.Println(resp.Body)
+	s.logger.Log(log.LevelDebug, "body", string(body))
 
 	return nil
 }
