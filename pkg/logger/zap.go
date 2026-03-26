@@ -61,7 +61,7 @@ func (l *Logger) Log(level log.Level, keyvals ...any) error {
 		msg    = ""
 		keylen = len(keyvals)
 	)
-	if keylen == 0 || keylen%2 != 0 {
+	if keylen%2 != 0 {
 		l.log.Warn(fmt.Sprint("Keyvalues must appear in pairs: ", keyvals))
 		return nil
 	}

@@ -51,8 +51,8 @@ func NewUsersUsecase(logger log.Logger, txRepo TxRepo, repo UsersRepo, accountRe
 	return &UsersUsecase{logger: logger, txRepo: txRepo, repo: repo, accountRepo: accountRepo}
 }
 
-// FirebaseFindOrCreateUser 查询或创建用户[Firebase]
-func (uc *UsersUsecase) FirebaseFindOrCreateUser(ctx context.Context, dto *UserDTO) (*UserProfileVO, bool, error) {
+// FindOrCreateUser 查询或创建用户
+func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, dto *UserDTO) (*UserProfileVO, bool, error) {
 	// 判断账户是否存在
 	existAcc, err := uc.accountRepo.GetByEmailAndProvider(ctx, dto.Email, dto.Provider)
 	if err != nil {
