@@ -16,7 +16,7 @@ type httpResponse struct {
 }
 
 // 自定义响应格式
-func ResponseEncoder(w http.ResponseWriter, r *http.Request, v interface{}) error {
+func ResponseEncoder(w http.ResponseWriter, r *http.Request, v any) error {
 	if v == nil {
 		return nil
 	}
@@ -44,6 +44,7 @@ func ResponseEncoder(w http.ResponseWriter, r *http.Request, v interface{}) erro
 // 自定义错误格式
 func ErrorEncoder(w http.ResponseWriter, r *http.Request, err error) {
 	resp := new(httpResponse)
+	// 如果能从kratos error解析出来, 则使用对应的code和message作为错误响应
 	if gs, ok := status.FromError(err); ok {
 		resp = &httpResponse{
 			Success: false,

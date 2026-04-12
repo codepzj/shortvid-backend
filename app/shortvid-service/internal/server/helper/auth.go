@@ -9,8 +9,10 @@ import (
 	"strconv"
 	"strings"
 
+	kerrors "github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
+
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
 
@@ -55,12 +57,12 @@ func RequireAuth(userSvc *service.UserService, jwtSvc *service.JwtService) middl
 			authorization := hr.Header.Get("Authorization")
 
 			if authorization == "" {
-				return nil, errors.New("no authorization")
+				return nil, kerrors.Unauthorized("no authorization", "authorization is empty")
 			}
 
 			parts := strings.SplitN(authorization, " ", 2)
 			if len(parts) != 2 || parts[0] != "Bearer" {
-				return nil, errors.New("invalid authorization format")
+				return nil, kerrors.Unauthorized("authorize failed","invalid authorization format")
 			}
 
 			tokenStr := parts[1]
