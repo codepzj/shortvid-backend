@@ -34,7 +34,7 @@ func (s *CacheService) SetUserSession(ctx context.Context, UID int, sessionID st
 	userSessionKey := cache.GetUserSessionKey(sessionID)
 	pipe := s.cache.Pipeline()
 	sessionData := map[string]any{
-		"uid":   UID,
+		"uid":        UID,
 		"session_id": sessionID,
 		"created_at": time.Now().Unix(),
 	}

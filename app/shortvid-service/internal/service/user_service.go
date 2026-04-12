@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	pb "shortvid-backend/api/shortvid-service/v1"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/data/model"
@@ -10,6 +11,8 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -19,22 +22,25 @@ type UserService struct {
 	logger             log.Logger
 	uc                 *biz.UsersUsecase
 	firebaseService    *FirebaseService
+	githubService      *GithubService
 	jwtService         *JwtService
 	userSessionService *UserSessionService
 	cacheService       *CacheService
 }
 
-func NewUserService(logger log.Logger, uc *biz.UsersUsecase, firebaseService *FirebaseService, jwtService *JwtService, userSessionService *UserSessionService, cacheService *CacheService) *UserService {
+func NewUserService(logger log.Logger, uc *biz.UsersUsecase, firebaseService *FirebaseService, githubService *GithubService, jwtService *JwtService, userSessionService *UserSessionService, cacheService *CacheService) *UserService {
 	return &UserService{
 		logger:             logger,
 		uc:                 uc,
 		firebaseService:    firebaseService,
+		githubService:      githubService,
 		jwtService:         jwtService,
 		userSessionService: userSessionService,
 		cacheService:       cacheService,
 	}
 }
 
+// LoginFirebase 登录Firebase
 func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRequest) (*pb.FirebaseLoginResponse, error) {
 	// 1. 验证IDToken
 	token, err := s.firebaseService.VertifyIDToken(ctx, req.IdToken)
@@ -53,7 +59,7 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 	}
 
 	// 3. 查找或创建用户
-	user, isNew, err := s.uc.FirebaseFindOrCreateUser(ctx, &biz.User{
+	user, isNew, err := s.uc.FindOrCreateUser(ctx, &biz.UserDTO{
 		Nickname:    firebaseUser.DisplayName,
 		Avatar:      firebaseUser.PhotoURL,
 		Email:       firebaseUser.Email,
@@ -65,8 +71,8 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 	}
 
 	// 4. 更新登录信息
-	if err := s.uc.UpdateLoginInfo(ctx, user.ID); err != nil {
-		s.logger.Log(log.LevelError, "msg", "Update login info failed", "error", err)
+	if err := s.uc.UpdateLoginInfo(ctx, user.UID); err != nil {
+		s.logger.Log(log.LevelError, "msg", "update login info failed", "error", err)
 		return nil, err
 	}
 
@@ -76,14 +82,14 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 	// 6. 生成accessToken
 	accessToken, err := s.jwtService.GenerateAccessToken(user.UID, sessionID)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Generate access token failed", "error", err)
+		s.logger.Log(log.LevelError, "msg", "generate access token failed", "error", err)
 		return nil, err
 	}
 
 	// 7. 生成refreshToken
 	refreshToken, err := s.jwtService.GenerateRefreshToken(user.UID, sessionID)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Generate refresh token failed", "error", err)
+		s.logger.Log(log.LevelError, "msg", "generate refresh token failed", "error", err)
 		return nil, err
 	}
 
@@ -94,7 +100,7 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 		ExpiresAt: time.Now().Add(s.jwtService.GetRefreshTokenExpiration()),
 	}
 	if err := s.userSessionService.CreateUserSession(ctx, session); err != nil {
-		s.logger.Log(log.LevelError, "msg", "Create user session failed", "error", err)
+		s.logger.Log(log.LevelError, "msg", "create user session failed", "error", err)
 		return nil, err
 	}
 
@@ -107,12 +113,12 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 	// 10. 将用户会话缓存到redis中
 	expiration := s.jwtService.GetTokenExpiration()
 	if err := s.cacheService.SetUserSession(ctx, user.UID, sessionID, expiration); err != nil {
-		s.logger.Log(log.LevelError, "msg", "Set user session failed", "error", err)
+		s.logger.Log(log.LevelError, "msg", "set user session failed", "error", err)
 	}
 
 	// 11. 如果用户是新用户，则记录日志
 	if isNew {
-		s.logger.Log(log.LevelInfo, "msg", "user is new")
+		s.logger.Log(log.LevelInfo, "msg", "user is new", "user", user)
 	} else {
 		s.logger.Log(log.LevelInfo, "msg", "user already esist", "user", user)
 	}
@@ -121,18 +127,115 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		User: &pb.UserProfile{
-			Nickname: user.Nickname,
-			Avatar:   user.Avatar,
+			Id:          int32(user.UID),
+			Uid:         int32(user.UID),
+			Nickname:    user.Nickname,
+			Avatar:      user.Avatar,
+			Email:       user.Email,
+			Provider:    user.Provider,
+			ProviderUid: user.ProviderUID,
 		},
 	}, nil
 }
 
-// GetUserProfile 根据userUid查询用户信息
+// LoginGithub 登录Github
+func (s *UserService) LoginGithub(ctx context.Context, req *pb.GithubLoginRequest) (*pb.GithubLoginResponse, error) {
+	// 1. 获取Github用户信息
+	userInfo, err := s.githubService.GetGithubUserInfo(ctx, req.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	// 2. 查找或创建用户
+	user, isNew, err := s.uc.FindOrCreateUser(ctx, &biz.UserDTO{
+		Nickname:    userInfo.Name,
+		Avatar:      userInfo.AvatarURL,
+		Email:       *userInfo.Email,
+		Provider:    "github",
+		ProviderUID: fmt.Sprintf("%d", userInfo.ID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// 3. 更新登录信息
+	if err := s.uc.UpdateLoginInfo(ctx, user.UID); err != nil {
+		s.logger.Log(log.LevelError, "msg", "update login info failed", "error", err)
+		return nil, err
+	}
+
+	// 4. 生成sessionID
+	sessionID := uuid.NewString()
+
+	// 5. 生成accessToken
+	accessToken, err := s.jwtService.GenerateAccessToken(user.UID, sessionID)
+	if err != nil {
+		s.logger.Log(log.LevelError, "msg", "generate access token failed", "error", err)
+		return nil, err
+	}
+
+	// 6. 生成refreshToken
+	refreshToken, err := s.jwtService.GenerateRefreshToken(user.UID, sessionID)
+	if err != nil {
+		s.logger.Log(log.LevelError, "msg", "generate refresh token failed", "error", err)
+		return nil, err
+	}
+
+	// 7. 创建用户会话session
+	session := &model.UserSession{
+		UID:       user.UID,
+		SessionID: sessionID,
+		ExpiresAt: time.Now().Add(s.jwtService.GetRefreshTokenExpiration()),
+	}
+	if err := s.userSessionService.CreateUserSession(ctx, session); err != nil {
+		s.logger.Log(log.LevelError, "msg", "create user session failed", "error", err)
+		return nil, err
+	}
+
+	// 8. 限制会话数量
+	if err := s.userSessionService.LimitUserSession(ctx, user.UID); err != nil {
+		s.logger.Log(log.LevelError, "msg", "Limit user session failed", "error", err)
+		return nil, err
+	}
+
+	// 9. 将用户会话缓存到redis中
+	expiration := s.jwtService.GetTokenExpiration()
+	if err := s.cacheService.SetUserSession(ctx, user.UID, sessionID, expiration); err != nil {
+		s.logger.Log(log.LevelError, "msg", "set user session failed", "error", err)
+	}
+
+	// 10. 如果用户是新用户，则记录日志
+	if isNew {
+		s.logger.Log(log.LevelInfo, "msg", "user is new", "user", user)
+	} else {
+		s.logger.Log(log.LevelInfo, "msg", "user already esist", "user", user)
+	}
+
+	return &pb.GithubLoginResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		User: &pb.UserProfile{
+			Id:          int32(user.ID),
+			Uid:         int32(user.UID),
+			Nickname:    user.Nickname,
+			Avatar:      user.Avatar,
+			Email:       user.Email,
+			Provider:    user.Provider,
+			ProviderUid: user.ProviderUID,
+		},
+	}, nil
+}
+
+// GetUserProfile 根据uid查询用户信息
 func (s *UserService) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
 	user, err := s.uc.GetUserByUID(ctx, int(req.Uid))
 	if err != nil {
 		return nil, err
 	}
+	if user == nil {
+		return nil, status.Error(codes.NotFound, "user not found")
+	}
+
 	return &pb.GetUserProfileResponse{
 		User: &pb.UserProfile{
 			Uid:      int32(user.UID),
@@ -162,8 +265,8 @@ func (s *UserService) UserInfo(ctx context.Context, req *emptypb.Empty) (*pb.Use
 }
 
 // GetUserByUID 根据UID查询用户
-func (s *UserService) GetUserByUID(ctx context.Context, userUID int) (*biz.UserProfile, error) {
-	user, err := s.uc.GetUserByUID(ctx, userUID)
+func (s *UserService) GetUserByUID(ctx context.Context, uid int) (*biz.UserProfileVO, error) {
+	user, err := s.uc.GetUserByUID(ctx, uid)
 	if err != nil {
 		return nil, err
 	}

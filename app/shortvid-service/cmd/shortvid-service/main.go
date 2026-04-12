@@ -77,10 +77,11 @@ func main() {
 		"span.id", tracing.SpanID(),
 	)
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Firebase, bc.Jwt, bc.Session, bc.Minio, logger)
+	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Firebase, bc.Github, bc.Jwt, bc.Session, bc.Minio, logger)
 	if err != nil {
 		panic(err)
 	}
+	// 释放基础设施资源
 	defer cleanup()
 
 	// start and wait for stop signal

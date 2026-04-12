@@ -9,11 +9,11 @@ import (
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
-	mysqlDriver "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
 )
 
-type User struct {
+type UserDTO struct {
 	Nickname    string
 	Avatar      string
 	Email       string
@@ -21,7 +21,7 @@ type User struct {
 	Provider    string
 }
 
-type UserProfile struct {
+type UserProfileVO struct {
 	ID          int
 	UID         int
 	Ctime       int64  // 创建时间
@@ -42,18 +42,19 @@ type UsersRepo interface {
 
 type UsersUsecase struct {
 	logger      log.Logger
+	txRepo      TxRepo
 	repo        UsersRepo
 	accountRepo AccountRepo
 }
 
-func NewUsersUsecase(logger log.Logger, repo UsersRepo, accountRepo AccountRepo) *UsersUsecase {
-	return &UsersUsecase{logger: logger, repo: repo, accountRepo: accountRepo}
+func NewUsersUsecase(logger log.Logger, txRepo TxRepo, repo UsersRepo, accountRepo AccountRepo) *UsersUsecase {
+	return &UsersUsecase{logger: logger, txRepo: txRepo, repo: repo, accountRepo: accountRepo}
 }
 
-// FirebaseFindOrCreateUser 查询或创建用户[Firebase]
-func (uc *UsersUsecase) FirebaseFindOrCreateUser(ctx context.Context, user *User) (*UserProfile, bool, error) {
+// FindOrCreateUser 查询或创建用户
+func (uc *UsersUsecase) FindOrCreateUser(ctx context.Context, dto *UserDTO) (*UserProfileVO, bool, error) {
 	// 判断账户是否存在
-	existAcc, err := uc.accountRepo.GetByEmailAndProvider(ctx, user.Email, user.Provider)
+	existAcc, err := uc.accountRepo.GetByEmailAndProvider(ctx, dto.Email, dto.Provider)
 	if err != nil {
 		uc.logger.Log(log.LevelError, "msg", "Get account by email and provider failed", "error", err)
 		return nil, false, err
@@ -69,7 +70,7 @@ func (uc *UsersUsecase) FirebaseFindOrCreateUser(ctx context.Context, user *User
 			return nil, false, errors.New("account exists, but user not found")
 		}
 
-		return &UserProfile{
+		return &UserProfileVO{
 			ID:          existUser.ID,
 			UID:         existUser.UID,
 			Ctime:       existUser.CreatedAt.Unix(),
@@ -81,53 +82,78 @@ func (uc *UsersUsecase) FirebaseFindOrCreateUser(ctx context.Context, user *User
 		}, false, nil
 	}
 
-	// 账户不存在, 创建账户和用户
-	maxCount := 10
-	userModel := &model.User{
-		UID:         0,
-		Nickname:    user.Nickname,
-		Avatar:      user.Avatar,
+	// 创建账户和用户(强关联操作)
+	user := &model.User{
+		Nickname:    dto.Nickname,
+		Avatar:      dto.Avatar,
 		LastLoginAt: time.Now(),
 	}
-	for range maxCount {
-		// 生成唯一的UserUID
-		userModel.UID = uc.generateUniqueUserUID()
-		err := uc.repo.CreateUser(ctx, userModel)
-
-		if err != nil {
-			var mysqlErr *mysqlDriver.MySQLError
-			if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
-				uc.logger.Log(log.LevelInfo, "msg", "UserUID already exists, retrying", "userUID", userModel.UID)
-				continue
-			}
-			uc.logger.Log(log.LevelWarn, "msg", "Create user failed", "error", err)
-			return nil, false, err
-		}
-		return &UserProfile{
-			ID:       userModel.ID,
-			UID:      userModel.UID,
-			Nickname: userModel.Nickname,
-			Avatar:   userModel.Avatar,
-		}, true, nil
+	account := &model.Account{
+		Email:       dto.Email,
+		Provider:    dto.Provider,
+		ProviderUID: dto.ProviderUID,
 	}
-	return nil, false, errors.New("create user failed after max retries")
+	err = uc.txRepo.ExecFunc(func(tx *gorm.DB) error {
+		maxCount := 10
+		for range maxCount {
+			// 生成唯一的UID
+			user.UID = uc.generateUniqueUserUID()
+			err := uc.repo.CreateUserWithTx(ctx, tx, user)
+
+			if err != nil {
+				var mysqlErr *mysql.MySQLError
+				if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
+					uc.logger.Log(log.LevelInfo, "msg", "UserUID already exists, retrying", "userUID", user.UID)
+					continue
+				}
+				uc.logger.Log(log.LevelError, "msg", "Create user failed", "error", err)
+				return err
+			}
+			break
+		}
+
+		account.UID = user.UID
+		err := uc.accountRepo.CreateAccountWithTx(ctx, tx, account)
+		if err != nil {
+			uc.logger.Log(log.LevelError, "msg", "Create account failed", "error", err)
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		uc.logger.Log(log.LevelError, "msg", "Create user and account failed", "error", err)
+		return nil, false, err
+	}
+
+	return &UserProfileVO{
+		ID:          user.ID,
+		UID:         user.UID,
+		Ctime:       user.CreatedAt.Unix(), // 创建时间
+		Nickname:    user.Nickname,         // 昵称
+		Avatar:      user.Avatar,           // 头像
+		Email:       account.Email,         // 邮箱
+		Provider:    account.Provider,      // 提供商
+		ProviderUID: account.ProviderUID,   // 提供商UID
+	}, true, nil
 }
 
 // GetUserByUserUID 根据UserUID查询用户
-func (uc *UsersUsecase) GetUserByUID(ctx context.Context, UID int) (*UserProfile, error) {
-	userModel, err := uc.repo.GetUserByUID(ctx, UID)
+func (uc *UsersUsecase) GetUserByUID(ctx context.Context, UID int) (*UserProfileVO, error) {
+	user, err := uc.repo.GetUserByUID(ctx, UID)
 	if err != nil {
-		uc.logger.Log(log.LevelError, "msg", "Get user by userUid failed", "error", err)
+		uc.logger.Log(log.LevelError, "msg", "Get user by uid failed", "error", err)
 		return nil, err
 	}
-	if userModel == nil {
+	if user == nil {
 		return nil, v1.ErrorUserNotFound("user not found")
 	}
-	return &UserProfile{
-		ID:       userModel.ID,
-		UID:      userModel.UID,
-		Nickname: userModel.Nickname,
-		Avatar:   userModel.Avatar,
+	return &UserProfileVO{
+		ID:       user.ID,
+		UID:      user.UID,
+		Nickname: user.Nickname,
+		Avatar:   user.Avatar,
 	}, nil
 }
 

@@ -13,9 +13,9 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(db.NewDB, cache.NewRedis, storage.NewMinioClient, NewData, NewAccountRepo, NewUserRepo, NewUserSessionRepo)
+var ProviderSet = wire.NewSet(db.NewDB, cache.NewRedis, storage.NewMinioClient, NewData, NewTxRepo, NewAccountRepo, NewUserRepo, NewUserSessionRepo)
 
-// Data .
+// 基础设施的数据模型
 type Data struct {
 	db     *gorm.DB
 	redis  *redis.Client
@@ -23,10 +23,10 @@ type Data struct {
 	logger log.Logger
 }
 
-// NewData .
+// NewData 初始化基础设施
 func NewData(db *gorm.DB, redis *redis.Client, minio *minio.Client, logger log.Logger) (*Data, func(), error) {
 	cleanup := func() {
-		logger.Log(log.LevelInfo, "closing the data resources")
+		logger.Log(log.LevelInfo, "msg", "closing the infra data resources")
 	}
 	return &Data{
 		db:     db,

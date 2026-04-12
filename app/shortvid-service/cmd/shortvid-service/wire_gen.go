@@ -7,6 +7,8 @@
 package main
 
 import (
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/log"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/conf"
 	"shortvid-backend/app/shortvid-service/internal/data"
@@ -15,17 +17,16 @@ import (
 	"shortvid-backend/app/shortvid-service/internal/data/infra/storage"
 	"shortvid-backend/app/shortvid-service/internal/server"
 	"shortvid-backend/app/shortvid-service/internal/service"
+)
 
-	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
-
+import (
 	_ "go.uber.org/automaxprocs"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, jwt *conf.Jwt, session *conf.Session, minio *conf.Minio, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, github *conf.Github, jwt *conf.Jwt, session *conf.Session, minio *conf.Minio, logger log.Logger) (*kratos.App, func(), error) {
 	gormDB := db.NewDB(confData)
 	client := cache.NewRedis(confData)
 	minioClient := storage.NewMinioClient(minio)
@@ -33,19 +34,21 @@ func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Fireba
 	if err != nil {
 		return nil, nil, err
 	}
+	txRepo := data.NewTxRepo(dataData)
 	usersRepo := data.NewUserRepo(dataData)
 	accountRepo := data.NewAccountRepo(dataData)
-	usersUsecase := biz.NewUsersUsecase(logger, usersRepo, accountRepo)
+	usersUsecase := biz.NewUsersUsecase(logger, txRepo, usersRepo, accountRepo)
 	firebaseService, err := service.NewFirebaseService(logger, firebase)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
+	githubService := service.NewGithubService(logger, github)
 	jwtService := service.NewJwtService(jwt, logger)
 	userSessionRepo := data.NewUserSessionRepo(dataData)
 	cacheService := service.NewCacheService(client, logger)
 	userSessionService := service.NewUserSessionService(logger, session, userSessionRepo, cacheService, jwtService)
-	userService := service.NewUserService(logger, usersUsecase, firebaseService, jwtService, userSessionService, cacheService)
+	userService := service.NewUserService(logger, usersUsecase, firebaseService, githubService, jwtService, userSessionService, cacheService)
 	grpcServer := server.NewGRPCServer(confServer, userService, logger)
 	fileService := service.NewFileService(logger)
 	httpServer := server.NewHTTPServer(confServer, jwt, userService, jwtService, fileService, logger)

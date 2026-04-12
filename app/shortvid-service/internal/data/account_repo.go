@@ -17,8 +17,8 @@ func NewAccountRepo(data *Data) biz.AccountRepo {
 	return &accountRepo{data: data}
 }
 
-func (r *accountRepo) CreateAccount(ctx context.Context, account *model.Account) error {
-	return r.data.db.WithContext(ctx).Create(account).Error
+func (r *accountRepo) CreateAccountWithTx(ctx context.Context, tx *gorm.DB, account *model.Account) error {
+	return tx.WithContext(ctx).Create(account).Error
 }
 
 func (r *accountRepo) GetByEmailAndProvider(ctx context.Context, email string, provider string) (*model.Account, error) {

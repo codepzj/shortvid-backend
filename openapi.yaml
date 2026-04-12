@@ -43,6 +43,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/.FirebaseLoginResponse'
+    /api/v1/github/login:
+        post:
+            tags:
+                - UserService
+            description: github登录
+            operationId: UserService_LoginGithub
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/.GithubLoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/.GithubLoginResponse'
     /api/v1/user/info:
         post:
             tags:
@@ -110,6 +129,18 @@ components:
                 user:
                     $ref: '#/components/schemas/.UserProfile'
             description: 用户资料响应体
+        .GithubLoginRequest:
+            type: object
+            properties: {}
+        .GithubLoginResponse:
+            type: object
+            properties:
+                accessToken:
+                    type: string
+                refreshToken:
+                    type: string
+                user:
+                    $ref: '#/components/schemas/.UserProfile'
         .UploadFileReply:
             type: object
             properties: {}

@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	UserService_LoginFirebase_FullMethodName  = "/UserService/LoginFirebase"
+	UserService_LoginGithub_FullMethodName    = "/UserService/LoginGithub"
 	UserService_GetUserProfile_FullMethodName = "/UserService/GetUserProfile"
 	UserService_UserInfo_FullMethodName       = "/UserService/UserInfo"
 )
@@ -33,6 +34,8 @@ const (
 type UserServiceClient interface {
 	// firebase登录
 	LoginFirebase(ctx context.Context, in *FirebaseLoginRequest, opts ...grpc.CallOption) (*FirebaseLoginResponse, error)
+	// github登录
+	LoginGithub(ctx context.Context, in *GithubLoginRequest, opts ...grpc.CallOption) (*GithubLoginResponse, error)
 	// 通过uid获取用户信息
 	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error)
 	// 获取自己的用户信息
@@ -51,6 +54,16 @@ func (c *userServiceClient) LoginFirebase(ctx context.Context, in *FirebaseLogin
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(FirebaseLoginResponse)
 	err := c.cc.Invoke(ctx, UserService_LoginFirebase_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) LoginGithub(ctx context.Context, in *GithubLoginRequest, opts ...grpc.CallOption) (*GithubLoginResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GithubLoginResponse)
+	err := c.cc.Invoke(ctx, UserService_LoginGithub_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -85,6 +98,8 @@ func (c *userServiceClient) UserInfo(ctx context.Context, in *emptypb.Empty, opt
 type UserServiceServer interface {
 	// firebase登录
 	LoginFirebase(context.Context, *FirebaseLoginRequest) (*FirebaseLoginResponse, error)
+	// github登录
+	LoginGithub(context.Context, *GithubLoginRequest) (*GithubLoginResponse, error)
 	// 通过uid获取用户信息
 	GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
 	// 获取自己的用户信息
@@ -101,6 +116,9 @@ type UnimplementedUserServiceServer struct{}
 
 func (UnimplementedUserServiceServer) LoginFirebase(context.Context, *FirebaseLoginRequest) (*FirebaseLoginResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method LoginFirebase not implemented")
+}
+func (UnimplementedUserServiceServer) LoginGithub(context.Context, *GithubLoginRequest) (*GithubLoginResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method LoginGithub not implemented")
 }
 func (UnimplementedUserServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserProfile not implemented")
@@ -143,6 +161,24 @@ func _UserService_LoginFirebase_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).LoginFirebase(ctx, req.(*FirebaseLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_LoginGithub_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GithubLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).LoginGithub(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_LoginGithub_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).LoginGithub(ctx, req.(*GithubLoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -193,6 +229,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LoginFirebase",
 			Handler:    _UserService_LoginFirebase_Handler,
+		},
+		{
+			MethodName: "LoginGithub",
+			Handler:    _UserService_LoginGithub_Handler,
 		},
 		{
 			MethodName: "GetUserProfile",
