@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"shortvid-backend/app/shortvid-service/internal/conf"
-	"shortvid-backend/pkg/logger"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -67,16 +66,15 @@ func main() {
 		panic(err)
 	}
 
-	// zap 封装的日志
-	logger := log.With(logger.NewZapLogger(logger.NewOption(bc.Log.Format, bc.Log.Level, bc.Log.LogFile, bc.Log.MaxSize, bc.Log.MaxBackups, bc.Log.MaxAge, bc.Log.Compress)),
+	logger := log.With(log.NewStdLogger(os.Stdout),
+		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.id", id,
 		"service.name", Name,
 		"service.version", Version,
-		"trace.id", tracing.TraceID(),
-		"span.id", tracing.SpanID(),
+		"trace_id", tracing.TraceID(),
+		"span_id", tracing.SpanID(),
 	)
-
 	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Firebase, bc.Github, bc.Jwt, bc.Session, bc.Minio, logger)
 	if err != nil {
 		panic(err)

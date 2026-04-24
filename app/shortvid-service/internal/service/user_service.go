@@ -7,6 +7,7 @@ import (
 	pb "shortvid-backend/api/shortvid-service/v1"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/data/model"
+	"shortvid-backend/app/shortvid-service/pkg/utils"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -159,6 +160,7 @@ func (s *UserService) LoginGithub(ctx context.Context, req *pb.GithubLoginReques
 	}
 
 	// 3. 更新登录信息
+	_ = utils.GetPublicParamFromCtx(ctx)
 	if err := s.uc.UpdateLoginInfo(ctx, user.UID); err != nil {
 		s.logger.Log(log.LevelError, "msg", "update login info failed", "error", err)
 		return nil, err

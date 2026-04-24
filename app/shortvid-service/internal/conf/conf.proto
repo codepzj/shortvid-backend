@@ -8,12 +8,11 @@ import "google/protobuf/duration.proto";
 message Bootstrap {
   Server server = 1;
   Data data = 2;
-  Log log = 3;
-  Firebase firebase = 4;
-  Github github = 5;
-  Jwt jwt = 6;
-  Session session = 7;
-  Minio minio = 8;
+  Firebase firebase = 3;
+  Github github = 4;
+  Jwt jwt = 5;
+  Session session = 6;
+  Minio minio = 7;
 }
 
 message Server {
@@ -51,16 +50,6 @@ message Data {
   }
   Database database = 1;
   Redis redis = 2;
-}
-
-message Log {
-  string format = 1;
-  string level = 2;
-  string log_file = 3;
-  int32 max_size = 4;
-  int32 max_backups = 5;
-  int32 max_age = 6;
-  bool compress = 7;
 }
 
 message Firebase {

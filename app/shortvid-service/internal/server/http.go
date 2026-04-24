@@ -19,7 +19,7 @@ func NewHTTPServer(cs *conf.Server, cj *conf.Jwt, userSvc *service.UserService, 
 			recovery.Recovery(),
 			validate.ProtoValidate(), // 校验参数中间件
 			helper.RequireAuthMiddleware(userSvc, jwtSvc),
-			helper.CommonParamMiddleware(),
+			helper.PublicParamMiddleware(),
 		),
 	}
 	if cs.Http.Network != "" {
