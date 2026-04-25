@@ -13,11 +13,11 @@ import (
 
 type FileService struct {
 	pb.UnimplementedFileServer
-	logger log.Logger
+	logger *log.Helper
 }
 
 func NewFileService(logger log.Logger) *FileService {
-	return &FileService{logger: logger}
+	return &FileService{logger: log.NewHelper(logger)}
 }
 
 func (s *FileService) UploadFile(ctx context.Context, req *pb.UploadFileRequest) (*pb.UploadFileReply, error) {
@@ -29,7 +29,7 @@ func (s *FileService) UploadFile(ctx context.Context, req *pb.UploadFileRequest)
 	if s.logger == nil {
 		return nil, fmt.Errorf("file service logger is nil")
 	}
-	s.logger.Log(log.LevelInfo, "headers", hr.Header)
+	s.logger.Infow("headers", hr.Header)
 	return &pb.UploadFileReply{}, nil
 }
 func (s *FileService) DeleteFile(ctx context.Context, req *pb.DeleteFileRequest) (*pb.DeleteFileReply, error) {

@@ -20,18 +20,19 @@ type Data struct {
 	db     *gorm.DB
 	redis  *redis.Client
 	minio  *minio.Client
-	logger log.Logger
+	logger *log.Helper
 }
 
 // NewData 初始化基础设施
 func NewData(db *gorm.DB, redis *redis.Client, minio *minio.Client, logger log.Logger) (*Data, func(), error) {
+	helper := log.NewHelper(logger)
 	cleanup := func() {
-		logger.Log(log.LevelInfo, "msg", "closing the infra data resources")
+		helper.Infow("msg", "closing the infra data resources")
 	}
 	return &Data{
 		db:     db,
 		redis:  redis,
 		minio:  minio,
-		logger: logger,
+		logger: helper,
 	}, cleanup, nil
 }

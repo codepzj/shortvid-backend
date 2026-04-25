@@ -16,11 +16,11 @@ const (
 
 type JwtService struct {
 	jwtConf *conf.Jwt
-	logger  log.Logger
+	logger  *log.Helper
 }
 
 func NewJwtService(jwtConf *conf.Jwt, logger log.Logger) *JwtService {
-	return &JwtService{jwtConf: jwtConf, logger: logger}
+	return &JwtService{jwtConf: jwtConf, logger: log.NewHelper(logger)}
 }
 
 type JwtCustomClaims struct {
