@@ -168,7 +168,7 @@ func (x *Server) GetGrpc() *Server_GRPC {
 
 type Data struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Database      *Data_Database         `protobuf:"bytes,1,opt,name=database,proto3" json:"database,omitempty"`
+	Mysql         *Data_Mysql            `protobuf:"bytes,1,opt,name=mysql,proto3" json:"mysql,omitempty"`
 	Redis         *Data_Redis            `protobuf:"bytes,2,opt,name=redis,proto3" json:"redis,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -204,9 +204,9 @@ func (*Data) Descriptor() ([]byte, []int) {
 	return file_conf_conf_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *Data) GetDatabase() *Data_Database {
+func (x *Data) GetMysql() *Data_Mysql {
 	if x != nil {
-		return x.Database
+		return x.Mysql
 	}
 	return nil
 }
@@ -638,32 +638,30 @@ func (x *Server_GRPC) GetTimeout() *durationpb.Duration {
 	return nil
 }
 
-type Data_Database struct {
+type Data_Mysql struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	Driver           string                 `protobuf:"bytes,1,opt,name=driver,proto3" json:"driver,omitempty"`
-	Source           string                 `protobuf:"bytes,2,opt,name=source,proto3" json:"source,omitempty"`
-	SlowSqlThreshold *durationpb.Duration   `protobuf:"bytes,3,opt,name=slow_sql_threshold,json=slowSqlThreshold,proto3" json:"slow_sql_threshold,omitempty"`
-	LogLevel         string                 `protobuf:"bytes,4,opt,name=log_level,json=logLevel,proto3" json:"log_level,omitempty"`
-	LogFormat        string                 `protobuf:"bytes,5,opt,name=log_format,json=logFormat,proto3" json:"log_format,omitempty"`
-	LogFile          string                 `protobuf:"bytes,6,opt,name=log_file,json=logFile,proto3" json:"log_file,omitempty"`
+	Dsn              string                 `protobuf:"bytes,1,opt,name=dsn,proto3" json:"dsn,omitempty"`
+	SlowSqlThreshold *durationpb.Duration   `protobuf:"bytes,2,opt,name=slow_sql_threshold,json=slowSqlThreshold,proto3" json:"slow_sql_threshold,omitempty"`
+	MaxOpenConns     int64                  `protobuf:"varint,3,opt,name=max_open_conns,json=maxOpenConns,proto3" json:"max_open_conns,omitempty"`
+	MaxIdleConns     int64                  `protobuf:"varint,4,opt,name=max_idle_conns,json=maxIdleConns,proto3" json:"max_idle_conns,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
 
-func (x *Data_Database) Reset() {
-	*x = Data_Database{}
+func (x *Data_Mysql) Reset() {
+	*x = Data_Mysql{}
 	mi := &file_conf_conf_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Data_Database) String() string {
+func (x *Data_Mysql) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Data_Database) ProtoMessage() {}
+func (*Data_Mysql) ProtoMessage() {}
 
-func (x *Data_Database) ProtoReflect() protoreflect.Message {
+func (x *Data_Mysql) ProtoReflect() protoreflect.Message {
 	mi := &file_conf_conf_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -675,51 +673,37 @@ func (x *Data_Database) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Data_Database.ProtoReflect.Descriptor instead.
-func (*Data_Database) Descriptor() ([]byte, []int) {
+// Deprecated: Use Data_Mysql.ProtoReflect.Descriptor instead.
+func (*Data_Mysql) Descriptor() ([]byte, []int) {
 	return file_conf_conf_proto_rawDescGZIP(), []int{2, 0}
 }
 
-func (x *Data_Database) GetDriver() string {
+func (x *Data_Mysql) GetDsn() string {
 	if x != nil {
-		return x.Driver
+		return x.Dsn
 	}
 	return ""
 }
 
-func (x *Data_Database) GetSource() string {
-	if x != nil {
-		return x.Source
-	}
-	return ""
-}
-
-func (x *Data_Database) GetSlowSqlThreshold() *durationpb.Duration {
+func (x *Data_Mysql) GetSlowSqlThreshold() *durationpb.Duration {
 	if x != nil {
 		return x.SlowSqlThreshold
 	}
 	return nil
 }
 
-func (x *Data_Database) GetLogLevel() string {
+func (x *Data_Mysql) GetMaxOpenConns() int64 {
 	if x != nil {
-		return x.LogLevel
+		return x.MaxOpenConns
 	}
-	return ""
+	return 0
 }
 
-func (x *Data_Database) GetLogFormat() string {
+func (x *Data_Mysql) GetMaxIdleConns() int64 {
 	if x != nil {
-		return x.LogFormat
+		return x.MaxIdleConns
 	}
-	return ""
-}
-
-func (x *Data_Database) GetLogFile() string {
-	if x != nil {
-		return x.LogFile
-	}
-	return ""
+	return 0
 }
 
 type Data_Redis struct {
@@ -838,18 +822,15 @@ const file_conf_conf_proto_rawDesc = "" +
 	"\x04GRPC\x12\x18\n" +
 	"\anetwork\x18\x01 \x01(\tR\anetwork\x12\x12\n" +
 	"\x04addr\x18\x02 \x01(\tR\x04addr\x123\n" +
-	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"\xc9\x04\n" +
-	"\x04Data\x125\n" +
-	"\bdatabase\x18\x01 \x01(\v2\x19.kratos.api.Data.DatabaseR\bdatabase\x12,\n" +
-	"\x05redis\x18\x02 \x01(\v2\x16.kratos.api.Data.RedisR\x05redis\x1a\xda\x01\n" +
-	"\bDatabase\x12\x16\n" +
-	"\x06driver\x18\x01 \x01(\tR\x06driver\x12\x16\n" +
-	"\x06source\x18\x02 \x01(\tR\x06source\x12G\n" +
-	"\x12slow_sql_threshold\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\x10slowSqlThreshold\x12\x1b\n" +
-	"\tlog_level\x18\x04 \x01(\tR\blogLevel\x12\x1d\n" +
-	"\n" +
-	"log_format\x18\x05 \x01(\tR\tlogFormat\x12\x19\n" +
-	"\blog_file\x18\x06 \x01(\tR\alogFile\x1a\xfe\x01\n" +
+	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"\x94\x04\n" +
+	"\x04Data\x12,\n" +
+	"\x05mysql\x18\x01 \x01(\v2\x16.kratos.api.Data.MysqlR\x05mysql\x12,\n" +
+	"\x05redis\x18\x02 \x01(\v2\x16.kratos.api.Data.RedisR\x05redis\x1a\xae\x01\n" +
+	"\x05Mysql\x12\x10\n" +
+	"\x03dsn\x18\x01 \x01(\tR\x03dsn\x12G\n" +
+	"\x12slow_sql_threshold\x18\x02 \x01(\v2\x19.google.protobuf.DurationR\x10slowSqlThreshold\x12$\n" +
+	"\x0emax_open_conns\x18\x03 \x01(\x03R\fmaxOpenConns\x12$\n" +
+	"\x0emax_idle_conns\x18\x04 \x01(\x03R\fmaxIdleConns\x1a\xfe\x01\n" +
 	"\x05Redis\x12\x18\n" +
 	"\anetwork\x18\x01 \x01(\tR\anetwork\x12\x12\n" +
 	"\x04addr\x18\x02 \x01(\tR\x04addr\x12\x1a\n" +
@@ -906,7 +887,7 @@ var file_conf_conf_proto_goTypes = []any{
 	(*Minio)(nil),               // 7: kratos.api.Minio
 	(*Server_HTTP)(nil),         // 8: kratos.api.Server.HTTP
 	(*Server_GRPC)(nil),         // 9: kratos.api.Server.GRPC
-	(*Data_Database)(nil),       // 10: kratos.api.Data.Database
+	(*Data_Mysql)(nil),          // 10: kratos.api.Data.Mysql
 	(*Data_Redis)(nil),          // 11: kratos.api.Data.Redis
 	(*durationpb.Duration)(nil), // 12: google.protobuf.Duration
 }
@@ -920,13 +901,13 @@ var file_conf_conf_proto_depIdxs = []int32{
 	7,  // 6: kratos.api.Bootstrap.minio:type_name -> kratos.api.Minio
 	8,  // 7: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
 	9,  // 8: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
-	10, // 9: kratos.api.Data.database:type_name -> kratos.api.Data.Database
+	10, // 9: kratos.api.Data.mysql:type_name -> kratos.api.Data.Mysql
 	11, // 10: kratos.api.Data.redis:type_name -> kratos.api.Data.Redis
 	12, // 11: kratos.api.Jwt.access_token_expires_in:type_name -> google.protobuf.Duration
 	12, // 12: kratos.api.Jwt.refresh_token_expires_in:type_name -> google.protobuf.Duration
 	12, // 13: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
 	12, // 14: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
-	12, // 15: kratos.api.Data.Database.slow_sql_threshold:type_name -> google.protobuf.Duration
+	12, // 15: kratos.api.Data.Mysql.slow_sql_threshold:type_name -> google.protobuf.Duration
 	12, // 16: kratos.api.Data.Redis.read_timeout:type_name -> google.protobuf.Duration
 	12, // 17: kratos.api.Data.Redis.write_timeout:type_name -> google.protobuf.Duration
 	18, // [18:18] is the sub-list for method output_type
