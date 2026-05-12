@@ -12,11 +12,11 @@ import (
 
 type CacheService struct {
 	cache  *redis.Client
-	logger log.Logger
+	logger *log.Helper
 }
 
 func NewCacheService(cache *redis.Client, logger log.Logger) *CacheService {
-	return &CacheService{cache: cache, logger: logger}
+	return &CacheService{cache: cache, logger: log.NewHelper(logger)}
 }
 
 // SetUserSession 设置用户会话
@@ -26,7 +26,7 @@ func (s *CacheService) SetUserSession(ctx context.Context, UID int, sessionID st
 	sessionUserKey := cache.GetSessionUserKey(sessionID)
 	err := s.cache.Set(ctx, sessionUserKey, UID, expiration).Err()
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Set session user failed", "error", err)
+		s.logger.Errorw("msg", "Set session user failed", "error", err)
 		return err
 	}
 
@@ -42,7 +42,7 @@ func (s *CacheService) SetUserSession(ctx context.Context, UID int, sessionID st
 	pipe.Expire(ctx, userSessionKey, expiration)
 	_, err = pipe.Exec(ctx)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Set user session failed", "error", err)
+		s.logger.Errorw("msg", "Set user session failed", "error", err)
 		return err
 	}
 	return nil
@@ -53,12 +53,12 @@ func (s *CacheService) DeleteUserSession(ctx context.Context, sessionID string) 
 	sessionUserKey := cache.GetSessionUserKey(sessionID)
 	err := s.cache.Del(ctx, sessionUserKey).Err()
 	if err != nil {
-		s.logger.Log(log.LevelWarn, "msg", "Delete session user key failed", "error", err, "sessionID", sessionID)
+		s.logger.Warnw("msg", "Delete session user key failed", "error", err, "sessionID", sessionID)
 	}
 	userSessionKey := cache.GetUserSessionKey(sessionID)
 	err = s.cache.Del(ctx, userSessionKey).Err()
 	if err != nil {
-		s.logger.Log(log.LevelWarn, "msg", "Delete user session key failed", "error", err, "sessionID", sessionID)
+		s.logger.Warnw("msg", "Delete user session key failed", "error", err, "sessionID", sessionID)
 	}
 }
 
@@ -75,14 +75,14 @@ func (s *CacheService) SetUserInfo(ctx context.Context, userUID int, userInfo ma
 	// 序列化userInfo
 	userInfoJson, err := json.Marshal(userInfo)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Marshal user info failed", "error", err)
+		s.logger.Errorw("msg", "Marshal user info failed", "error", err)
 		return err
 	}
 
 	// 设置userInfo
 	err = s.cache.Set(ctx, userInfoKey, userInfoJson, expiration).Err()
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Set user info failed", "error", err)
+		s.logger.Errorw("msg", "Set user info failed", "error", err)
 		return err
 	}
 	return nil

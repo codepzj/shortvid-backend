@@ -7,6 +7,7 @@ import (
 	pb "shortvid-backend/api/shortvid-service/v1"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/data/model"
+	"shortvid-backend/app/shortvid-service/pkg/utils"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -19,7 +20,7 @@ import (
 type UserService struct {
 	pb.UnimplementedUserServiceServer
 
-	logger             log.Logger
+	logger             *log.Helper
 	uc                 *biz.UsersUsecase
 	firebaseService    *FirebaseService
 	githubService      *GithubService
@@ -30,7 +31,7 @@ type UserService struct {
 
 func NewUserService(logger log.Logger, uc *biz.UsersUsecase, firebaseService *FirebaseService, githubService *GithubService, jwtService *JwtService, userSessionService *UserSessionService, cacheService *CacheService) *UserService {
 	return &UserService{
-		logger:             logger,
+		logger:             log.NewHelper(logger),
 		uc:                 uc,
 		firebaseService:    firebaseService,
 		githubService:      githubService,
@@ -72,7 +73,7 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 
 	// 4. 更新登录信息
 	if err := s.uc.UpdateLoginInfo(ctx, user.UID); err != nil {
-		s.logger.Log(log.LevelError, "msg", "update login info failed", "error", err)
+		s.logger.Errorw("msg", "update login info failed", "error", err)
 		return nil, err
 	}
 
@@ -82,14 +83,14 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 	// 6. 生成accessToken
 	accessToken, err := s.jwtService.GenerateAccessToken(user.UID, sessionID)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "generate access token failed", "error", err)
+		s.logger.Errorw("msg", "generate access token failed", "error", err)
 		return nil, err
 	}
 
 	// 7. 生成refreshToken
 	refreshToken, err := s.jwtService.GenerateRefreshToken(user.UID, sessionID)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "generate refresh token failed", "error", err)
+		s.logger.Errorw("msg", "generate refresh token failed", "error", err)
 		return nil, err
 	}
 
@@ -100,27 +101,27 @@ func (s *UserService) LoginFirebase(ctx context.Context, req *pb.FirebaseLoginRe
 		ExpiresAt: time.Now().Add(s.jwtService.GetRefreshTokenExpiration()),
 	}
 	if err := s.userSessionService.CreateUserSession(ctx, session); err != nil {
-		s.logger.Log(log.LevelError, "msg", "create user session failed", "error", err)
+		s.logger.Errorw("msg", "create user session failed", "error", err)
 		return nil, err
 	}
 
 	// 9. 限制会话数量
 	if err := s.userSessionService.LimitUserSession(ctx, user.UID); err != nil {
-		s.logger.Log(log.LevelError, "msg", "Limit user session failed", "error", err)
+		s.logger.Errorw("msg", "Limit user session failed", "error", err)
 		return nil, err
 	}
 
 	// 10. 将用户会话缓存到redis中
 	expiration := s.jwtService.GetTokenExpiration()
 	if err := s.cacheService.SetUserSession(ctx, user.UID, sessionID, expiration); err != nil {
-		s.logger.Log(log.LevelError, "msg", "set user session failed", "error", err)
+		s.logger.Errorw("msg", "set user session failed", "error", err)
 	}
 
 	// 11. 如果用户是新用户，则记录日志
 	if isNew {
-		s.logger.Log(log.LevelInfo, "msg", "user is new", "user", user)
+		s.logger.Infow("msg", "user is new", "user", user)
 	} else {
-		s.logger.Log(log.LevelInfo, "msg", "user already esist", "user", user)
+		s.logger.Infow("msg", "user already esist", "user", user)
 	}
 
 	return &pb.FirebaseLoginResponse{
@@ -159,8 +160,9 @@ func (s *UserService) LoginGithub(ctx context.Context, req *pb.GithubLoginReques
 	}
 
 	// 3. 更新登录信息
+	_ = utils.GetPublicParamFromCtx(ctx)
 	if err := s.uc.UpdateLoginInfo(ctx, user.UID); err != nil {
-		s.logger.Log(log.LevelError, "msg", "update login info failed", "error", err)
+		s.logger.Errorw("msg", "update login info failed", "error", err)
 		return nil, err
 	}
 
@@ -170,14 +172,14 @@ func (s *UserService) LoginGithub(ctx context.Context, req *pb.GithubLoginReques
 	// 5. 生成accessToken
 	accessToken, err := s.jwtService.GenerateAccessToken(user.UID, sessionID)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "generate access token failed", "error", err)
+		s.logger.Errorw("msg", "generate access token failed", "error", err)
 		return nil, err
 	}
 
 	// 6. 生成refreshToken
 	refreshToken, err := s.jwtService.GenerateRefreshToken(user.UID, sessionID)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "generate refresh token failed", "error", err)
+		s.logger.Errorw("msg", "generate refresh token failed", "error", err)
 		return nil, err
 	}
 
@@ -188,27 +190,27 @@ func (s *UserService) LoginGithub(ctx context.Context, req *pb.GithubLoginReques
 		ExpiresAt: time.Now().Add(s.jwtService.GetRefreshTokenExpiration()),
 	}
 	if err := s.userSessionService.CreateUserSession(ctx, session); err != nil {
-		s.logger.Log(log.LevelError, "msg", "create user session failed", "error", err)
+		s.logger.Errorw("msg", "create user session failed", "error", err)
 		return nil, err
 	}
 
 	// 8. 限制会话数量
 	if err := s.userSessionService.LimitUserSession(ctx, user.UID); err != nil {
-		s.logger.Log(log.LevelError, "msg", "Limit user session failed", "error", err)
+		s.logger.Errorw("msg", "Limit user session failed", "error", err)
 		return nil, err
 	}
 
 	// 9. 将用户会话缓存到redis中
 	expiration := s.jwtService.GetTokenExpiration()
 	if err := s.cacheService.SetUserSession(ctx, user.UID, sessionID, expiration); err != nil {
-		s.logger.Log(log.LevelError, "msg", "set user session failed", "error", err)
+		s.logger.Errorw("msg", "set user session failed", "error", err)
 	}
 
 	// 10. 如果用户是新用户，则记录日志
 	if isNew {
-		s.logger.Log(log.LevelInfo, "msg", "user is new", "user", user)
+		s.logger.Infow("msg", "user is new", "user", user)
 	} else {
-		s.logger.Log(log.LevelInfo, "msg", "user already esist", "user", user)
+		s.logger.Infow("msg", "user already esist", "user", user)
 	}
 
 	return &pb.GithubLoginResponse{

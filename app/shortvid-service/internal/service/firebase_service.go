@@ -24,24 +24,25 @@ func NewFirebaseApp(c *conf.Firebase) (*auth.Client, error) {
 }
 
 type FirebaseService struct {
-	logger log.Logger
+	logger *log.Helper
 	auth   *auth.Client
 }
 
 func NewFirebaseService(logger log.Logger, c *conf.Firebase) (*FirebaseService, error) {
+	helper := log.NewHelper(logger)
 	auth, err := NewFirebaseApp(c)
 	if err != nil {
-		logger.Log(log.LevelError, "msg", "New Firebase App failed", "error", err)
+		helper.Errorw("msg", "New Firebase App failed", "error", err)
 		return nil, err
 	}
-	return &FirebaseService{logger: logger, auth: auth}, nil
+	return &FirebaseService{logger: helper, auth: auth}, nil
 }
 
 // VertifyIDToken 验证IDToken[验签]
 func (s *FirebaseService) VertifyIDToken(ctx context.Context, idToken string) (*auth.Token, error) {
 	token, err := s.auth.VerifyIDToken(ctx, idToken)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Verify Firebase ID token failed", "error", err)
+		s.logger.Errorw("msg", "Verify Firebase ID token failed", "error", err)
 		return nil, err
 	}
 	return token, nil
@@ -51,7 +52,7 @@ func (s *FirebaseService) VertifyIDToken(ctx context.Context, idToken string) (*
 func (s *FirebaseService) GetUserInfo(ctx context.Context, uid string) (*auth.UserRecord, error) {
 	user, err := s.auth.GetUser(ctx, uid)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Get Firebase User info failed", "error", err)
+		s.logger.Errorw("msg", "Get Firebase User info failed", "error", err)
 		return nil, err
 	}
 	return user, nil

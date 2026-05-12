@@ -5,33 +5,34 @@ import (
 	"shortvid-backend/app/shortvid-service/internal/data/infra/db"
 	"shortvid-backend/app/shortvid-service/internal/data/infra/storage"
 
+	"github.com/Scorpio69t/rustfs-go"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
-	"github.com/minio/minio-go/v7"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(db.NewDB, cache.NewRedis, storage.NewMinioClient, NewData, NewTxRepo, NewAccountRepo, NewUserRepo, NewUserSessionRepo)
+var ProviderSet = wire.NewSet(db.NewDB, cache.NewRedis, storage.NewRustFS, NewData, NewTxRepo, NewAccountRepo, NewUserRepo, NewUserSessionRepo)
 
 // 基础设施的数据模型
 type Data struct {
 	db     *gorm.DB
 	redis  *redis.Client
-	minio  *minio.Client
-	logger log.Logger
+	rustfs *rustfs.Client
+	logger *log.Helper
 }
 
 // NewData 初始化基础设施
-func NewData(db *gorm.DB, redis *redis.Client, minio *minio.Client, logger log.Logger) (*Data, func(), error) {
+func NewData(db *gorm.DB, redis *redis.Client, rustfs *rustfs.Client, logger log.Logger) (*Data, func(), error) {
+	helper := log.NewHelper(logger)
 	cleanup := func() {
-		logger.Log(log.LevelInfo, "msg", "closing the infra data resources")
+		helper.Infow("msg", "closing the infra data resources")
 	}
 	return &Data{
 		db:     db,
 		redis:  redis,
-		minio:  minio,
-		logger: logger,
+		rustfs: rustfs,
+		logger: helper,
 	}, cleanup, nil
 }

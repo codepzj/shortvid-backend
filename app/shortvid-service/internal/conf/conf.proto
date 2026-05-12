@@ -8,12 +8,11 @@ import "google/protobuf/duration.proto";
 message Bootstrap {
   Server server = 1;
   Data data = 2;
-  Log log = 3;
-  Firebase firebase = 4;
-  Github github = 5;
-  Jwt jwt = 6;
-  Session session = 7;
-  Minio minio = 8;
+  Firebase firebase = 3;
+  Github github = 4;
+  Jwt jwt = 5;
+  Session session = 6;
+  RustFs rustfs = 7;
 }
 
 message Server {
@@ -32,13 +31,11 @@ message Server {
 }
 
 message Data {
-  message Database {
-    string driver = 1;
-    string source = 2;
-    google.protobuf.Duration slow_sql_threshold = 3;
-    string log_level = 4;
-    string log_format = 5;
-    string log_file = 6;
+  message Mysql {
+    string dsn = 1;
+    google.protobuf.Duration slow_sql_threshold = 2;
+    int64 max_open_conns = 3;
+    int64 max_idle_conns = 4;
   }
   message Redis {
     string network = 1;
@@ -49,18 +46,8 @@ message Data {
     google.protobuf.Duration read_timeout = 6;
     google.protobuf.Duration write_timeout = 7;
   }
-  Database database = 1;
+  Mysql mysql = 1;
   Redis redis = 2;
-}
-
-message Log {
-  string format = 1;
-  string level = 2;
-  string log_file = 3;
-  int32 max_size = 4;
-  int32 max_backups = 5;
-  int32 max_age = 6;
-  bool compress = 7;
 }
 
 message Firebase {
@@ -86,9 +73,9 @@ message Session {
   int32 limit_count = 4;
 }
 
-message Minio {
+message RustFs {
   string endpoint = 1;
-  string accessKey = 2;
-  string secretKey = 3;
-  bool useSSL = 4;
+  string access_key = 2;
+  string secret_key = 3;
+  bool use_ssl = 4;
 }

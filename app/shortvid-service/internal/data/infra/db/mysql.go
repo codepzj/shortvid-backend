@@ -14,49 +14,27 @@ import (
 
 func NewDB(c *conf.Data) *gorm.DB {
 	newLogger := logger.New(
-		log.New(getLogOutput(c.Database.LogFormat, c.Database.LogFile), "\r\n", log.LstdFlags),
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
 		logger.Config{
-			SlowThreshold: c.Database.SlowSqlThreshold.AsDuration(), // 慢查询阈值
-			LogLevel:      parseMysqlLogLevel(c.Database.LogLevel),  // 日志级别
+			SlowThreshold: c.Mysql.SlowSqlThreshold.AsDuration(), // 慢查询阈值
+			LogLevel:      logger.Info,                           // 日志级别
 		},
 	)
 	// 初始化gorm
 	db, err := gorm.Open(mysql.New(
-		mysql.Config{DSN: c.Database.Source}),
+		mysql.Config{DSN: c.Mysql.Dsn}),
 		&gorm.Config{Logger: newLogger, NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		}},
 	)
+
+	sqlDB, _ := db.DB()
+	sqlDB.SetMaxOpenConns(int(c.Mysql.MaxOpenConns)) // 设置最大打开连接数(最多允许n个连接去使用mysql, 超过会被阻塞)
+	sqlDB.SetMaxIdleConns(int(c.Mysql.MaxIdleConns)) // 设置最大空闲连接数(最多允许创建n个连接但是不使用mysql的, 超过会被丢弃, 防止频繁创建对象造成的开销)
+
 	if err != nil {
 		log.Fatalf("Connect MySQL failed: %v", err)
 	}
 	log.Printf("MySQL connect success...")
 	return db
-}
-
-func getLogOutput(format string, logFile string) *os.File {
-	switch format {
-	case "text":
-		return os.Stdout
-	case "json":
-		f, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
-		if err != nil {
-			log.Fatalf("Open log file failed: %v", err)
-		}
-		return f
-	}
-	return os.Stdout
-}
-
-func parseMysqlLogLevel(logLevel string) logger.LogLevel {
-	switch logLevel {
-	case "info":
-		return logger.Info
-	case "warn":
-		return logger.Warn
-	case "error":
-		return logger.Error
-	default:
-		return logger.Info
-	}
 }

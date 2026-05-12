@@ -46,13 +46,13 @@ type GithubUserInfo struct {
 }
 
 type GithubService struct {
-	logger log.Logger
+	logger *log.Helper
 	ghCfg  *conf.Github
 }
 
 func NewGithubService(logger log.Logger, ghCfg *conf.Github) *GithubService {
 	return &GithubService{
-		logger: logger,
+		logger: log.NewHelper(logger),
 		ghCfg:  ghCfg,
 	}
 }
@@ -69,7 +69,7 @@ func (s *GithubService) GetGithubUserInfo(ctx context.Context, code string) (*Gi
 	// 通过code获取accessToken
 	accessToken, err := cfg.Exchange(ctx, code)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "get github access token by code failed", "error", err)
+		s.logger.Errorw("msg", "get github access token by code failed", "error", err)
 		return nil, err
 	}
 
@@ -87,6 +87,6 @@ func (s *GithubService) GetGithubUserInfo(ctx context.Context, code string) (*Gi
 		return nil, err
 	}
 
-	s.logger.Log(log.LevelDebug, "userInfo", userInfo)
+	s.logger.Debugw("userInfo", userInfo)
 	return &userInfo, nil
 }

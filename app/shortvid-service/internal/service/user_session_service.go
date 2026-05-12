@@ -11,7 +11,7 @@ import (
 )
 
 type UserSessionService struct {
-	logger          log.Logger
+	logger          *log.Helper
 	sessionConf     *conf.Session
 	userSessionRepo biz.UserSessionRepo
 	cacheService    *CacheService
@@ -20,7 +20,7 @@ type UserSessionService struct {
 
 func NewUserSessionService(logger log.Logger, sessionConf *conf.Session, userSessionRepo biz.UserSessionRepo, cacheService *CacheService, jwtService *JwtService) *UserSessionService {
 	return &UserSessionService{
-		logger:          logger,
+		logger:          log.NewHelper(logger),
 		sessionConf:     sessionConf,
 		userSessionRepo: userSessionRepo,
 		cacheService:    cacheService,
@@ -31,7 +31,7 @@ func NewUserSessionService(logger log.Logger, sessionConf *conf.Session, userSes
 // CreateUserSession 创建用户会话
 func (s *UserSessionService) CreateUserSession(ctx context.Context, userSession *model.UserSession) error {
 	if err := s.userSessionRepo.CreateUserSession(ctx, userSession); err != nil {
-		s.logger.Log(log.LevelError, "msg", "Create user session failed", "error", err)
+		s.logger.Errorw("msg", "Create user session failed", "error", err)
 		return err
 	}
 	return nil
@@ -42,13 +42,13 @@ func (s *UserSessionService) DeleteUserSession(ctx context.Context, sessionId st
 	// 1. 先查数据库
 	session, err := s.userSessionRepo.FindUserSessionBySessionID(ctx, sessionId)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Find user session by session id failed", "error", err)
+		s.logger.Errorw("msg", "Find user session by session id failed", "error", err)
 		return err
 	}
 	// 2. 如果会话存在, 则删除会话
 	if session != nil {
 		if err := s.userSessionRepo.DeleteUserSessionBySessionID(ctx, sessionId); err != nil {
-			s.logger.Log(log.LevelError, "msg", "Delete user session by session id failed", "error", err)
+			s.logger.Errorw("msg", "Delete user session by session id failed", "error", err)
 			return err
 		}
 	}
@@ -63,7 +63,7 @@ func (s *UserSessionService) ValidateSession(ctx context.Context, sessionId stri
 	// 1. 先查缓存
 	sessionInfo, err := s.cacheService.GetUserSessionInfo(ctx, sessionId)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Get user session info failed", "error", err)
+		s.logger.Errorw("msg", "Get user session info failed", "error", err)
 		return err
 	}
 	// map不为空, 则会话有效
@@ -73,7 +73,7 @@ func (s *UserSessionService) ValidateSession(ctx context.Context, sessionId stri
 	// 2. 查询用户会话
 	session, err := s.userSessionRepo.FindUserSessionBySessionID(ctx, sessionId)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Find user session by session id failed", "error", err)
+		s.logger.Errorw("msg", "Find user session by session id failed", "error", err)
 		return err
 	}
 	// 3. 会话是否过期
@@ -83,7 +83,7 @@ func (s *UserSessionService) ValidateSession(ctx context.Context, sessionId stri
 	// 4. 回填缓存
 	expiration := s.jwtService.GetTokenExpiration()
 	if err := s.cacheService.SetUserSession(ctx, session.UID, sessionId, expiration); err != nil {
-		s.logger.Log(log.LevelError, "msg", "Set user session failed", "error", err)
+		s.logger.Errorw("msg", "Set user session failed", "error", err)
 		return err
 	}
 	return nil
@@ -106,7 +106,7 @@ func (s *UserSessionService) LimitUserSession(ctx context.Context, UID int) erro
 	// 3. 查询用户会话
 	sessions, err := s.userSessionRepo.FindUserSessionByUID(ctx, UID)
 	if err != nil {
-		s.logger.Log(log.LevelError, "msg", "Find user session by user id failed", "error", err)
+		s.logger.Errorw("msg", "Find user session by user id failed", "error", err)
 		return err
 	}
 	// 4. 会话数量超过限制, 删除最早的会话
@@ -117,7 +117,7 @@ func (s *UserSessionService) LimitUserSession(ctx context.Context, UID int) erro
 			deleteSessionIds[i] = deleteSessions[i].ID
 		}
 		if err := s.userSessionRepo.DeleteUserSessionByIDs(ctx, deleteSessionIds); err != nil {
-			s.logger.Log(log.LevelError, "msg", "Delete user session by ids failed", "error", err)
+			s.logger.Errorw("msg", "Delete user session by ids failed", "error", err)
 			return err
 		}
 		// 删除对应的缓存
