@@ -30,7 +30,7 @@ type Bootstrap struct {
 	Github        *Github                `protobuf:"bytes,4,opt,name=github,proto3" json:"github,omitempty"`
 	Jwt           *Jwt                   `protobuf:"bytes,5,opt,name=jwt,proto3" json:"jwt,omitempty"`
 	Session       *Session               `protobuf:"bytes,6,opt,name=session,proto3" json:"session,omitempty"`
-	Minio         *Minio                 `protobuf:"bytes,7,opt,name=minio,proto3" json:"minio,omitempty"`
+	Rustfs        *RustFs                `protobuf:"bytes,7,opt,name=rustfs,proto3" json:"rustfs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -107,9 +107,9 @@ func (x *Bootstrap) GetSession() *Session {
 	return nil
 }
 
-func (x *Bootstrap) GetMinio() *Minio {
+func (x *Bootstrap) GetRustfs() *RustFs {
 	if x != nil {
-		return x.Minio
+		return x.Rustfs
 	}
 	return nil
 }
@@ -450,30 +450,30 @@ func (x *Session) GetLimitCount() int32 {
 	return 0
 }
 
-type Minio struct {
+type RustFs struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Endpoint      string                 `protobuf:"bytes,1,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
-	AccessKey     string                 `protobuf:"bytes,2,opt,name=accessKey,proto3" json:"accessKey,omitempty"`
-	SecretKey     string                 `protobuf:"bytes,3,opt,name=secretKey,proto3" json:"secretKey,omitempty"`
-	UseSSL        bool                   `protobuf:"varint,4,opt,name=useSSL,proto3" json:"useSSL,omitempty"`
+	AccessKey     string                 `protobuf:"bytes,2,opt,name=access_key,json=accessKey,proto3" json:"access_key,omitempty"`
+	SecretKey     string                 `protobuf:"bytes,3,opt,name=secret_key,json=secretKey,proto3" json:"secret_key,omitempty"`
+	UseSsl        bool                   `protobuf:"varint,4,opt,name=use_ssl,json=useSsl,proto3" json:"use_ssl,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Minio) Reset() {
-	*x = Minio{}
+func (x *RustFs) Reset() {
+	*x = RustFs{}
 	mi := &file_conf_conf_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Minio) String() string {
+func (x *RustFs) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Minio) ProtoMessage() {}
+func (*RustFs) ProtoMessage() {}
 
-func (x *Minio) ProtoReflect() protoreflect.Message {
+func (x *RustFs) ProtoReflect() protoreflect.Message {
 	mi := &file_conf_conf_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -485,35 +485,35 @@ func (x *Minio) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Minio.ProtoReflect.Descriptor instead.
-func (*Minio) Descriptor() ([]byte, []int) {
+// Deprecated: Use RustFs.ProtoReflect.Descriptor instead.
+func (*RustFs) Descriptor() ([]byte, []int) {
 	return file_conf_conf_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *Minio) GetEndpoint() string {
+func (x *RustFs) GetEndpoint() string {
 	if x != nil {
 		return x.Endpoint
 	}
 	return ""
 }
 
-func (x *Minio) GetAccessKey() string {
+func (x *RustFs) GetAccessKey() string {
 	if x != nil {
 		return x.AccessKey
 	}
 	return ""
 }
 
-func (x *Minio) GetSecretKey() string {
+func (x *RustFs) GetSecretKey() string {
 	if x != nil {
 		return x.SecretKey
 	}
 	return ""
 }
 
-func (x *Minio) GetUseSSL() bool {
+func (x *RustFs) GetUseSsl() bool {
 	if x != nil {
-		return x.UseSSL
+		return x.UseSsl
 	}
 	return false
 }
@@ -803,15 +803,15 @@ var File_conf_conf_proto protoreflect.FileDescriptor
 const file_conf_conf_proto_rawDesc = "" +
 	"\n" +
 	"\x0fconf/conf.proto\x12\n" +
-	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"\xb6\x02\n" +
+	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"\xb9\x02\n" +
 	"\tBootstrap\x12*\n" +
 	"\x06server\x18\x01 \x01(\v2\x12.kratos.api.ServerR\x06server\x12$\n" +
 	"\x04data\x18\x02 \x01(\v2\x10.kratos.api.DataR\x04data\x120\n" +
 	"\bfirebase\x18\x03 \x01(\v2\x14.kratos.api.FirebaseR\bfirebase\x12*\n" +
 	"\x06github\x18\x04 \x01(\v2\x12.kratos.api.GithubR\x06github\x12!\n" +
 	"\x03jwt\x18\x05 \x01(\v2\x0f.kratos.api.JwtR\x03jwt\x12-\n" +
-	"\asession\x18\x06 \x01(\v2\x13.kratos.api.SessionR\asession\x12'\n" +
-	"\x05minio\x18\a \x01(\v2\x11.kratos.api.MinioR\x05minio\"\xb8\x02\n" +
+	"\asession\x18\x06 \x01(\v2\x13.kratos.api.SessionR\asession\x12*\n" +
+	"\x06rustfs\x18\a \x01(\v2\x12.kratos.api.RustFsR\x06rustfs\"\xb8\x02\n" +
 	"\x06Server\x12+\n" +
 	"\x04http\x18\x01 \x01(\v2\x17.kratos.api.Server.HTTPR\x04http\x12+\n" +
 	"\x04grpc\x18\x02 \x01(\v2\x17.kratos.api.Server.GRPCR\x04grpc\x1ai\n" +
@@ -856,12 +856,14 @@ const file_conf_conf_proto_rawDesc = "" +
 	"\x06secure\x18\x02 \x01(\bR\x06secure\x12#\n" +
 	"\rlimit_enabled\x18\x03 \x01(\bR\flimitEnabled\x12\x1f\n" +
 	"\vlimit_count\x18\x04 \x01(\x05R\n" +
-	"limitCount\"w\n" +
-	"\x05Minio\x12\x1a\n" +
-	"\bendpoint\x18\x01 \x01(\tR\bendpoint\x12\x1c\n" +
-	"\taccessKey\x18\x02 \x01(\tR\taccessKey\x12\x1c\n" +
-	"\tsecretKey\x18\x03 \x01(\tR\tsecretKey\x12\x16\n" +
-	"\x06useSSL\x18\x04 \x01(\bR\x06useSSLB:Z8shortvid-backend/app/shortvid-service/internal/conf;confb\x06proto3"
+	"limitCount\"{\n" +
+	"\x06RustFs\x12\x1a\n" +
+	"\bendpoint\x18\x01 \x01(\tR\bendpoint\x12\x1d\n" +
+	"\n" +
+	"access_key\x18\x02 \x01(\tR\taccessKey\x12\x1d\n" +
+	"\n" +
+	"secret_key\x18\x03 \x01(\tR\tsecretKey\x12\x17\n" +
+	"\ause_ssl\x18\x04 \x01(\bR\x06useSslB:Z8shortvid-backend/app/shortvid-service/internal/conf;confb\x06proto3"
 
 var (
 	file_conf_conf_proto_rawDescOnce sync.Once
@@ -884,7 +886,7 @@ var file_conf_conf_proto_goTypes = []any{
 	(*Github)(nil),              // 4: kratos.api.Github
 	(*Jwt)(nil),                 // 5: kratos.api.Jwt
 	(*Session)(nil),             // 6: kratos.api.Session
-	(*Minio)(nil),               // 7: kratos.api.Minio
+	(*RustFs)(nil),              // 7: kratos.api.RustFs
 	(*Server_HTTP)(nil),         // 8: kratos.api.Server.HTTP
 	(*Server_GRPC)(nil),         // 9: kratos.api.Server.GRPC
 	(*Data_Mysql)(nil),          // 10: kratos.api.Data.Mysql
@@ -898,7 +900,7 @@ var file_conf_conf_proto_depIdxs = []int32{
 	4,  // 3: kratos.api.Bootstrap.github:type_name -> kratos.api.Github
 	5,  // 4: kratos.api.Bootstrap.jwt:type_name -> kratos.api.Jwt
 	6,  // 5: kratos.api.Bootstrap.session:type_name -> kratos.api.Session
-	7,  // 6: kratos.api.Bootstrap.minio:type_name -> kratos.api.Minio
+	7,  // 6: kratos.api.Bootstrap.rustfs:type_name -> kratos.api.RustFs
 	8,  // 7: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
 	9,  // 8: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
 	10, // 9: kratos.api.Data.mysql:type_name -> kratos.api.Data.Mysql

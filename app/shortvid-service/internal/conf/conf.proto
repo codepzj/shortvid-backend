@@ -12,7 +12,7 @@ message Bootstrap {
   Github github = 4;
   Jwt jwt = 5;
   Session session = 6;
-  Minio minio = 7;
+  RustFs rustfs = 7;
 }
 
 message Server {
@@ -73,9 +73,9 @@ message Session {
   int32 limit_count = 4;
 }
 
-message Minio {
+message RustFs {
   string endpoint = 1;
-  string accessKey = 2;
-  string secretKey = 3;
-  bool useSSL = 4;
+  string access_key = 2;
+  string secret_key = 3;
+  bool use_ssl = 4;
 }
