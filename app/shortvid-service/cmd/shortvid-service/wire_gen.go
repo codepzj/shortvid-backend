@@ -29,8 +29,8 @@ import (
 func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, github *conf.Github, jwt *conf.Jwt, session *conf.Session, rustFs *conf.RustFs, logger log.Logger) (*kratos.App, func(), error) {
 	gormDB := db.NewDB(confData)
 	client := cache.NewRedis(confData)
-	rustfsClient := storage.NewRustFS(rustFs)
-	dataData, cleanup, err := data.NewData(gormDB, client, rustfsClient, logger)
+	s3Client := storage.NewS3(rustFs)
+	dataData, cleanup, err := data.NewData(gormDB, client, s3Client, logger)
 	if err != nil {
 		return nil, nil, err
 	}
