@@ -62,6 +62,54 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/.GithubLoginResponse'
+    /api/v1/upload/buckets:
+        post:
+            tags:
+                - UploadService
+            operationId: UploadService_ListBuckets
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/.ListBucketsReply'
+    /api/v1/upload/presigned-url:
+        post:
+            tags:
+                - UploadService
+            operationId: UploadService_GetUploadPresignedURL
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/.GetUploadPresignedURLReply'
+    /api/v1/upload/session:
+        post:
+            tags:
+                - UploadService
+            operationId: UploadService_GetUploadSession
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/.GetUploadSessionReply'
     /api/v1/user/info:
         post:
             tags:
@@ -116,6 +164,20 @@ components:
                 user:
                     $ref: '#/components/schemas/.UserProfile'
             description: firebase登录响应体
+        .GetUploadPresignedURLReply:
+            type: object
+            properties:
+                url:
+                    type: string
+        .GetUploadSessionReply:
+            type: object
+            properties:
+                accessKeyId:
+                    type: string
+                secretAccessKey:
+                    type: string
+                sessionToken:
+                    type: string
         .GetUserProfileRequest:
             type: object
             properties:
@@ -131,7 +193,9 @@ components:
             description: 用户资料响应体
         .GithubLoginRequest:
             type: object
-            properties: {}
+            properties:
+                code:
+                    type: string
         .GithubLoginResponse:
             type: object
             properties:
@@ -141,6 +205,13 @@ components:
                     type: string
                 user:
                     $ref: '#/components/schemas/.UserProfile'
+        .ListBucketsReply:
+            type: object
+            properties:
+                buckets:
+                    type: array
+                    items:
+                        type: string
         .UploadFileReply:
             type: object
             properties: {}
@@ -175,5 +246,6 @@ components:
             description: 用户资料
 tags:
     - name: File
+    - name: UploadService
     - name: UserService
       description: 用户服务

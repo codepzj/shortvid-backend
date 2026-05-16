@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option go_package = "shortvid-backend/api/shortvid-service/v1;v1";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+service UploadService {
+	rpc GetUploadPresignedURL (google.protobuf.Empty) returns (GetUploadPresignedURLReply){
+		option (google.api.http) = {
+			post: "/api/v1/upload/presigned-url"
+			body: "*"
+		};
+	};
+
+	rpc GetUploadSession (google.protobuf.Empty) returns (GetUploadSessionReply){
+		option (google.api.http) = {
+			post: "/api/v1/upload/session"
+			body: "*"
+		};
+	};
+
+	rpc ListBuckets (google.protobuf.Empty) returns (ListBucketsReply){
+		option (google.api.http) = {
+			post: "/api/v1/upload/buckets"
+			body: "*"
+		};
+	};
+}
+
+message GetUploadPresignedURLReply {
+	string url = 1;
+}
+
+message GetUploadSessionReply {
+	string access_key_id = 1;
+	string secret_access_key = 2;
+	string session_token = 3;
+}
+
+message ListBucketsReply {
+	repeated string buckets = 1;
+}

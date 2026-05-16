@@ -12,7 +12,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(db.NewDB, cache.NewRedis, storage.NewS3, NewData, NewTxRepo, NewAccountRepo, NewUserRepo, NewUserSessionRepo)
+var ProviderSet = wire.NewSet(db.NewDB, cache.NewRedis, storage.NewS3, NewData, NewTxRepo, NewAccountRepo, NewUserRepo, NewUserSessionRepo, NewS3Repo)
 
 // 基础设施的数据模型
 type Data struct {
