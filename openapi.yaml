@@ -78,22 +78,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/.ListBucketsReply'
-    /api/v1/upload/presigned-url:
-        post:
-            tags:
-                - UploadService
-            operationId: UploadService_GetUploadPresignedURL
-            requestBody:
-                content:
-                    application/json: {}
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/.GetUploadPresignedURLReply'
     /api/v1/upload/session:
         post:
             tags:
@@ -164,11 +148,6 @@ components:
                 user:
                     $ref: '#/components/schemas/.UserProfile'
             description: firebase登录响应体
-        .GetUploadPresignedURLReply:
-            type: object
-            properties:
-                url:
-                    type: string
         .GetUploadSessionReply:
             type: object
             properties:
@@ -177,6 +156,10 @@ components:
                 secretAccessKey:
                     type: string
                 sessionToken:
+                    type: string
+                expiration:
+                    type: string
+                endpoint:
                     type: string
         .GetUserProfileRequest:
             type: object

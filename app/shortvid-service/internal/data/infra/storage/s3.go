@@ -13,6 +13,7 @@ import (
 )
 
 type S3Data struct {
+	S3Conf          *conf.S3
 	Client          *s3.Client        // s3对象存储客户端
 	PresignedClient *s3.PresignClient // s3临时凭证客户端
 	StsClient       *sts.Client       // sts客户端
@@ -48,6 +49,7 @@ func NewS3(conf *conf.S3) *S3Data {
 	log.Println("S3 data client initialized successfully...")
 
 	return &S3Data{
+		S3Conf:          conf,
 		Client:          client,
 		PresignedClient: presignedClient,
 		StsClient:       stsClient,

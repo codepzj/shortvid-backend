@@ -24,17 +24,6 @@ func NewUploadService(logger log.Logger, uc *biz.S3Usecase) *UploadService {
 	}
 }
 
-// GetUploadSession 获取上传会话
-func (s *UploadService) GetUploadPresignedURL(ctx context.Context, req *emptypb.Empty) (*pb.GetUploadPresignedURLReply, error) {
-	url, err := s.uc.GetUploadPresignedURL(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return &pb.GetUploadPresignedURLReply{
-		Url: url,
-	}, nil
-}
-
 func (s *UploadService) GetUploadSession(ctx context.Context, req *emptypb.Empty) (*pb.GetUploadSessionReply, error) {
 	session, err := s.uc.GetUploadSession(ctx)
 	if err != nil {

@@ -6,13 +6,6 @@ import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
 
 service UploadService {
-	rpc GetUploadPresignedURL (google.protobuf.Empty) returns (GetUploadPresignedURLReply){
-		option (google.api.http) = {
-			post: "/api/v1/upload/presigned-url"
-			body: "*"
-		};
-	};
-
 	rpc GetUploadSession (google.protobuf.Empty) returns (GetUploadSessionReply){
 		option (google.api.http) = {
 			post: "/api/v1/upload/session"
@@ -28,14 +21,11 @@ service UploadService {
 	};
 }
 
-message GetUploadPresignedURLReply {
-	string url = 1;
-}
-
 message GetUploadSessionReply {
-	string access_key_id = 1;
-	string secret_access_key = 2;
-	string session_token = 3;
+	string access_key_id = 1; // 访问密钥ID
+	string secret_access_key = 2; // 秘密访问密钥
+	string session_token = 3; // 会话令牌
+	string endpoint = 4; // 终端节点
 }
 
 message ListBucketsReply {

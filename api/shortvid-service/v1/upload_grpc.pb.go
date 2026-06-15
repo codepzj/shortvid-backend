@@ -20,16 +20,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UploadService_GetUploadPresignedURL_FullMethodName = "/UploadService/GetUploadPresignedURL"
-	UploadService_GetUploadSession_FullMethodName      = "/UploadService/GetUploadSession"
-	UploadService_ListBuckets_FullMethodName           = "/UploadService/ListBuckets"
+	UploadService_GetUploadSession_FullMethodName = "/UploadService/GetUploadSession"
+	UploadService_ListBuckets_FullMethodName      = "/UploadService/ListBuckets"
 )
 
 // UploadServiceClient is the client API for UploadService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UploadServiceClient interface {
-	GetUploadPresignedURL(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUploadPresignedURLReply, error)
 	GetUploadSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUploadSessionReply, error)
 	ListBuckets(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListBucketsReply, error)
 }
@@ -40,16 +38,6 @@ type uploadServiceClient struct {
 
 func NewUploadServiceClient(cc grpc.ClientConnInterface) UploadServiceClient {
 	return &uploadServiceClient{cc}
-}
-
-func (c *uploadServiceClient) GetUploadPresignedURL(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUploadPresignedURLReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUploadPresignedURLReply)
-	err := c.cc.Invoke(ctx, UploadService_GetUploadPresignedURL_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *uploadServiceClient) GetUploadSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUploadSessionReply, error) {
@@ -76,7 +64,6 @@ func (c *uploadServiceClient) ListBuckets(ctx context.Context, in *emptypb.Empty
 // All implementations must embed UnimplementedUploadServiceServer
 // for forward compatibility.
 type UploadServiceServer interface {
-	GetUploadPresignedURL(context.Context, *emptypb.Empty) (*GetUploadPresignedURLReply, error)
 	GetUploadSession(context.Context, *emptypb.Empty) (*GetUploadSessionReply, error)
 	ListBuckets(context.Context, *emptypb.Empty) (*ListBucketsReply, error)
 	mustEmbedUnimplementedUploadServiceServer()
@@ -89,9 +76,6 @@ type UploadServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUploadServiceServer struct{}
 
-func (UnimplementedUploadServiceServer) GetUploadPresignedURL(context.Context, *emptypb.Empty) (*GetUploadPresignedURLReply, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUploadPresignedURL not implemented")
-}
 func (UnimplementedUploadServiceServer) GetUploadSession(context.Context, *emptypb.Empty) (*GetUploadSessionReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUploadSession not implemented")
 }
@@ -117,24 +101,6 @@ func RegisterUploadServiceServer(s grpc.ServiceRegistrar, srv UploadServiceServe
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&UploadService_ServiceDesc, srv)
-}
-
-func _UploadService_GetUploadPresignedURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UploadServiceServer).GetUploadPresignedURL(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UploadService_GetUploadPresignedURL_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UploadServiceServer).GetUploadPresignedURL(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _UploadService_GetUploadSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -180,10 +146,6 @@ var UploadService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "UploadService",
 	HandlerType: (*UploadServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetUploadPresignedURL",
-			Handler:    _UploadService_GetUploadPresignedURL_Handler,
-		},
 		{
 			MethodName: "GetUploadSession",
 			Handler:    _UploadService_GetUploadSession_Handler,

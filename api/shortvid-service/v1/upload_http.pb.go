@@ -20,43 +20,18 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationUploadServiceGetUploadPresignedURL = "/UploadService/GetUploadPresignedURL"
 const OperationUploadServiceGetUploadSession = "/UploadService/GetUploadSession"
 const OperationUploadServiceListBuckets = "/UploadService/ListBuckets"
 
 type UploadServiceHTTPServer interface {
-	GetUploadPresignedURL(context.Context, *emptypb.Empty) (*GetUploadPresignedURLReply, error)
 	GetUploadSession(context.Context, *emptypb.Empty) (*GetUploadSessionReply, error)
 	ListBuckets(context.Context, *emptypb.Empty) (*ListBucketsReply, error)
 }
 
 func RegisterUploadServiceHTTPServer(s *http.Server, srv UploadServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/api/v1/upload/presigned-url", _UploadService_GetUploadPresignedURL0_HTTP_Handler(srv))
 	r.POST("/api/v1/upload/session", _UploadService_GetUploadSession0_HTTP_Handler(srv))
 	r.POST("/api/v1/upload/buckets", _UploadService_ListBuckets0_HTTP_Handler(srv))
-}
-
-func _UploadService_GetUploadPresignedURL0_HTTP_Handler(srv UploadServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationUploadServiceGetUploadPresignedURL)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUploadPresignedURL(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetUploadPresignedURLReply)
-		return ctx.Result(200, reply)
-	}
 }
 
 func _UploadService_GetUploadSession0_HTTP_Handler(srv UploadServiceHTTPServer) func(ctx http.Context) error {
@@ -104,7 +79,6 @@ func _UploadService_ListBuckets0_HTTP_Handler(srv UploadServiceHTTPServer) func(
 }
 
 type UploadServiceHTTPClient interface {
-	GetUploadPresignedURL(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUploadPresignedURLReply, err error)
 	GetUploadSession(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUploadSessionReply, err error)
 	ListBuckets(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListBucketsReply, err error)
 }
@@ -115,19 +89,6 @@ type UploadServiceHTTPClientImpl struct {
 
 func NewUploadServiceHTTPClient(client *http.Client) UploadServiceHTTPClient {
 	return &UploadServiceHTTPClientImpl{client}
-}
-
-func (c *UploadServiceHTTPClientImpl) GetUploadPresignedURL(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetUploadPresignedURLReply, error) {
-	var out GetUploadPresignedURLReply
-	pattern := "/api/v1/upload/presigned-url"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationUploadServiceGetUploadPresignedURL))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
 }
 
 func (c *UploadServiceHTTPClientImpl) GetUploadSession(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetUploadSessionReply, error) {
