@@ -60,6 +60,9 @@ all:
 	make api
 	make config
 	make generate
+	make errors
+	make validate
+	make fmt
 
 # show help
 help:

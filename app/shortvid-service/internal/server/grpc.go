@@ -5,10 +5,10 @@ import (
 	"shortvid-backend/app/shortvid-service/internal/conf"
 	"shortvid-backend/app/shortvid-service/internal/service"
 
+	"github.com/go-kratos/kratos/contrib/middleware/validate/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/contrib/middleware/validate/v2"
 )
 
 // NewGRPCServer new a gRPC server.

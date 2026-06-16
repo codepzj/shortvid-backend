@@ -26,11 +26,11 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, github *conf.Github, jwt *conf.Jwt, session *conf.Session, rustFs *conf.RustFs, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, github *conf.Github, jwt *conf.Jwt, session *conf.Session, s3 *conf.S3, logger log.Logger) (*kratos.App, func(), error) {
 	gormDB := db.NewDB(confData)
 	client := cache.NewRedis(confData)
-	rustfsClient := storage.NewRustFS(rustFs)
-	dataData, cleanup, err := data.NewData(gormDB, client, rustfsClient, logger)
+	s3Data := storage.NewS3(s3)
+	dataData, cleanup, err := data.NewData(gormDB, client, s3Data, logger)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -50,8 +50,10 @@ func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Fireba
 	userSessionService := service.NewUserSessionService(logger, session, userSessionRepo, cacheService, jwtService)
 	userService := service.NewUserService(logger, usersUsecase, firebaseService, githubService, jwtService, userSessionService, cacheService)
 	grpcServer := server.NewGRPCServer(confServer, userService, logger)
-	fileService := service.NewFileService(logger)
-	httpServer := server.NewHTTPServer(confServer, jwt, userService, jwtService, fileService, logger)
+	s3Repo := data.NewS3Repo(s3, dataData, logger)
+	s3Usecase := biz.NewS3Usecase(s3, logger, s3Repo)
+	uploadService := service.NewUploadService(logger, s3Usecase)
+	httpServer := server.NewHTTPServer(confServer, jwt, userService, jwtService, uploadService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

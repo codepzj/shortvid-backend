@@ -5,7 +5,6 @@ import (
 	"shortvid-backend/app/shortvid-service/internal/data/infra/db"
 	"shortvid-backend/app/shortvid-service/internal/data/infra/storage"
 
-	"github.com/Scorpio69t/rustfs-go"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 	"github.com/redis/go-redis/v9"
@@ -13,18 +12,18 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(db.NewDB, cache.NewRedis, storage.NewRustFS, NewData, NewTxRepo, NewAccountRepo, NewUserRepo, NewUserSessionRepo)
+var ProviderSet = wire.NewSet(db.NewDB, cache.NewRedis, storage.NewS3, NewData, NewTxRepo, NewAccountRepo, NewUserRepo, NewUserSessionRepo, NewS3Repo)
 
 // 基础设施的数据模型
 type Data struct {
 	db     *gorm.DB
 	redis  *redis.Client
-	rustfs *rustfs.Client
+	s3     *storage.S3Data
 	logger *log.Helper
 }
 
 // NewData 初始化基础设施
-func NewData(db *gorm.DB, redis *redis.Client, rustfs *rustfs.Client, logger log.Logger) (*Data, func(), error) {
+func NewData(db *gorm.DB, redis *redis.Client, s3 *storage.S3Data, logger log.Logger) (*Data, func(), error) {
 	helper := log.NewHelper(logger)
 	cleanup := func() {
 		helper.Infow("msg", "closing the infra data resources")
@@ -32,7 +31,7 @@ func NewData(db *gorm.DB, redis *redis.Client, rustfs *rustfs.Client, logger log
 	return &Data{
 		db:     db,
 		redis:  redis,
-		rustfs: rustfs,
+		s3:     s3,
 		logger: helper,
 	}, cleanup, nil
 }
