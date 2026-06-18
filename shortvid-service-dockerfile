@@ -1,9 +1,9 @@
-FROM golang:1.19 AS builder
+FROM golang:1.26 AS builder
 
 COPY . /src
 WORKDIR /src
 
-RUN GOPROXY=https://goproxy.cn make build
+RUN GOPROXY=https://goproxy.cn make build-shortvid-service
 
 FROM debian:stable-slim
 
@@ -17,8 +17,8 @@ COPY --from=builder /src/bin /app
 
 WORKDIR /app
 
-EXPOSE 8000
-EXPOSE 9000
+EXPOSE 4001
+EXPOSE 5001
 VOLUME /data/conf
 
-CMD ["./server", "-conf", "/data/conf"]
+CMD ["./shortvid-service", "-conf", "/data/conf"]

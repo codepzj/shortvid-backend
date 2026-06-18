@@ -62,7 +62,7 @@ func RequireAuth(userSvc *service.UserService, jwtSvc *service.JwtService) middl
 
 			parts := strings.SplitN(authorization, " ", 2)
 			if len(parts) != 2 || parts[0] != "Bearer" {
-				return nil, kerrors.Unauthorized("authorize failed","invalid authorization format")
+				return nil, kerrors.Unauthorized("authorize failed", "invalid authorization format")
 			}
 
 			tokenStr := parts[1]

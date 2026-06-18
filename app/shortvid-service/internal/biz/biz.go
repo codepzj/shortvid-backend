@@ -5,4 +5,4 @@ import (
 )
 
 // ProviderSet is biz providers.
-var ProviderSet = wire.NewSet(NewAccountUsecase, NewUsersUsecase, NewUserSessionUsecase)
+var ProviderSet = wire.NewSet(NewAccountUsecase, NewUsersUsecase, NewUserSessionUsecase, NewS3Usecase)

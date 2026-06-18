@@ -43,10 +43,10 @@ api:
 	       --openapi_out=fq_schema_naming=true,default_response=false:. \
 	       $(API_PROTO_FILES)
 
-.PHONY: build
-# build
-build:
-	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
+.PHONY: build-shortvid-service
+# build-shortvid-service
+build-shortvid-service:
+	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin ./app/shortvid-service/...
 
 .PHONY: generate
 # generate
@@ -60,6 +60,9 @@ all:
 	make api
 	make config
 	make generate
+	make errors
+	make validate
+	make fmt
 
 # show help
 help:

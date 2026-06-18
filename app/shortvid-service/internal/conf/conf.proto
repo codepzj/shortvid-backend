@@ -12,7 +12,7 @@ message Bootstrap {
   Github github = 4;
   Jwt jwt = 5;
   Session session = 6;
-  RustFs rustfs = 7;
+  S3 s3 = 7;
 }
 
 message Server {
@@ -73,9 +73,16 @@ message Session {
   int32 limit_count = 4;
 }
 
-message RustFs {
+message S3 {
   string endpoint = 1;
-  string access_key = 2;
-  string secret_key = 3;
-  bool use_ssl = 4;
+  string s3_access_key = 2;
+  string s3_secret_key = 3;
+  string region = 4;
+  bool use_path_style = 5;
+  string sts_access_key = 6;
+  string sts_secret_key = 7;
+  string sts_role_arn = 8;
+  string sts_session_name = 9;
+  string sts_policy = 10;
+  int32 sts_duration_seconds = 11;
 }

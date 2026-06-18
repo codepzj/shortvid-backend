@@ -30,7 +30,7 @@ type Bootstrap struct {
 	Github        *Github                `protobuf:"bytes,4,opt,name=github,proto3" json:"github,omitempty"`
 	Jwt           *Jwt                   `protobuf:"bytes,5,opt,name=jwt,proto3" json:"jwt,omitempty"`
 	Session       *Session               `protobuf:"bytes,6,opt,name=session,proto3" json:"session,omitempty"`
-	Rustfs        *RustFs                `protobuf:"bytes,7,opt,name=rustfs,proto3" json:"rustfs,omitempty"`
+	S3            *S3                    `protobuf:"bytes,7,opt,name=s3,proto3" json:"s3,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -107,9 +107,9 @@ func (x *Bootstrap) GetSession() *Session {
 	return nil
 }
 
-func (x *Bootstrap) GetRustfs() *RustFs {
+func (x *Bootstrap) GetS3() *S3 {
 	if x != nil {
-		return x.Rustfs
+		return x.S3
 	}
 	return nil
 }
@@ -450,30 +450,37 @@ func (x *Session) GetLimitCount() int32 {
 	return 0
 }
 
-type RustFs struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Endpoint      string                 `protobuf:"bytes,1,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
-	AccessKey     string                 `protobuf:"bytes,2,opt,name=access_key,json=accessKey,proto3" json:"access_key,omitempty"`
-	SecretKey     string                 `protobuf:"bytes,3,opt,name=secret_key,json=secretKey,proto3" json:"secret_key,omitempty"`
-	UseSsl        bool                   `protobuf:"varint,4,opt,name=use_ssl,json=useSsl,proto3" json:"use_ssl,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+type S3 struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	Endpoint           string                 `protobuf:"bytes,1,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
+	S3AccessKey        string                 `protobuf:"bytes,2,opt,name=s3_access_key,json=s3AccessKey,proto3" json:"s3_access_key,omitempty"`
+	S3SecretKey        string                 `protobuf:"bytes,3,opt,name=s3_secret_key,json=s3SecretKey,proto3" json:"s3_secret_key,omitempty"`
+	Region             string                 `protobuf:"bytes,4,opt,name=region,proto3" json:"region,omitempty"`
+	UsePathStyle       bool                   `protobuf:"varint,5,opt,name=use_path_style,json=usePathStyle,proto3" json:"use_path_style,omitempty"`
+	StsAccessKey       string                 `protobuf:"bytes,6,opt,name=sts_access_key,json=stsAccessKey,proto3" json:"sts_access_key,omitempty"`
+	StsSecretKey       string                 `protobuf:"bytes,7,opt,name=sts_secret_key,json=stsSecretKey,proto3" json:"sts_secret_key,omitempty"`
+	StsRoleArn         string                 `protobuf:"bytes,8,opt,name=sts_role_arn,json=stsRoleArn,proto3" json:"sts_role_arn,omitempty"`
+	StsSessionName     string                 `protobuf:"bytes,9,opt,name=sts_session_name,json=stsSessionName,proto3" json:"sts_session_name,omitempty"`
+	StsPolicy          string                 `protobuf:"bytes,10,opt,name=sts_policy,json=stsPolicy,proto3" json:"sts_policy,omitempty"`
+	StsDurationSeconds int32                  `protobuf:"varint,11,opt,name=sts_duration_seconds,json=stsDurationSeconds,proto3" json:"sts_duration_seconds,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
-func (x *RustFs) Reset() {
-	*x = RustFs{}
+func (x *S3) Reset() {
+	*x = S3{}
 	mi := &file_conf_conf_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RustFs) String() string {
+func (x *S3) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RustFs) ProtoMessage() {}
+func (*S3) ProtoMessage() {}
 
-func (x *RustFs) ProtoReflect() protoreflect.Message {
+func (x *S3) ProtoReflect() protoreflect.Message {
 	mi := &file_conf_conf_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -485,37 +492,86 @@ func (x *RustFs) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RustFs.ProtoReflect.Descriptor instead.
-func (*RustFs) Descriptor() ([]byte, []int) {
+// Deprecated: Use S3.ProtoReflect.Descriptor instead.
+func (*S3) Descriptor() ([]byte, []int) {
 	return file_conf_conf_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *RustFs) GetEndpoint() string {
+func (x *S3) GetEndpoint() string {
 	if x != nil {
 		return x.Endpoint
 	}
 	return ""
 }
 
-func (x *RustFs) GetAccessKey() string {
+func (x *S3) GetS3AccessKey() string {
 	if x != nil {
-		return x.AccessKey
+		return x.S3AccessKey
 	}
 	return ""
 }
 
-func (x *RustFs) GetSecretKey() string {
+func (x *S3) GetS3SecretKey() string {
 	if x != nil {
-		return x.SecretKey
+		return x.S3SecretKey
 	}
 	return ""
 }
 
-func (x *RustFs) GetUseSsl() bool {
+func (x *S3) GetRegion() string {
 	if x != nil {
-		return x.UseSsl
+		return x.Region
+	}
+	return ""
+}
+
+func (x *S3) GetUsePathStyle() bool {
+	if x != nil {
+		return x.UsePathStyle
 	}
 	return false
+}
+
+func (x *S3) GetStsAccessKey() string {
+	if x != nil {
+		return x.StsAccessKey
+	}
+	return ""
+}
+
+func (x *S3) GetStsSecretKey() string {
+	if x != nil {
+		return x.StsSecretKey
+	}
+	return ""
+}
+
+func (x *S3) GetStsRoleArn() string {
+	if x != nil {
+		return x.StsRoleArn
+	}
+	return ""
+}
+
+func (x *S3) GetStsSessionName() string {
+	if x != nil {
+		return x.StsSessionName
+	}
+	return ""
+}
+
+func (x *S3) GetStsPolicy() string {
+	if x != nil {
+		return x.StsPolicy
+	}
+	return ""
+}
+
+func (x *S3) GetStsDurationSeconds() int32 {
+	if x != nil {
+		return x.StsDurationSeconds
+	}
+	return 0
 }
 
 type Server_HTTP struct {
@@ -803,15 +859,15 @@ var File_conf_conf_proto protoreflect.FileDescriptor
 const file_conf_conf_proto_rawDesc = "" +
 	"\n" +
 	"\x0fconf/conf.proto\x12\n" +
-	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"\xb9\x02\n" +
+	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"\xad\x02\n" +
 	"\tBootstrap\x12*\n" +
 	"\x06server\x18\x01 \x01(\v2\x12.kratos.api.ServerR\x06server\x12$\n" +
 	"\x04data\x18\x02 \x01(\v2\x10.kratos.api.DataR\x04data\x120\n" +
 	"\bfirebase\x18\x03 \x01(\v2\x14.kratos.api.FirebaseR\bfirebase\x12*\n" +
 	"\x06github\x18\x04 \x01(\v2\x12.kratos.api.GithubR\x06github\x12!\n" +
 	"\x03jwt\x18\x05 \x01(\v2\x0f.kratos.api.JwtR\x03jwt\x12-\n" +
-	"\asession\x18\x06 \x01(\v2\x13.kratos.api.SessionR\asession\x12*\n" +
-	"\x06rustfs\x18\a \x01(\v2\x12.kratos.api.RustFsR\x06rustfs\"\xb8\x02\n" +
+	"\asession\x18\x06 \x01(\v2\x13.kratos.api.SessionR\asession\x12\x1e\n" +
+	"\x02s3\x18\a \x01(\v2\x0e.kratos.api.S3R\x02s3\"\xb8\x02\n" +
 	"\x06Server\x12+\n" +
 	"\x04http\x18\x01 \x01(\v2\x17.kratos.api.Server.HTTPR\x04http\x12+\n" +
 	"\x04grpc\x18\x02 \x01(\v2\x17.kratos.api.Server.GRPCR\x04grpc\x1ai\n" +
@@ -856,14 +912,22 @@ const file_conf_conf_proto_rawDesc = "" +
 	"\x06secure\x18\x02 \x01(\bR\x06secure\x12#\n" +
 	"\rlimit_enabled\x18\x03 \x01(\bR\flimitEnabled\x12\x1f\n" +
 	"\vlimit_count\x18\x04 \x01(\x05R\n" +
-	"limitCount\"{\n" +
-	"\x06RustFs\x12\x1a\n" +
-	"\bendpoint\x18\x01 \x01(\tR\bendpoint\x12\x1d\n" +
+	"limitCount\"\x8f\x03\n" +
+	"\x02S3\x12\x1a\n" +
+	"\bendpoint\x18\x01 \x01(\tR\bendpoint\x12\"\n" +
+	"\rs3_access_key\x18\x02 \x01(\tR\vs3AccessKey\x12\"\n" +
+	"\rs3_secret_key\x18\x03 \x01(\tR\vs3SecretKey\x12\x16\n" +
+	"\x06region\x18\x04 \x01(\tR\x06region\x12$\n" +
+	"\x0euse_path_style\x18\x05 \x01(\bR\fusePathStyle\x12$\n" +
+	"\x0ests_access_key\x18\x06 \x01(\tR\fstsAccessKey\x12$\n" +
+	"\x0ests_secret_key\x18\a \x01(\tR\fstsSecretKey\x12 \n" +
+	"\fsts_role_arn\x18\b \x01(\tR\n" +
+	"stsRoleArn\x12(\n" +
+	"\x10sts_session_name\x18\t \x01(\tR\x0estsSessionName\x12\x1d\n" +
 	"\n" +
-	"access_key\x18\x02 \x01(\tR\taccessKey\x12\x1d\n" +
-	"\n" +
-	"secret_key\x18\x03 \x01(\tR\tsecretKey\x12\x17\n" +
-	"\ause_ssl\x18\x04 \x01(\bR\x06useSslB:Z8shortvid-backend/app/shortvid-service/internal/conf;confb\x06proto3"
+	"sts_policy\x18\n" +
+	" \x01(\tR\tstsPolicy\x120\n" +
+	"\x14sts_duration_seconds\x18\v \x01(\x05R\x12stsDurationSecondsB:Z8shortvid-backend/app/shortvid-service/internal/conf;confb\x06proto3"
 
 var (
 	file_conf_conf_proto_rawDescOnce sync.Once
@@ -886,7 +950,7 @@ var file_conf_conf_proto_goTypes = []any{
 	(*Github)(nil),              // 4: kratos.api.Github
 	(*Jwt)(nil),                 // 5: kratos.api.Jwt
 	(*Session)(nil),             // 6: kratos.api.Session
-	(*RustFs)(nil),              // 7: kratos.api.RustFs
+	(*S3)(nil),                  // 7: kratos.api.S3
 	(*Server_HTTP)(nil),         // 8: kratos.api.Server.HTTP
 	(*Server_GRPC)(nil),         // 9: kratos.api.Server.GRPC
 	(*Data_Mysql)(nil),          // 10: kratos.api.Data.Mysql
@@ -900,7 +964,7 @@ var file_conf_conf_proto_depIdxs = []int32{
 	4,  // 3: kratos.api.Bootstrap.github:type_name -> kratos.api.Github
 	5,  // 4: kratos.api.Bootstrap.jwt:type_name -> kratos.api.Jwt
 	6,  // 5: kratos.api.Bootstrap.session:type_name -> kratos.api.Session
-	7,  // 6: kratos.api.Bootstrap.rustfs:type_name -> kratos.api.RustFs
+	7,  // 6: kratos.api.Bootstrap.s3:type_name -> kratos.api.S3
 	8,  // 7: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
 	9,  // 8: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
 	10, // 9: kratos.api.Data.mysql:type_name -> kratos.api.Data.Mysql
