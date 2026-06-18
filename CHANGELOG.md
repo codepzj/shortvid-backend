@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/codepzj/shortvid-backend/compare/v1.0.1...v1.1.0) (2026-06-18)
+
+
+### Features
+
+* 合并yml ([cc12bf4](https://github.com/codepzj/shortvid-backend/commit/cc12bf46e80e6b34d4b67f4c0f9c67ec25199eca))
+
 ## [1.0.1](https://github.com/codepzj/shortvid-backend/compare/v1.0.0...v1.0.1) (2026-06-18)
 
 
