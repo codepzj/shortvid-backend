@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/codepzj/shortvid-backend/compare/v1.0.0...v1.0.1) (2026-06-18)
+
+
+### Bug Fixes
+
+* ci写权限 ([7228e0c](https://github.com/codepzj/shortvid-backend/commit/7228e0c8259414672d57b32f5fb93b24a7457e4d))
+
 # 1.0.0 (2026-06-18)
 
 
