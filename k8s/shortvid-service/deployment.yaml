@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  shortvid-service
+  namespace: default
+  labels:
+    app:  shortvid-service
+spec:
+  selector:
+    matchLabels:
+      app: shortvid-service
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0 # 至少有1个副本在运行
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  shortvid-service
+    spec:
+      containers:
+      - name: shortvid-service
+        image: ${IMAGE_NAME}:${IMAGE_TAG}
+        imagePullPolicy: Always
+        command: ["/app/shortvid-service", "-conf", "/data/conf"]
+        resources:
+          requests:
+            cpu: 200m # 0.2核
+            memory: 1Gi # 1G内存
+          limits:
+            cpu: 1000m # 1核
+            memory: 1Gi # 1G内存
+        livenessProbe:
+          httpGet:
+            path: /health  # 确保你的应用有这个健康检查端点
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        ports:
+        - containerPort: 8000
+          name: http
+        - containerPort: 9000
+          name: grpc
+        volumeMounts:
+        - name: shortvid-service-config
+          mountPath: /data/conf
+      volumes:
+        - name: shortvid-service-config
+          configMap:
+            name: shortvid-service-config # 需要创建这个configMap

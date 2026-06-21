@@ -1,0 +1,44 @@
+name: Deploy Shortvid Service
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: Docker image tag
+        required: true
+        default: latest
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Configure Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Render Manifest
+        env:
+          IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/shortvid-service
+          IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+        run: |
+          echo "IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/shortvid-service"
+          echo "IMAGE_TAG: ${{ github.event.inputs.image_tag }}"
+          envsubst < k8s/shortvid-service/deployment.yaml > deployment.yaml
+
+      - name: Deploy
+        run: |
+          kubectl apply -f deployment.yaml
+
+      - name: Wait Rollout
+        run: |
+          kubectl rollout status deployment/shortvid-service \
+            -n default \
+            --timeout=300s

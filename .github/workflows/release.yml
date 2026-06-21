@@ -10,23 +10,18 @@ permissions:
   pull-requests: write
   issues: write
 
-env:
-  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/shortvid-service
-
 jobs:
   release:
     runs-on: ubuntu-latest
 
     steps:
-      # 拉代码
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # ---------- Go 环境 ----------
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v5
         with:
           go-version: '1.26'
           cache: true
@@ -34,67 +29,20 @@ jobs:
       - name: Go mod tidy
         run: go mod tidy
 
-      - name: Go build
+      - name: Build
         run: make build-shortvid-service
 
-      # ---------- Node 环境 ----------
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Get latest tag before release
-        id: previous_release
-        run: |
-          echo "tag=$(git describe --tags --abbrev=0 2>/dev/null || true)" >> "$GITHUB_OUTPUT"
-
-      # ---------- Semantic Release ----------
-      - name: Run semantic-release
+      - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx -y -p semantic-release -p @semantic-release/changelog -p @semantic-release/git semantic-release
-
-      - name: Get release tag
-        id: release_tag
         run: |
-          current_tag="$(git describe --tags --abbrev=0 2>/dev/null || true)"
-          previous_tag="${{ steps.previous_release.outputs.tag }}"
-
-          if [ -n "$current_tag" ] && [ "$current_tag" != "$previous_tag" ]; then
-            echo "released=true" >> "$GITHUB_OUTPUT"
-            echo "tag=$current_tag" >> "$GITHUB_OUTPUT"
-          else
-            echo "released=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      # ---------- Docker ----------
-      - name: Set up Docker Buildx
-        if: steps.release_tag.outputs.released == 'true'
-        uses: docker/setup-buildx-action@v4
-
-      - name: Log in to Docker Hub
-        if: steps.release_tag.outputs.released == 'true'
-        uses: docker/login-action@v4
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Docker metadata
-        if: steps.release_tag.outputs.released == 'true'
-        id: docker_meta
-        uses: docker/metadata-action@v6
-        with:
-          images: ${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=${{ steps.release_tag.outputs.tag }}
-            type=raw,value=latest
-
-      - name: Build and push Docker image
-        if: steps.release_tag.outputs.released == 'true'
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ./shortvid-service-dockerfile
-          push: true
-          tags: ${{ steps.docker_meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
+          npx -y \
+            -p semantic-release \
+            -p @semantic-release/changelog \
+            -p @semantic-release/git \
+            semantic-release

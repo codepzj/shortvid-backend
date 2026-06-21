@@ -17,8 +17,7 @@ COPY --from=builder /src/bin /app
 
 WORKDIR /app
 
-EXPOSE 4001
-EXPOSE 5001
-VOLUME /data/conf
-
-CMD ["./shortvid-service", "-conf", "/data/conf"]
+# http端口
+EXPOSE 8000
+# grpc端口
+EXPOSE 9000
