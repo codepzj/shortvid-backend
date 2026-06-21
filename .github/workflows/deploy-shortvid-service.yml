@@ -2,17 +2,19 @@ name: Deploy Shortvid Service
 
 on:
   workflow_dispatch:
-    inputs:
-      image_tag:
-        description: Docker image tag
-        required: true
-        default: latest
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Validate Tag
+        run: |
+          if [ "${{ github.ref_type }}" != "tag" ]; then
+            echo "请在 Run workflow 时从 Tags 选择要部署的版本"
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       - name: Setup Kubectl
@@ -27,10 +29,10 @@ jobs:
       - name: Render Manifest
         env:
           IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/shortvid-service
-          IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+          IMAGE_TAG: ${{ github.ref_name }}
         run: |
-          echo "IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/shortvid-service"
-          echo "IMAGE_TAG: ${{ github.event.inputs.image_tag }}"
+          echo "IMAGE_NAME: $IMAGE_NAME"
+          echo "IMAGE_TAG: $IMAGE_TAG"
           envsubst < k8s/shortvid-service/deployment.yaml > deployment.yaml
 
       - name: Deploy
