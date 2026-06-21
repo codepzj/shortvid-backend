@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/codepzj/shortvid-backend/compare/v1.5.2...v1.6.0) (2026-06-21)
+
+
+### Features
+
+* 添加health路由 ([3ba2040](https://github.com/codepzj/shortvid-backend/commit/3ba20405c630f73d004ab1d624a5802d7973b670))
+
 ## [1.5.2](https://github.com/codepzj/shortvid-backend/compare/v1.5.1...v1.5.2) (2026-06-21)
 
 
