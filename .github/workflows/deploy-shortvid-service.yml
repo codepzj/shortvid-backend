@@ -21,7 +21,7 @@ jobs:
 
       - name: Render Manifest
         env:
-          IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/shortvid-service
+          IMAGE_NAME: docker.cnb.cool/${{ secrets.CNB_REPO_SLUG }}/shortvid-service
           IMAGE_TAG: ${{ github.ref_name }}
         run: |
           echo "IMAGE_NAME: $IMAGE_NAME"
