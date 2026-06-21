@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/codepzj/shortvid-backend/compare/v1.4.0...v1.5.0) (2026-06-21)
+
+
+### Features
+
+* 手动选择tag ([dade294](https://github.com/codepzj/shortvid-backend/commit/dade29459deab25fa856d70396763ab45f552475))
+
 # [1.4.0](https://github.com/codepzj/shortvid-backend/compare/v1.3.0...v1.4.0) (2026-06-21)
 
 
