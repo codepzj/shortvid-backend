@@ -1,3 +1,11 @@
+## [1.2.1](https://github.com/codepzj/shortvid-backend/compare/v1.2.0...v1.2.1) (2026-06-21)
+
+
+### Bug Fixes
+
+* 使用PAT(Github Token无法递归触发工作流) ([c48e4e5](https://github.com/codepzj/shortvid-backend/commit/c48e4e5e38bc72b27b6762de34e88fb490aa4f9b))
+* 修复权限问题 ([2bf06c3](https://github.com/codepzj/shortvid-backend/commit/2bf06c34aa66e2973b23b6a3caf8f7b87f134818))
+
 # [1.2.0](https://github.com/codepzj/shortvid-backend/compare/v1.1.0...v1.2.0) (2026-06-21)
 
 
