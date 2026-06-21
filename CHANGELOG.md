@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/codepzj/shortvid-backend/compare/v1.5.1...v1.5.2) (2026-06-21)
+
+
+### Bug Fixes
+
+* 使用cnb ([b6700c1](https://github.com/codepzj/shortvid-backend/commit/b6700c1dcbc33940574c0152763c220f32b4a29a))
+
 ## [1.5.1](https://github.com/codepzj/shortvid-backend/compare/v1.5.0...v1.5.1) (2026-06-21)
 
 
