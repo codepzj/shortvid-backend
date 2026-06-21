@@ -18,6 +18,7 @@ import (
 
 // 路由白名单
 var authWhiteList = []string{
+	v1.OperationHealthServiceHealth,
 	v1.OperationUserServiceLoginFirebase,
 	v1.OperationUserServiceLoginGithub,
 }

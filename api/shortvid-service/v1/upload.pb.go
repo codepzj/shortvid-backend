@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v6.33.2
-// source: shortvid-service/v1/upload.proto
+// source: api/shortvid-service/v1/upload.proto
 
 package v1
 
@@ -23,64 +23,19 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type GetUploadPresignedURLReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetUploadPresignedURLReply) Reset() {
-	*x = GetUploadPresignedURLReply{}
-	mi := &file_shortvid_service_v1_upload_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetUploadPresignedURLReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetUploadPresignedURLReply) ProtoMessage() {}
-
-func (x *GetUploadPresignedURLReply) ProtoReflect() protoreflect.Message {
-	mi := &file_shortvid_service_v1_upload_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetUploadPresignedURLReply.ProtoReflect.Descriptor instead.
-func (*GetUploadPresignedURLReply) Descriptor() ([]byte, []int) {
-	return file_shortvid_service_v1_upload_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *GetUploadPresignedURLReply) GetUrl() string {
-	if x != nil {
-		return x.Url
-	}
-	return ""
-}
-
 type GetUploadSessionReply struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	AccessKeyId     string                 `protobuf:"bytes,1,opt,name=access_key_id,json=accessKeyId,proto3" json:"access_key_id,omitempty"`             // 访问密钥ID
 	SecretAccessKey string                 `protobuf:"bytes,2,opt,name=secret_access_key,json=secretAccessKey,proto3" json:"secret_access_key,omitempty"` // 秘密访问密钥
 	SessionToken    string                 `protobuf:"bytes,3,opt,name=session_token,json=sessionToken,proto3" json:"session_token,omitempty"`            // 会话令牌
-	Expiration      int64                  `protobuf:"varint,4,opt,name=expiration,proto3" json:"expiration,omitempty"`                                   // 过期时间
-	Endpoint        string                 `protobuf:"bytes,5,opt,name=endpoint,proto3" json:"endpoint,omitempty"`                                        // 终端节点
+	Endpoint        string                 `protobuf:"bytes,4,opt,name=endpoint,proto3" json:"endpoint,omitempty"`                                        // 终端节点
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
 
 func (x *GetUploadSessionReply) Reset() {
 	*x = GetUploadSessionReply{}
-	mi := &file_shortvid_service_v1_upload_proto_msgTypes[1]
+	mi := &file_api_shortvid_service_v1_upload_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -92,7 +47,7 @@ func (x *GetUploadSessionReply) String() string {
 func (*GetUploadSessionReply) ProtoMessage() {}
 
 func (x *GetUploadSessionReply) ProtoReflect() protoreflect.Message {
-	mi := &file_shortvid_service_v1_upload_proto_msgTypes[1]
+	mi := &file_api_shortvid_service_v1_upload_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -105,7 +60,7 @@ func (x *GetUploadSessionReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUploadSessionReply.ProtoReflect.Descriptor instead.
 func (*GetUploadSessionReply) Descriptor() ([]byte, []int) {
-	return file_shortvid_service_v1_upload_proto_rawDescGZIP(), []int{1}
+	return file_api_shortvid_service_v1_upload_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *GetUploadSessionReply) GetAccessKeyId() string {
@@ -129,13 +84,6 @@ func (x *GetUploadSessionReply) GetSessionToken() string {
 	return ""
 }
 
-func (x *GetUploadSessionReply) GetExpiration() int64 {
-	if x != nil {
-		return x.Expiration
-	}
-	return 0
-}
-
 func (x *GetUploadSessionReply) GetEndpoint() string {
 	if x != nil {
 		return x.Endpoint
@@ -152,7 +100,7 @@ type ListBucketsReply struct {
 
 func (x *ListBucketsReply) Reset() {
 	*x = ListBucketsReply{}
-	mi := &file_shortvid_service_v1_upload_proto_msgTypes[2]
+	mi := &file_api_shortvid_service_v1_upload_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -164,7 +112,7 @@ func (x *ListBucketsReply) String() string {
 func (*ListBucketsReply) ProtoMessage() {}
 
 func (x *ListBucketsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_shortvid_service_v1_upload_proto_msgTypes[2]
+	mi := &file_api_shortvid_service_v1_upload_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -177,7 +125,7 @@ func (x *ListBucketsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListBucketsReply.ProtoReflect.Descriptor instead.
 func (*ListBucketsReply) Descriptor() ([]byte, []int) {
-	return file_shortvid_service_v1_upload_proto_rawDescGZIP(), []int{2}
+	return file_api_shortvid_service_v1_upload_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ListBucketsReply) GetBuckets() []string {
@@ -187,21 +135,16 @@ func (x *ListBucketsReply) GetBuckets() []string {
 	return nil
 }
 
-var File_shortvid_service_v1_upload_proto protoreflect.FileDescriptor
+var File_api_shortvid_service_v1_upload_proto protoreflect.FileDescriptor
 
-const file_shortvid_service_v1_upload_proto_rawDesc = "" +
+const file_api_shortvid_service_v1_upload_proto_rawDesc = "" +
 	"\n" +
-	" shortvid-service/v1/upload.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/api/annotations.proto\".\n" +
-	"\x1aGetUploadPresignedURLReply\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\"\xc8\x01\n" +
+	"$api/shortvid-service/v1/upload.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/api/annotations.proto\"\xa8\x01\n" +
 	"\x15GetUploadSessionReply\x12\"\n" +
 	"\raccess_key_id\x18\x01 \x01(\tR\vaccessKeyId\x12*\n" +
 	"\x11secret_access_key\x18\x02 \x01(\tR\x0fsecretAccessKey\x12#\n" +
-	"\rsession_token\x18\x03 \x01(\tR\fsessionToken\x12\x1e\n" +
-	"\n" +
-	"expiration\x18\x04 \x01(\x03R\n" +
-	"expiration\x12\x1a\n" +
-	"\bendpoint\x18\x05 \x01(\tR\bendpoint\",\n" +
+	"\rsession_token\x18\x03 \x01(\tR\fsessionToken\x12\x1a\n" +
+	"\bendpoint\x18\x04 \x01(\tR\bendpoint\",\n" +
 	"\x10ListBucketsReply\x12\x18\n" +
 	"\abuckets\x18\x01 \x03(\tR\abuckets2\xd3\x01\n" +
 	"\rUploadService\x12e\n" +
@@ -209,29 +152,28 @@ const file_shortvid_service_v1_upload_proto_rawDesc = "" +
 	"\vListBuckets\x12\x16.google.protobuf.Empty\x1a\x11.ListBucketsReply\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/upload/bucketsB-Z+shortvid-backend/api/shortvid-service/v1;v1b\x06proto3"
 
 var (
-	file_shortvid_service_v1_upload_proto_rawDescOnce sync.Once
-	file_shortvid_service_v1_upload_proto_rawDescData []byte
+	file_api_shortvid_service_v1_upload_proto_rawDescOnce sync.Once
+	file_api_shortvid_service_v1_upload_proto_rawDescData []byte
 )
 
-func file_shortvid_service_v1_upload_proto_rawDescGZIP() []byte {
-	file_shortvid_service_v1_upload_proto_rawDescOnce.Do(func() {
-		file_shortvid_service_v1_upload_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_shortvid_service_v1_upload_proto_rawDesc), len(file_shortvid_service_v1_upload_proto_rawDesc)))
+func file_api_shortvid_service_v1_upload_proto_rawDescGZIP() []byte {
+	file_api_shortvid_service_v1_upload_proto_rawDescOnce.Do(func() {
+		file_api_shortvid_service_v1_upload_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_shortvid_service_v1_upload_proto_rawDesc), len(file_api_shortvid_service_v1_upload_proto_rawDesc)))
 	})
-	return file_shortvid_service_v1_upload_proto_rawDescData
+	return file_api_shortvid_service_v1_upload_proto_rawDescData
 }
 
-var file_shortvid_service_v1_upload_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_shortvid_service_v1_upload_proto_goTypes = []any{
-	(*GetUploadPresignedURLReply)(nil), // 0: GetUploadPresignedURLReply
-	(*GetUploadSessionReply)(nil),      // 1: GetUploadSessionReply
-	(*ListBucketsReply)(nil),           // 2: ListBucketsReply
-	(*emptypb.Empty)(nil),              // 3: google.protobuf.Empty
+var file_api_shortvid_service_v1_upload_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_api_shortvid_service_v1_upload_proto_goTypes = []any{
+	(*GetUploadSessionReply)(nil), // 0: GetUploadSessionReply
+	(*ListBucketsReply)(nil),      // 1: ListBucketsReply
+	(*emptypb.Empty)(nil),         // 2: google.protobuf.Empty
 }
-var file_shortvid_service_v1_upload_proto_depIdxs = []int32{
-	3, // 0: UploadService.GetUploadSession:input_type -> google.protobuf.Empty
-	3, // 1: UploadService.ListBuckets:input_type -> google.protobuf.Empty
-	1, // 2: UploadService.GetUploadSession:output_type -> GetUploadSessionReply
-	2, // 3: UploadService.ListBuckets:output_type -> ListBucketsReply
+var file_api_shortvid_service_v1_upload_proto_depIdxs = []int32{
+	2, // 0: UploadService.GetUploadSession:input_type -> google.protobuf.Empty
+	2, // 1: UploadService.ListBuckets:input_type -> google.protobuf.Empty
+	0, // 2: UploadService.GetUploadSession:output_type -> GetUploadSessionReply
+	1, // 3: UploadService.ListBuckets:output_type -> ListBucketsReply
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -239,26 +181,26 @@ var file_shortvid_service_v1_upload_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_shortvid_service_v1_upload_proto_init() }
-func file_shortvid_service_v1_upload_proto_init() {
-	if File_shortvid_service_v1_upload_proto != nil {
+func init() { file_api_shortvid_service_v1_upload_proto_init() }
+func file_api_shortvid_service_v1_upload_proto_init() {
+	if File_api_shortvid_service_v1_upload_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shortvid_service_v1_upload_proto_rawDesc), len(file_shortvid_service_v1_upload_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_shortvid_service_v1_upload_proto_rawDesc), len(file_api_shortvid_service_v1_upload_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_shortvid_service_v1_upload_proto_goTypes,
-		DependencyIndexes: file_shortvid_service_v1_upload_proto_depIdxs,
-		MessageInfos:      file_shortvid_service_v1_upload_proto_msgTypes,
+		GoTypes:           file_api_shortvid_service_v1_upload_proto_goTypes,
+		DependencyIndexes: file_api_shortvid_service_v1_upload_proto_depIdxs,
+		MessageInfos:      file_api_shortvid_service_v1_upload_proto_msgTypes,
 	}.Build()
-	File_shortvid_service_v1_upload_proto = out.File
-	file_shortvid_service_v1_upload_proto_goTypes = nil
-	file_shortvid_service_v1_upload_proto_depIdxs = nil
+	File_api_shortvid_service_v1_upload_proto = out.File
+	file_api_shortvid_service_v1_upload_proto_goTypes = nil
+	file_api_shortvid_service_v1_upload_proto_depIdxs = nil
 }

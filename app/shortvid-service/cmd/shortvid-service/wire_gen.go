@@ -50,10 +50,11 @@ func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Fireba
 	userSessionService := service.NewUserSessionService(logger, session, userSessionRepo, cacheService, jwtService)
 	userService := service.NewUserService(logger, usersUsecase, firebaseService, githubService, jwtService, userSessionService, cacheService)
 	grpcServer := server.NewGRPCServer(confServer, userService, logger)
+	healthService := service.NewHealthService()
 	s3Repo := data.NewS3Repo(s3, dataData, logger)
 	s3Usecase := biz.NewS3Usecase(s3, logger, s3Repo)
 	uploadService := service.NewUploadService(logger, s3Usecase)
-	httpServer := server.NewHTTPServer(confServer, jwt, userService, jwtService, uploadService, logger)
+	httpServer := server.NewHTTPServer(confServer, jwt, healthService, jwtService, userService, uploadService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

@@ -35,110 +35,6 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on GetUploadPresignedURLReply with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetUploadPresignedURLReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetUploadPresignedURLReply with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetUploadPresignedURLReplyMultiError, or nil if none found.
-func (m *GetUploadPresignedURLReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetUploadPresignedURLReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Url
-
-	if len(errors) > 0 {
-		return GetUploadPresignedURLReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetUploadPresignedURLReplyMultiError is an error wrapping multiple
-// validation errors returned by GetUploadPresignedURLReply.ValidateAll() if
-// the designated constraints aren't met.
-type GetUploadPresignedURLReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetUploadPresignedURLReplyMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetUploadPresignedURLReplyMultiError) AllErrors() []error { return m }
-
-// GetUploadPresignedURLReplyValidationError is the validation error returned
-// by GetUploadPresignedURLReply.Validate if the designated constraints aren't met.
-type GetUploadPresignedURLReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetUploadPresignedURLReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetUploadPresignedURLReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetUploadPresignedURLReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetUploadPresignedURLReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetUploadPresignedURLReplyValidationError) ErrorName() string {
-	return "GetUploadPresignedURLReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetUploadPresignedURLReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetUploadPresignedURLReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetUploadPresignedURLReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetUploadPresignedURLReplyValidationError{}
-
 // Validate checks the field values on GetUploadSessionReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -166,6 +62,8 @@ func (m *GetUploadSessionReply) validate(all bool) error {
 	// no validation rules for SecretAccessKey
 
 	// no validation rules for SessionToken
+
+	// no validation rules for Endpoint
 
 	if len(errors) > 0 {
 		return GetUploadSessionReplyMultiError(errors)

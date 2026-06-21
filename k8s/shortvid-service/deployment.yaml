@@ -34,7 +34,7 @@ spec:
             memory: 1Gi # 1G内存
         livenessProbe:
           httpGet:
-            path: /health  # 确保你的应用有这个健康检查端点
+            path: /api/v1/health  # 确保你的应用有这个健康检查端点
             port: http
           initialDelaySeconds: 5
           periodSeconds: 10

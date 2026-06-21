@@ -6,24 +6,6 @@ info:
     title: ""
     version: 0.0.1
 paths:
-    /api/v1/file/upload:
-        post:
-            tags:
-                - File
-            operationId: File_UploadFile
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/.UploadFileRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/.UploadFileReply'
     /api/v1/firebase/login:
         post:
             tags:
@@ -62,6 +44,15 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/.GithubLoginResponse'
+    /api/v1/health:
+        get:
+            tags:
+                - HealthService
+            operationId: HealthService_Health
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /api/v1/upload/buckets:
         post:
             tags:
@@ -157,8 +148,6 @@ components:
                     type: string
                 sessionToken:
                     type: string
-                expiration:
-                    type: string
                 endpoint:
                     type: string
         .GetUserProfileRequest:
@@ -195,12 +184,6 @@ components:
                     type: array
                     items:
                         type: string
-        .UploadFileReply:
-            type: object
-            properties: {}
-        .UploadFileRequest:
-            type: object
-            properties: {}
         .UserInfoResponse:
             type: object
             properties:
@@ -228,7 +211,7 @@ components:
                     type: string
             description: 用户资料
 tags:
-    - name: File
+    - name: HealthService
     - name: UploadService
     - name: UserService
       description: 用户服务
