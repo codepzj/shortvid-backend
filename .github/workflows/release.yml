@@ -46,3 +46,7 @@ jobs:
             -p @semantic-release/changelog \
             -p @semantic-release/git \
             semantic-release
+
+      - name: Trigger Docker
+        run: |
+          git push origin --tags
