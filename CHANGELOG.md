@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/codepzj/shortvid-backend/compare/v1.3.0...v1.4.0) (2026-06-21)
+
+
+### Features
+
+* release后触发docker打包 ([af0a740](https://github.com/codepzj/shortvid-backend/commit/af0a74068dd0ad5a987b84ad83622201e24b22f8))
+
 # [1.3.0](https://github.com/codepzj/shortvid-backend/compare/v1.2.0...v1.3.0) (2026-06-21)
 
 
