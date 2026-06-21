@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/codepzj/shortvid-backend/compare/v1.2.0...v1.3.0) (2026-06-21)
+
+
+### Features
+
+* 触发tag ([4d97edd](https://github.com/codepzj/shortvid-backend/commit/4d97edd4d67c8dea1bf5f699a0cc7b86f5a52c45))
+
 # [1.2.0](https://github.com/codepzj/shortvid-backend/compare/v1.1.0...v1.2.0) (2026-06-21)
 
 
