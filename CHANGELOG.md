@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/codepzj/shortvid-backend/compare/v1.1.0...v1.2.0) (2026-06-21)
+
+
+### Features
+
+* 添加k8s部署方式 ([b9cd4a2](https://github.com/codepzj/shortvid-backend/commit/b9cd4a2d8f4383b634efbc2b49ae0395bf60a066))
+
 # [1.1.0](https://github.com/codepzj/shortvid-backend/compare/v1.0.1...v1.1.0) (2026-06-18)
 
 
