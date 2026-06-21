@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/codepzj/shortvid-backend/compare/v1.5.0...v1.5.1) (2026-06-21)
+
+
+### Bug Fixes
+
+* 修改deploy配置 ([4a5c9bd](https://github.com/codepzj/shortvid-backend/commit/4a5c9bdd1ad366f9c50ca684f8de52c5c8660051))
+
 # [1.5.0](https://github.com/codepzj/shortvid-backend/compare/v1.4.0...v1.5.0) (2026-06-21)
 
 
