@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/codepzj/shortvid-backend/compare/v1.6.0...v1.7.0) (2026-06-24)
+
+
+### Features
+
+* 添加日志 ([e1b0163](https://github.com/codepzj/shortvid-backend/commit/e1b0163348bca97819a1b643d76815e65133e863))
+
 # [1.6.0](https://github.com/codepzj/shortvid-backend/compare/v1.5.2...v1.6.0) (2026-06-21)
 
 
