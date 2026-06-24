@@ -13,6 +13,7 @@ import (
 )
 
 func NewDB(c *conf.Data) *gorm.DB {
+	log.Println("MySQL connect start...")
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
 		logger.Config{
@@ -35,6 +36,6 @@ func NewDB(c *conf.Data) *gorm.DB {
 	if err != nil {
 		log.Fatalf("Connect MySQL failed: %v", err)
 	}
-	log.Printf("MySQL connect success...")
+	log.Println("MySQL connect success...")
 	return db
 }

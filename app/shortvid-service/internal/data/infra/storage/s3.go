@@ -21,6 +21,7 @@ type S3Data struct {
 
 // NewS3 使用aws的go sdk连接S3对象存储
 func NewS3(conf *conf.S3) *S3Data {
+	log.Println("S3 connect start...")
 	ctx := context.Background()
 	cfg, err := config.LoadDefaultConfig(ctx,
 		config.WithRegion(conf.GetRegion()),
@@ -46,7 +47,7 @@ func NewS3(conf *conf.S3) *S3Data {
 		o.Credentials = credentials.NewStaticCredentialsProvider(conf.GetStsAccessKey(), conf.GetStsSecretKey(), "")
 	})
 
-	log.Println("S3 data client initialized successfully...")
+	log.Println("S3 connect success...")
 
 	return &S3Data{
 		S3Conf:          conf,

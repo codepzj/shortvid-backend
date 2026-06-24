@@ -115,6 +115,7 @@ func (h *prefixHook) addPrefix(cmd redis.Cmder) {
 }
 
 func NewRedis(c *conf.Data) *redis.Client {
+	log.Println("Redis connect start...")
 	opts := &redis.Options{
 		Addr:         c.Redis.Addr,
 		Password:     c.Redis.Password,
@@ -132,6 +133,6 @@ func NewRedis(c *conf.Data) *redis.Client {
 	if err := client.Ping(context.Background()).Err(); err != nil {
 		log.Fatalf("Redis connect failed: %v", err)
 	}
-	log.Printf("Redis connect success...")
+	log.Println("Redis connect success...")
 	return client
 }
