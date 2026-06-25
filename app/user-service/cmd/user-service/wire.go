@@ -8,17 +8,17 @@ package main
 import (
 	"log/slog"
 
-	"user-service/internal/biz"
-	"user-service/internal/conf"
-	"user-service/internal/data"
-	"user-service/internal/server"
-	"user-service/internal/service"
+	"shortvid-backend/app/user-service/internal/biz"
+	"shortvid-backend/app/user-service/internal/conf"
+	"shortvid-backend/app/user-service/internal/data"
+	"shortvid-backend/app/user-service/internal/server"
+	"shortvid-backend/app/user-service/internal/service"
 
 	"github.com/go-kratos/kratos/v3"
 	"github.com/google/wire"
 )
 
 // wireApp init kratos application.
-func wireApp(*conf.Server, *conf.Data, *slog.Logger) (*kratos.App, func(), error) {
+func wireApp(*conf.Server, *conf.Data, *conf.Firebase, *conf.Github, *conf.Jwt, *conf.Session, *slog.Logger) (*kratos.App, func(), error) {
 	panic(wire.Build(server.ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, newApp))
 }

@@ -7,16 +7,31 @@ VERSION=$(shell git describe --tags --always)
 init:
 	go install github.com/google/wire/cmd/wire@latest
 	go install github.com/bufbuild/buf/cmd/buf@latest
+	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v3@v3.0.0-20260526000039-30da04b769dc
+	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v3@v3.0.0-20260526000039-30da04b769dc
+
+GO_ERRORS_PROTO_PATH:=$(shell go env GOMODCACHE)/github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v3@v3.0.0-20260526000039-30da04b769dc
+
+.PHONY: api
+# generate api proto (kratos v3; errors must be v3 to avoid proto registration conflict)
+api:
+	cd ../.. && protoc --proto_path=./api \
+	       --proto_path=./third_party \
+	       --go_out=paths=source_relative:./api \
+	       --go-grpc_out=paths=source_relative:./api \
+	       --go-http_out=paths=source_relative:./api \
+	       api/user-service/v1/user.proto
+	cd ../.. && protoc --proto_path=./api \
+	       --proto_path=$(GO_ERRORS_PROTO_PATH) \
+	       --proto_path=./third_party \
+	       --go_out=paths=source_relative:./api \
+	       --go-errors_out=paths=source_relative:./api \
+	       api/user-service/v1/errors.proto
 
 .PHONY: config
 # generate internal proto
 config:
 	buf generate --template buf.gen.config.yaml
-
-.PHONY: api
-# generate api proto
-api:
-	buf generate --template buf.gen.yaml
 
 .PHONY: build
 # build

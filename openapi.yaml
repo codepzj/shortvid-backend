@@ -3,7 +3,8 @@
 
 openapi: 3.0.3
 info:
-    title: ""
+    title: UserService API
+    description: 用户服务
     version: 0.0.1
 paths:
     /api/v1/firebase/login:
@@ -44,47 +45,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/.GithubLoginResponse'
-    /api/v1/health:
-        get:
-            tags:
-                - HealthService
-            operationId: HealthService_Health
-            responses:
-                "200":
-                    description: OK
-                    content: {}
-    /api/v1/upload/buckets:
-        post:
-            tags:
-                - UploadService
-            operationId: UploadService_ListBuckets
-            requestBody:
-                content:
-                    application/json: {}
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/.ListBucketsReply'
-    /api/v1/upload/session:
-        post:
-            tags:
-                - UploadService
-            operationId: UploadService_GetUploadSession
-            requestBody:
-                content:
-                    application/json: {}
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/.GetUploadSessionReply'
     /api/v1/user/info:
         post:
             tags:
@@ -139,17 +99,6 @@ components:
                 user:
                     $ref: '#/components/schemas/.UserProfile'
             description: firebase登录响应体
-        .GetUploadSessionReply:
-            type: object
-            properties:
-                accessKeyId:
-                    type: string
-                secretAccessKey:
-                    type: string
-                sessionToken:
-                    type: string
-                endpoint:
-                    type: string
         .GetUserProfileRequest:
             type: object
             properties:
@@ -177,13 +126,6 @@ components:
                     type: string
                 user:
                     $ref: '#/components/schemas/.UserProfile'
-        .ListBucketsReply:
-            type: object
-            properties:
-                buckets:
-                    type: array
-                    items:
-                        type: string
         .UserInfoResponse:
             type: object
             properties:
@@ -211,7 +153,4 @@ components:
                     type: string
             description: 用户资料
 tags:
-    - name: HealthService
-    - name: UploadService
     - name: UserService
-      description: 用户服务

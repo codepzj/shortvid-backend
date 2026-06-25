@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"os"
 
-	"user-service/internal/conf"
+	"shortvid-backend/app/user-service/internal/conf"
 
 	"github.com/go-kratos/kratos/contrib/otel/v3/tracing"
 	"github.com/go-kratos/kratos/v3"
@@ -78,11 +78,13 @@ func main() {
 		panic(err)
 	}
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
+	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Firebase, bc.Github, bc.Jwt, bc.Session, logger)
 	if err != nil {
 		panic(err)
 	}
 	defer cleanup()
+
+	log.Info("User service started", slog.String("service.id", id), slog.String("service.name", Name), slog.String("service.version", Version))
 
 	// start and wait for stop signal
 	if err := app.Run(); err != nil {

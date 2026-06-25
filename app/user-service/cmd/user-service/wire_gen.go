@@ -9,11 +9,13 @@ package main
 import (
 	"github.com/go-kratos/kratos/v3"
 	"log/slog"
-	"user-service/internal/biz"
-	"user-service/internal/conf"
-	"user-service/internal/data"
-	"user-service/internal/server"
-	"user-service/internal/service"
+	"shortvid-backend/app/user-service/internal/biz"
+	"shortvid-backend/app/user-service/internal/conf"
+	"shortvid-backend/app/user-service/internal/data"
+	"shortvid-backend/app/user-service/internal/data/infra/cache"
+	"shortvid-backend/app/user-service/internal/data/infra/db"
+	"shortvid-backend/app/user-service/internal/server"
+	"shortvid-backend/app/user-service/internal/service"
 )
 
 import (
@@ -23,16 +25,30 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, logger *slog.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData)
+func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, github *conf.Github, jwt *conf.Jwt, session *conf.Session, logger *slog.Logger) (*kratos.App, func(), error) {
+	gormDB := db.NewDB(confData)
+	client := cache.NewRedis(confData)
+	dataData, cleanup, err := data.NewData(gormDB, client)
 	if err != nil {
 		return nil, nil, err
 	}
-	todoRepo := data.NewTodoRepo(dataData)
-	todoUsecase := biz.NewTodoUsecase(todoRepo)
-	todoService := service.NewTodoService(todoUsecase)
-	grpcServer := server.NewGRPCServer(confServer, todoService)
-	httpServer := server.NewHTTPServer(confServer, todoService)
+	txRepo := data.NewTxRepo(dataData)
+	usersRepo := data.NewUserRepo(dataData)
+	accountRepo := data.NewAccountRepo(dataData)
+	usersUsecase := biz.NewUsersUsecase(txRepo, usersRepo, accountRepo)
+	firebaseService, err := service.NewFirebaseService(firebase)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	githubService := service.NewGithubService(github)
+	jwtService := service.NewJwtService(jwt)
+	userSessionRepo := data.NewUserSessionRepo(dataData)
+	cacheService := service.NewCacheService(client)
+	userSessionService := service.NewUserSessionService(session, userSessionRepo, cacheService, jwtService)
+	userService := service.NewUserService(usersUsecase, firebaseService, githubService, jwtService, userSessionService, cacheService)
+	grpcServer := server.NewGRPCServer(confServer, userService)
+	httpServer := server.NewHTTPServer(confServer, userService)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
