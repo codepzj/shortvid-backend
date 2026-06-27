@@ -1,3 +1,12 @@
+# [1.8.0](https://github.com/codepzj/shortvid-backend/compare/v1.7.0...v1.8.0) (2026-06-27)
+
+
+### Features
+
+* 完善用户服务(升级kratos为v3) ([7aaa098](https://github.com/codepzj/shortvid-backend/commit/7aaa098fdeb04136ba2f48d301004cd4f0b654ca))
+* 完善短视频主服务(升级kratos为v3) ([d696e83](https://github.com/codepzj/shortvid-backend/commit/d696e8381115d850f1c2fd9117648a9573867d69))
+* 添加user微服务 ([a893a5f](https://github.com/codepzj/shortvid-backend/commit/a893a5f6c86b0de483ae81def933acac97241d96))
+
 # [1.7.0](https://github.com/codepzj/shortvid-backend/compare/v1.6.0...v1.7.0) (2026-06-24)
 
 
