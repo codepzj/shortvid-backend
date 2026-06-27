@@ -1,0 +1,42 @@
+server:
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 60s
+  grpc:
+    addr: 0.0.0.0:9000
+    timeout: 10s
+
+data:
+  mysql:
+    dsn: root:123456@tcp(127.0.0.1:3306)/shortvid?parseTime=True&loc=UTC
+    slow_sql_threshold: 0.2s # 慢查询阈值，单位秒
+    max_open_conns: 100 # 最大打开连接数
+    max_idle_conns: 10 # 最大空闲连接数
+
+  redis:
+    addr: 127.0.0.1:6379
+    password: 123456
+    db: 0
+    key_prefix: "shortvid:"
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+
+firebase:
+  credentials_json: |
+    YOUR_FIREBASE_CREDENTIALS_JSON
+
+github:
+  client_id: "CLIENT_ID"
+  client_secret: "CLIENT_SECRET"
+
+jwt:
+  issuer: "shortvid-kratos" # JWT签发者
+  secret_key: "SECRET_KEY" # JWT密钥
+  access_token_expires_in: 14400s # 访问令牌过期时间(时)
+  refresh_token_expires_in: 604800s # 刷新令牌过期时间(天)
+
+session:
+  http_only: true # 前端无法通过JavaScript访问cookie
+  secure: false # 是否仅通过HTTPS传输
+  limit_enabled: true # 是否限制session数量
+  limit_count: 3 # session数量限制

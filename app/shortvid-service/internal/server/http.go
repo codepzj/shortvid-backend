@@ -1,25 +1,22 @@
 package server
 
 import (
-	v1 "shortvid-backend/api/shortvid-service/v1"
+	healthV1 "shortvid-backend/api/v1/health"
+	uploadV1 "shortvid-backend/api/v1/upload"
 	"shortvid-backend/app/shortvid-service/internal/conf"
-	"shortvid-backend/app/shortvid-service/internal/server/helper"
 	"shortvid-backend/app/shortvid-service/internal/service"
 
-	"github.com/go-kratos/kratos/contrib/middleware/validate/v2"
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/recovery"
-	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/go-kratos/kratos/v3/middleware/recovery"
+	"github.com/go-kratos/kratos/v3/middleware/validate"
+	"github.com/go-kratos/kratos/v3/transport/http"
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(cs *conf.Server, cj *conf.Jwt, healthSvc *service.HealthService, jwtSvc *service.JwtService, userSvc *service.UserService, uploadSvc *service.UploadService, logger log.Logger) *http.Server {
+func NewHTTPServer(cs *conf.Server, healthSvc *service.HealthService, uploadSvc *service.UploadService) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
-			validate.ProtoValidate(), // 校验参数中间件
-			helper.RequireAuthMiddleware(userSvc, jwtSvc),
-			helper.PublicParamMiddleware(),
+			validate.Validator(), // 校验参数中间件
 		),
 	}
 	if cs.Http.Network != "" {
@@ -40,11 +37,7 @@ func NewHTTPServer(cs *conf.Server, cj *conf.Jwt, healthSvc *service.HealthServi
 
 	srv := http.NewServer(opts...)
 
-	// 健康服务
-	v1.RegisterHealthServiceHTTPServer(srv, healthSvc)
-	// 用户服务
-	v1.RegisterUserServiceHTTPServer(srv, userSvc)
-	// 上传服务
-	v1.RegisterUploadServiceHTTPServer(srv, uploadSvc)
+	healthV1.RegisterHealthServiceHTTPServer(srv, healthSvc)
+	uploadV1.RegisterUploadServiceHTTPServer(srv, uploadSvc)
 	return srv
 }

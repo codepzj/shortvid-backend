@@ -16,7 +16,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/.FirebaseLoginRequest'
+                            $ref: '#/components/schemas/user.v1.FirebaseLoginRequest'
                 required: true
             responses:
                 "200":
@@ -24,7 +24,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/.FirebaseLoginResponse'
+                                $ref: '#/components/schemas/user.v1.FirebaseLoginResponse'
     /api/v1/github/login:
         post:
             tags:
@@ -35,7 +35,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/.GithubLoginRequest'
+                            $ref: '#/components/schemas/user.v1.GithubLoginRequest'
                 required: true
             responses:
                 "200":
@@ -43,7 +43,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/.GithubLoginResponse'
+                                $ref: '#/components/schemas/user.v1.GithubLoginResponse'
     /api/v1/health:
         get:
             tags:
@@ -68,7 +68,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/.ListBucketsReply'
+                                $ref: '#/components/schemas/upload.v1.ListBucketsReply'
     /api/v1/upload/session:
         post:
             tags:
@@ -84,7 +84,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/.GetUploadSessionReply'
+                                $ref: '#/components/schemas/upload.v1.GetUploadSessionReply'
     /api/v1/user/info:
         post:
             tags:
@@ -101,7 +101,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/.UserInfoResponse'
+                                $ref: '#/components/schemas/user.v1.UserInfoResponse'
     /api/v1/user/profile:
         post:
             tags:
@@ -112,7 +112,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/.GetUserProfileRequest'
+                            $ref: '#/components/schemas/user.v1.GetUserProfileRequest'
                 required: true
             responses:
                 "200":
@@ -120,26 +120,10 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/.GetUserProfileResponse'
+                                $ref: '#/components/schemas/user.v1.GetUserProfileResponse'
 components:
     schemas:
-        .FirebaseLoginRequest:
-            type: object
-            properties:
-                idToken:
-                    type: string
-            description: firebase登录请求体
-        .FirebaseLoginResponse:
-            type: object
-            properties:
-                accessToken:
-                    type: string
-                refreshToken:
-                    type: string
-                user:
-                    $ref: '#/components/schemas/.UserProfile'
-            description: firebase登录响应体
-        .GetUploadSessionReply:
+        upload.v1.GetUploadSessionReply:
             type: object
             properties:
                 accessKeyId:
@@ -150,25 +134,20 @@ components:
                     type: string
                 endpoint:
                     type: string
-        .GetUserProfileRequest:
+        upload.v1.ListBucketsReply:
             type: object
             properties:
-                uid:
-                    type: integer
-                    format: int32
-            description: 获取用户资料请求体
-        .GetUserProfileResponse:
+                buckets:
+                    type: array
+                    items:
+                        type: string
+        user.v1.FirebaseLoginRequest:
             type: object
             properties:
-                user:
-                    $ref: '#/components/schemas/.UserProfile'
-            description: 用户资料响应体
-        .GithubLoginRequest:
-            type: object
-            properties:
-                code:
+                idToken:
                     type: string
-        .GithubLoginResponse:
+            description: firebase登录请求体
+        user.v1.FirebaseLoginResponse:
             type: object
             properties:
                 accessToken:
@@ -176,21 +155,42 @@ components:
                 refreshToken:
                     type: string
                 user:
-                    $ref: '#/components/schemas/.UserProfile'
-        .ListBucketsReply:
+                    $ref: '#/components/schemas/user.v1.UserProfile'
+            description: firebase登录响应体
+        user.v1.GetUserProfileRequest:
             type: object
             properties:
-                buckets:
-                    type: array
-                    items:
-                        type: string
-        .UserInfoResponse:
+                uid:
+                    type: integer
+                    format: int32
+            description: 获取用户资料请求体
+        user.v1.GetUserProfileResponse:
             type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/.UserProfile'
+                    $ref: '#/components/schemas/user.v1.UserProfile'
+            description: 用户资料响应体
+        user.v1.GithubLoginRequest:
+            type: object
+            properties:
+                code:
+                    type: string
+        user.v1.GithubLoginResponse:
+            type: object
+            properties:
+                accessToken:
+                    type: string
+                refreshToken:
+                    type: string
+                user:
+                    $ref: '#/components/schemas/user.v1.UserProfile'
+        user.v1.UserInfoResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/user.v1.UserProfile'
             description: 用户信息响应
-        .UserProfile:
+        user.v1.UserProfile:
             type: object
             properties:
                 id:

@@ -12,12 +12,11 @@ import (
 	"shortvid-backend/app/shortvid-service/internal/server"
 	"shortvid-backend/app/shortvid-service/internal/service"
 
-	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v3"
 	"github.com/google/wire"
 )
 
 // wireApp init kratos application.
-func wireApp(*conf.Server, *conf.Data, *conf.Firebase, *conf.Github, *conf.Jwt, *conf.Session, *conf.S3, log.Logger) (*kratos.App, func(), error) {
+func wireApp(*conf.Server, *conf.Data, *conf.S3) (*kratos.App, func(), error) {
 	panic(wire.Build(server.ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, newApp))
 }

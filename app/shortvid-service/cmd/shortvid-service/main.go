@@ -2,17 +2,17 @@ package main
 
 import (
 	"flag"
+	"log/slog"
 	"os"
 
 	"shortvid-backend/app/shortvid-service/internal/conf"
 
-	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/config"
-	"github.com/go-kratos/kratos/v2/config/file"
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/go-kratos/kratos/contrib/otel/v3/tracing"
+	"github.com/go-kratos/kratos/v3"
+	"github.com/go-kratos/kratos/v3/config"
+	"github.com/go-kratos/kratos/v3/config/file"
+	"github.com/go-kratos/kratos/v3/log"
+	"github.com/go-kratos/kratos/v3/transport/http"
 
 	_ "go.uber.org/automaxprocs"
 )
@@ -22,7 +22,7 @@ var (
 	// Name is the name of the compiled software.
 	Name string = "shortvid-service"
 	// Version is the version of the compiled software.
-	Version string = "1.0.0"
+	Version string
 	// flagconf is the config flag.
 	flagconf string
 
@@ -33,23 +33,31 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
 }
 
-func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
+func newApp(hs *http.Server) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
 		kratos.Version(Version),
 		kratos.Metadata(map[string]string{}),
-		kratos.Logger(logger),
-		kratos.Server(
-			gs,
-			hs,
-		),
+		kratos.Logger(log.Default()),
+		kratos.Server(hs),
 	)
 }
 
 func main() {
 	flag.Parse()
-
+	logger := log.NewLogger(
+		slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			AddSource: true,
+			Level:     slog.LevelInfo,
+		}),
+		log.WithExtractor(tracing.TraceAttrs),
+	).With(
+		slog.String("service.id", id),
+		slog.String("service.name", Name),
+		slog.String("service.version", Version),
+	)
+	log.SetDefault(logger)
 	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),
@@ -66,23 +74,12 @@ func main() {
 		panic(err)
 	}
 
-	logger := log.With(log.NewStdLogger(os.Stdout),
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-		"service.id", id,
-		"service.name", Name,
-		"service.version", Version,
-		"trace_id", tracing.TraceID(),
-		"span_id", tracing.SpanID(),
-	)
-	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Firebase, bc.Github, bc.Jwt, bc.Session, bc.S3, logger)
+	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.S3)
 	if err != nil {
 		panic(err)
 	}
-	// 释放基础设施资源
 	defer cleanup()
 
-	// start and wait for stop signal
 	if err := app.Run(); err != nil {
 		panic(err)
 	}

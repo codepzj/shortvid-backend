@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package health.v1;
+option go_package = "shortvid-backend/api/v1/health;healthV1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service HealthService {
+	rpc Health (google.protobuf.Empty) returns (google.protobuf.Empty){
+		option (google.api.http) = {
+			get: "/api/v1/health"
+		};
+	};
+}
+
