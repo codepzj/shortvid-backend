@@ -26,11 +26,7 @@ type Bootstrap struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Server        *Server                `protobuf:"bytes,1,opt,name=server,proto3" json:"server,omitempty"`
 	Data          *Data                  `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
-	Firebase      *Firebase              `protobuf:"bytes,3,opt,name=firebase,proto3" json:"firebase,omitempty"`
-	Github        *Github                `protobuf:"bytes,4,opt,name=github,proto3" json:"github,omitempty"`
-	Jwt           *Jwt                   `protobuf:"bytes,5,opt,name=jwt,proto3" json:"jwt,omitempty"`
-	Session       *Session               `protobuf:"bytes,6,opt,name=session,proto3" json:"session,omitempty"`
-	S3            *S3                    `protobuf:"bytes,7,opt,name=s3,proto3" json:"s3,omitempty"`
+	S3            *S3                    `protobuf:"bytes,3,opt,name=s3,proto3" json:"s3,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -79,34 +75,6 @@ func (x *Bootstrap) GetData() *Data {
 	return nil
 }
 
-func (x *Bootstrap) GetFirebase() *Firebase {
-	if x != nil {
-		return x.Firebase
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetGithub() *Github {
-	if x != nil {
-		return x.Github
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetJwt() *Jwt {
-	if x != nil {
-		return x.Jwt
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetSession() *Session {
-	if x != nil {
-		return x.Session
-	}
-	return nil
-}
-
 func (x *Bootstrap) GetS3() *S3 {
 	if x != nil {
 		return x.S3
@@ -117,7 +85,6 @@ func (x *Bootstrap) GetS3() *S3 {
 type Server struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Http          *Server_HTTP           `protobuf:"bytes,1,opt,name=http,proto3" json:"http,omitempty"`
-	Grpc          *Server_GRPC           `protobuf:"bytes,2,opt,name=grpc,proto3" json:"grpc,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -159,17 +126,9 @@ func (x *Server) GetHttp() *Server_HTTP {
 	return nil
 }
 
-func (x *Server) GetGrpc() *Server_GRPC {
-	if x != nil {
-		return x.Grpc
-	}
-	return nil
-}
-
 type Data struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Mysql         *Data_Mysql            `protobuf:"bytes,1,opt,name=mysql,proto3" json:"mysql,omitempty"`
-	Redis         *Data_Redis            `protobuf:"bytes,2,opt,name=redis,proto3" json:"redis,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -211,245 +170,6 @@ func (x *Data) GetMysql() *Data_Mysql {
 	return nil
 }
 
-func (x *Data) GetRedis() *Data_Redis {
-	if x != nil {
-		return x.Redis
-	}
-	return nil
-}
-
-type Firebase struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	CredentialsJson string                 `protobuf:"bytes,1,opt,name=credentials_json,json=credentialsJson,proto3" json:"credentials_json,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *Firebase) Reset() {
-	*x = Firebase{}
-	mi := &file_conf_conf_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Firebase) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Firebase) ProtoMessage() {}
-
-func (x *Firebase) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Firebase.ProtoReflect.Descriptor instead.
-func (*Firebase) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *Firebase) GetCredentialsJson() string {
-	if x != nil {
-		return x.CredentialsJson
-	}
-	return ""
-}
-
-type Github struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ClientId      string                 `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
-	ClientSecret  string                 `protobuf:"bytes,2,opt,name=client_secret,json=clientSecret,proto3" json:"client_secret,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Github) Reset() {
-	*x = Github{}
-	mi := &file_conf_conf_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Github) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Github) ProtoMessage() {}
-
-func (x *Github) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Github.ProtoReflect.Descriptor instead.
-func (*Github) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *Github) GetClientId() string {
-	if x != nil {
-		return x.ClientId
-	}
-	return ""
-}
-
-func (x *Github) GetClientSecret() string {
-	if x != nil {
-		return x.ClientSecret
-	}
-	return ""
-}
-
-type Jwt struct {
-	state                 protoimpl.MessageState `protogen:"open.v1"`
-	Issuer                string                 `protobuf:"bytes,1,opt,name=issuer,proto3" json:"issuer,omitempty"`
-	SecretKey             string                 `protobuf:"bytes,2,opt,name=secret_key,json=secretKey,proto3" json:"secret_key,omitempty"`
-	AccessTokenExpiresIn  *durationpb.Duration   `protobuf:"bytes,3,opt,name=access_token_expires_in,json=accessTokenExpiresIn,proto3" json:"access_token_expires_in,omitempty"`
-	RefreshTokenExpiresIn *durationpb.Duration   `protobuf:"bytes,4,opt,name=refresh_token_expires_in,json=refreshTokenExpiresIn,proto3" json:"refresh_token_expires_in,omitempty"`
-	unknownFields         protoimpl.UnknownFields
-	sizeCache             protoimpl.SizeCache
-}
-
-func (x *Jwt) Reset() {
-	*x = Jwt{}
-	mi := &file_conf_conf_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Jwt) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Jwt) ProtoMessage() {}
-
-func (x *Jwt) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Jwt.ProtoReflect.Descriptor instead.
-func (*Jwt) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *Jwt) GetIssuer() string {
-	if x != nil {
-		return x.Issuer
-	}
-	return ""
-}
-
-func (x *Jwt) GetSecretKey() string {
-	if x != nil {
-		return x.SecretKey
-	}
-	return ""
-}
-
-func (x *Jwt) GetAccessTokenExpiresIn() *durationpb.Duration {
-	if x != nil {
-		return x.AccessTokenExpiresIn
-	}
-	return nil
-}
-
-func (x *Jwt) GetRefreshTokenExpiresIn() *durationpb.Duration {
-	if x != nil {
-		return x.RefreshTokenExpiresIn
-	}
-	return nil
-}
-
-type Session struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	HttpOnly      bool                   `protobuf:"varint,1,opt,name=http_only,json=httpOnly,proto3" json:"http_only,omitempty"`
-	Secure        bool                   `protobuf:"varint,2,opt,name=secure,proto3" json:"secure,omitempty"`
-	LimitEnabled  bool                   `protobuf:"varint,3,opt,name=limit_enabled,json=limitEnabled,proto3" json:"limit_enabled,omitempty"`
-	LimitCount    int32                  `protobuf:"varint,4,opt,name=limit_count,json=limitCount,proto3" json:"limit_count,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Session) Reset() {
-	*x = Session{}
-	mi := &file_conf_conf_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Session) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Session) ProtoMessage() {}
-
-func (x *Session) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Session.ProtoReflect.Descriptor instead.
-func (*Session) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *Session) GetHttpOnly() bool {
-	if x != nil {
-		return x.HttpOnly
-	}
-	return false
-}
-
-func (x *Session) GetSecure() bool {
-	if x != nil {
-		return x.Secure
-	}
-	return false
-}
-
-func (x *Session) GetLimitEnabled() bool {
-	if x != nil {
-		return x.LimitEnabled
-	}
-	return false
-}
-
-func (x *Session) GetLimitCount() int32 {
-	if x != nil {
-		return x.LimitCount
-	}
-	return 0
-}
-
 type S3 struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	Endpoint           string                 `protobuf:"bytes,1,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
@@ -469,7 +189,7 @@ type S3 struct {
 
 func (x *S3) Reset() {
 	*x = S3{}
-	mi := &file_conf_conf_proto_msgTypes[7]
+	mi := &file_conf_conf_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -481,7 +201,7 @@ func (x *S3) String() string {
 func (*S3) ProtoMessage() {}
 
 func (x *S3) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[7]
+	mi := &file_conf_conf_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -494,7 +214,7 @@ func (x *S3) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use S3.ProtoReflect.Descriptor instead.
 func (*S3) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{7}
+	return file_conf_conf_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *S3) GetEndpoint() string {
@@ -585,7 +305,7 @@ type Server_HTTP struct {
 
 func (x *Server_HTTP) Reset() {
 	*x = Server_HTTP{}
-	mi := &file_conf_conf_proto_msgTypes[8]
+	mi := &file_conf_conf_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -597,7 +317,7 @@ func (x *Server_HTTP) String() string {
 func (*Server_HTTP) ProtoMessage() {}
 
 func (x *Server_HTTP) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[8]
+	mi := &file_conf_conf_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -634,66 +354,6 @@ func (x *Server_HTTP) GetTimeout() *durationpb.Duration {
 	return nil
 }
 
-type Server_GRPC struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Network       string                 `protobuf:"bytes,1,opt,name=network,proto3" json:"network,omitempty"`
-	Addr          string                 `protobuf:"bytes,2,opt,name=addr,proto3" json:"addr,omitempty"`
-	Timeout       *durationpb.Duration   `protobuf:"bytes,3,opt,name=timeout,proto3" json:"timeout,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Server_GRPC) Reset() {
-	*x = Server_GRPC{}
-	mi := &file_conf_conf_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Server_GRPC) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Server_GRPC) ProtoMessage() {}
-
-func (x *Server_GRPC) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Server_GRPC.ProtoReflect.Descriptor instead.
-func (*Server_GRPC) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{1, 1}
-}
-
-func (x *Server_GRPC) GetNetwork() string {
-	if x != nil {
-		return x.Network
-	}
-	return ""
-}
-
-func (x *Server_GRPC) GetAddr() string {
-	if x != nil {
-		return x.Addr
-	}
-	return ""
-}
-
-func (x *Server_GRPC) GetTimeout() *durationpb.Duration {
-	if x != nil {
-		return x.Timeout
-	}
-	return nil
-}
-
 type Data_Mysql struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	Dsn              string                 `protobuf:"bytes,1,opt,name=dsn,proto3" json:"dsn,omitempty"`
@@ -706,7 +366,7 @@ type Data_Mysql struct {
 
 func (x *Data_Mysql) Reset() {
 	*x = Data_Mysql{}
-	mi := &file_conf_conf_proto_msgTypes[10]
+	mi := &file_conf_conf_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -718,7 +378,7 @@ func (x *Data_Mysql) String() string {
 func (*Data_Mysql) ProtoMessage() {}
 
 func (x *Data_Mysql) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[10]
+	mi := &file_conf_conf_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -762,157 +422,29 @@ func (x *Data_Mysql) GetMaxIdleConns() int64 {
 	return 0
 }
 
-type Data_Redis struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Network       string                 `protobuf:"bytes,1,opt,name=network,proto3" json:"network,omitempty"`
-	Addr          string                 `protobuf:"bytes,2,opt,name=addr,proto3" json:"addr,omitempty"`
-	Password      string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
-	Db            int32                  `protobuf:"varint,4,opt,name=db,proto3" json:"db,omitempty"`
-	KeyPrefix     string                 `protobuf:"bytes,5,opt,name=key_prefix,json=keyPrefix,proto3" json:"key_prefix,omitempty"`
-	ReadTimeout   *durationpb.Duration   `protobuf:"bytes,6,opt,name=read_timeout,json=readTimeout,proto3" json:"read_timeout,omitempty"`
-	WriteTimeout  *durationpb.Duration   `protobuf:"bytes,7,opt,name=write_timeout,json=writeTimeout,proto3" json:"write_timeout,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Data_Redis) Reset() {
-	*x = Data_Redis{}
-	mi := &file_conf_conf_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Data_Redis) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Data_Redis) ProtoMessage() {}
-
-func (x *Data_Redis) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Data_Redis.ProtoReflect.Descriptor instead.
-func (*Data_Redis) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{2, 1}
-}
-
-func (x *Data_Redis) GetNetwork() string {
-	if x != nil {
-		return x.Network
-	}
-	return ""
-}
-
-func (x *Data_Redis) GetAddr() string {
-	if x != nil {
-		return x.Addr
-	}
-	return ""
-}
-
-func (x *Data_Redis) GetPassword() string {
-	if x != nil {
-		return x.Password
-	}
-	return ""
-}
-
-func (x *Data_Redis) GetDb() int32 {
-	if x != nil {
-		return x.Db
-	}
-	return 0
-}
-
-func (x *Data_Redis) GetKeyPrefix() string {
-	if x != nil {
-		return x.KeyPrefix
-	}
-	return ""
-}
-
-func (x *Data_Redis) GetReadTimeout() *durationpb.Duration {
-	if x != nil {
-		return x.ReadTimeout
-	}
-	return nil
-}
-
-func (x *Data_Redis) GetWriteTimeout() *durationpb.Duration {
-	if x != nil {
-		return x.WriteTimeout
-	}
-	return nil
-}
-
 var File_conf_conf_proto protoreflect.FileDescriptor
 
 const file_conf_conf_proto_rawDesc = "" +
 	"\n" +
 	"\x0fconf/conf.proto\x12\n" +
-	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"\xad\x02\n" +
+	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"}\n" +
 	"\tBootstrap\x12*\n" +
 	"\x06server\x18\x01 \x01(\v2\x12.kratos.api.ServerR\x06server\x12$\n" +
-	"\x04data\x18\x02 \x01(\v2\x10.kratos.api.DataR\x04data\x120\n" +
-	"\bfirebase\x18\x03 \x01(\v2\x14.kratos.api.FirebaseR\bfirebase\x12*\n" +
-	"\x06github\x18\x04 \x01(\v2\x12.kratos.api.GithubR\x06github\x12!\n" +
-	"\x03jwt\x18\x05 \x01(\v2\x0f.kratos.api.JwtR\x03jwt\x12-\n" +
-	"\asession\x18\x06 \x01(\v2\x13.kratos.api.SessionR\asession\x12\x1e\n" +
-	"\x02s3\x18\a \x01(\v2\x0e.kratos.api.S3R\x02s3\"\xb8\x02\n" +
+	"\x04data\x18\x02 \x01(\v2\x10.kratos.api.DataR\x04data\x12\x1e\n" +
+	"\x02s3\x18\x03 \x01(\v2\x0e.kratos.api.S3R\x02s3\"\xa0\x01\n" +
 	"\x06Server\x12+\n" +
-	"\x04http\x18\x01 \x01(\v2\x17.kratos.api.Server.HTTPR\x04http\x12+\n" +
-	"\x04grpc\x18\x02 \x01(\v2\x17.kratos.api.Server.GRPCR\x04grpc\x1ai\n" +
+	"\x04http\x18\x01 \x01(\v2\x17.kratos.api.Server.HTTPR\x04http\x1ai\n" +
 	"\x04HTTP\x12\x18\n" +
 	"\anetwork\x18\x01 \x01(\tR\anetwork\x12\x12\n" +
 	"\x04addr\x18\x02 \x01(\tR\x04addr\x123\n" +
-	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeout\x1ai\n" +
-	"\x04GRPC\x12\x18\n" +
-	"\anetwork\x18\x01 \x01(\tR\anetwork\x12\x12\n" +
-	"\x04addr\x18\x02 \x01(\tR\x04addr\x123\n" +
-	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"\x94\x04\n" +
+	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"\xe5\x01\n" +
 	"\x04Data\x12,\n" +
-	"\x05mysql\x18\x01 \x01(\v2\x16.kratos.api.Data.MysqlR\x05mysql\x12,\n" +
-	"\x05redis\x18\x02 \x01(\v2\x16.kratos.api.Data.RedisR\x05redis\x1a\xae\x01\n" +
+	"\x05mysql\x18\x01 \x01(\v2\x16.kratos.api.Data.MysqlR\x05mysql\x1a\xae\x01\n" +
 	"\x05Mysql\x12\x10\n" +
 	"\x03dsn\x18\x01 \x01(\tR\x03dsn\x12G\n" +
 	"\x12slow_sql_threshold\x18\x02 \x01(\v2\x19.google.protobuf.DurationR\x10slowSqlThreshold\x12$\n" +
 	"\x0emax_open_conns\x18\x03 \x01(\x03R\fmaxOpenConns\x12$\n" +
-	"\x0emax_idle_conns\x18\x04 \x01(\x03R\fmaxIdleConns\x1a\xfe\x01\n" +
-	"\x05Redis\x12\x18\n" +
-	"\anetwork\x18\x01 \x01(\tR\anetwork\x12\x12\n" +
-	"\x04addr\x18\x02 \x01(\tR\x04addr\x12\x1a\n" +
-	"\bpassword\x18\x03 \x01(\tR\bpassword\x12\x0e\n" +
-	"\x02db\x18\x04 \x01(\x05R\x02db\x12\x1d\n" +
-	"\n" +
-	"key_prefix\x18\x05 \x01(\tR\tkeyPrefix\x12<\n" +
-	"\fread_timeout\x18\x06 \x01(\v2\x19.google.protobuf.DurationR\vreadTimeout\x12>\n" +
-	"\rwrite_timeout\x18\a \x01(\v2\x19.google.protobuf.DurationR\fwriteTimeout\"5\n" +
-	"\bFirebase\x12)\n" +
-	"\x10credentials_json\x18\x01 \x01(\tR\x0fcredentialsJson\"J\n" +
-	"\x06Github\x12\x1b\n" +
-	"\tclient_id\x18\x01 \x01(\tR\bclientId\x12#\n" +
-	"\rclient_secret\x18\x02 \x01(\tR\fclientSecret\"\xe2\x01\n" +
-	"\x03Jwt\x12\x16\n" +
-	"\x06issuer\x18\x01 \x01(\tR\x06issuer\x12\x1d\n" +
-	"\n" +
-	"secret_key\x18\x02 \x01(\tR\tsecretKey\x12P\n" +
-	"\x17access_token_expires_in\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\x14accessTokenExpiresIn\x12R\n" +
-	"\x18refresh_token_expires_in\x18\x04 \x01(\v2\x19.google.protobuf.DurationR\x15refreshTokenExpiresIn\"\x84\x01\n" +
-	"\aSession\x12\x1b\n" +
-	"\thttp_only\x18\x01 \x01(\bR\bhttpOnly\x12\x16\n" +
-	"\x06secure\x18\x02 \x01(\bR\x06secure\x12#\n" +
-	"\rlimit_enabled\x18\x03 \x01(\bR\flimitEnabled\x12\x1f\n" +
-	"\vlimit_count\x18\x04 \x01(\x05R\n" +
-	"limitCount\"\x8f\x03\n" +
+	"\x0emax_idle_conns\x18\x04 \x01(\x03R\fmaxIdleConns\"\x8f\x03\n" +
 	"\x02S3\x12\x1a\n" +
 	"\bendpoint\x18\x01 \x01(\tR\bendpoint\x12\"\n" +
 	"\rs3_access_key\x18\x02 \x01(\tR\vs3AccessKey\x12\"\n" +
@@ -941,46 +473,29 @@ func file_conf_conf_proto_rawDescGZIP() []byte {
 	return file_conf_conf_proto_rawDescData
 }
 
-var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_conf_conf_proto_goTypes = []any{
 	(*Bootstrap)(nil),           // 0: kratos.api.Bootstrap
 	(*Server)(nil),              // 1: kratos.api.Server
 	(*Data)(nil),                // 2: kratos.api.Data
-	(*Firebase)(nil),            // 3: kratos.api.Firebase
-	(*Github)(nil),              // 4: kratos.api.Github
-	(*Jwt)(nil),                 // 5: kratos.api.Jwt
-	(*Session)(nil),             // 6: kratos.api.Session
-	(*S3)(nil),                  // 7: kratos.api.S3
-	(*Server_HTTP)(nil),         // 8: kratos.api.Server.HTTP
-	(*Server_GRPC)(nil),         // 9: kratos.api.Server.GRPC
-	(*Data_Mysql)(nil),          // 10: kratos.api.Data.Mysql
-	(*Data_Redis)(nil),          // 11: kratos.api.Data.Redis
-	(*durationpb.Duration)(nil), // 12: google.protobuf.Duration
+	(*S3)(nil),                  // 3: kratos.api.S3
+	(*Server_HTTP)(nil),         // 4: kratos.api.Server.HTTP
+	(*Data_Mysql)(nil),          // 5: kratos.api.Data.Mysql
+	(*durationpb.Duration)(nil), // 6: google.protobuf.Duration
 }
 var file_conf_conf_proto_depIdxs = []int32{
-	1,  // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
-	2,  // 1: kratos.api.Bootstrap.data:type_name -> kratos.api.Data
-	3,  // 2: kratos.api.Bootstrap.firebase:type_name -> kratos.api.Firebase
-	4,  // 3: kratos.api.Bootstrap.github:type_name -> kratos.api.Github
-	5,  // 4: kratos.api.Bootstrap.jwt:type_name -> kratos.api.Jwt
-	6,  // 5: kratos.api.Bootstrap.session:type_name -> kratos.api.Session
-	7,  // 6: kratos.api.Bootstrap.s3:type_name -> kratos.api.S3
-	8,  // 7: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
-	9,  // 8: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
-	10, // 9: kratos.api.Data.mysql:type_name -> kratos.api.Data.Mysql
-	11, // 10: kratos.api.Data.redis:type_name -> kratos.api.Data.Redis
-	12, // 11: kratos.api.Jwt.access_token_expires_in:type_name -> google.protobuf.Duration
-	12, // 12: kratos.api.Jwt.refresh_token_expires_in:type_name -> google.protobuf.Duration
-	12, // 13: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
-	12, // 14: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
-	12, // 15: kratos.api.Data.Mysql.slow_sql_threshold:type_name -> google.protobuf.Duration
-	12, // 16: kratos.api.Data.Redis.read_timeout:type_name -> google.protobuf.Duration
-	12, // 17: kratos.api.Data.Redis.write_timeout:type_name -> google.protobuf.Duration
-	18, // [18:18] is the sub-list for method output_type
-	18, // [18:18] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	1, // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
+	2, // 1: kratos.api.Bootstrap.data:type_name -> kratos.api.Data
+	3, // 2: kratos.api.Bootstrap.s3:type_name -> kratos.api.S3
+	4, // 3: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
+	5, // 4: kratos.api.Data.mysql:type_name -> kratos.api.Data.Mysql
+	6, // 5: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
+	6, // 6: kratos.api.Data.Mysql.slow_sql_threshold:type_name -> google.protobuf.Duration
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_conf_conf_proto_init() }
@@ -994,7 +509,7 @@ func file_conf_conf_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_conf_conf_proto_rawDesc), len(file_conf_conf_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

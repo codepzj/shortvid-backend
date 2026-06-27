@@ -5,7 +5,7 @@ import (
 	"shortvid-backend/app/shortvid-service/internal/conf"
 
 	"github.com/aws/aws-sdk-go-v2/service/sts"
-	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v3/log"
 )
 
 type S3Repo interface {
@@ -14,13 +14,12 @@ type S3Repo interface {
 }
 
 type S3Usecase struct {
-	conf   *conf.S3
-	logger *log.Helper
-	repo   S3Repo
+	conf *conf.S3
+	repo S3Repo
 }
 
-func NewS3Usecase(conf *conf.S3, logger log.Logger, repo S3Repo) *S3Usecase {
-	return &S3Usecase{conf: conf, logger: log.NewHelper(logger), repo: repo}
+func NewS3Usecase(conf *conf.S3, repo S3Repo) *S3Usecase {
+	return &S3Usecase{conf: conf, repo: repo}
 }
 
 type UploadSession struct {
@@ -33,7 +32,7 @@ type UploadSession struct {
 func (s *S3Usecase) GetUploadSession(ctx context.Context) (*UploadSession, error) {
 	output, err := s.repo.GetUploadSession(ctx)
 	if err != nil {
-		s.logger.Error("get upload session failed", "error", err)
+		log.ErrorContext(ctx, "get upload session failed", "error", err)
 		return nil, err
 	}
 	return &UploadSession{
@@ -47,7 +46,7 @@ func (s *S3Usecase) GetUploadSession(ctx context.Context) (*UploadSession, error
 func (s *S3Usecase) ListBuckets(ctx context.Context) ([]string, error) {
 	buckets, err := s.repo.ListBuckets(ctx)
 	if err != nil {
-		s.logger.Error("list buckets failed", "error", err)
+		log.ErrorContext(ctx, "list buckets failed", "error", err)
 		return nil, err
 	}
 	return buckets, nil

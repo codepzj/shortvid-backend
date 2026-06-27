@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 	"errors"
-	"time"
 	"shortvid-backend/app/user-service/internal/conf"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )

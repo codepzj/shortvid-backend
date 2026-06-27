@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package upload.v1;
+option go_package = "shortvid-backend/api/v1/upload;uploadV1";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+service UploadService {
+	rpc GetUploadSession (google.protobuf.Empty) returns (GetUploadSessionReply){
+		option (google.api.http) = {
+			post: "/api/v1/upload/session"
+			body: "*"
+		};
+	};
+
+	rpc ListBuckets (google.protobuf.Empty) returns (ListBucketsReply){
+		option (google.api.http) = {
+			post: "/api/v1/upload/buckets"
+			body: "*"
+		};
+	};
+}
+
+message GetUploadSessionReply {
+	string access_key_id = 1; // 访问密钥ID
+	string secret_access_key = 2; // 秘密访问密钥
+	string session_token = 3; // 会话令牌
+	string endpoint = 4; // 终端节点
+}
+
+message ListBucketsReply {
+	repeated string buckets = 1;
+}

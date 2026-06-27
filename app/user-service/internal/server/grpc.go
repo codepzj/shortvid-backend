@@ -1,7 +1,7 @@
 package server
 
 import (
-	v1 "shortvid-backend/api/user-service/v1"
+	userV1 "shortvid-backend/api/v1/user"
 	"shortvid-backend/app/user-service/internal/conf"
 	"shortvid-backend/app/user-service/internal/service"
 
@@ -26,6 +26,6 @@ func NewGRPCServer(c *conf.Server, user *service.UserService) *grpc.Server {
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	v1.RegisterUserServiceServer(srv, user)
+	userV1.RegisterUserServiceServer(srv, user)
 	return srv
 }

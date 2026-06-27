@@ -1,7 +1,7 @@
 package server
 
 import (
-	v1 "shortvid-backend/api/user-service/v1"
+	userV1 "shortvid-backend/api/v1/user"
 	"shortvid-backend/app/user-service/internal/conf"
 	"shortvid-backend/app/user-service/internal/service"
 
@@ -37,6 +37,6 @@ func NewHTTPServer(c *conf.Server, user *service.UserService) *http.Server {
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
-	v1.RegisterUserServiceHTTPServer(srv, user)
+	userV1.RegisterUserServiceHTTPServer(srv, user)
 	return srv
 }

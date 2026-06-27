@@ -7,12 +7,10 @@
 package main
 
 import (
-	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v3"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 	"shortvid-backend/app/shortvid-service/internal/conf"
 	"shortvid-backend/app/shortvid-service/internal/data"
-	"shortvid-backend/app/shortvid-service/internal/data/infra/cache"
 	"shortvid-backend/app/shortvid-service/internal/data/infra/db"
 	"shortvid-backend/app/shortvid-service/internal/data/infra/storage"
 	"shortvid-backend/app/shortvid-service/internal/server"
@@ -26,36 +24,19 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, firebase *conf.Firebase, github *conf.Github, jwt *conf.Jwt, session *conf.Session, s3 *conf.S3, logger log.Logger) (*kratos.App, func(), error) {
-	gormDB := db.NewDB(confData)
-	client := cache.NewRedis(confData)
-	s3Data := storage.NewS3(s3)
-	dataData, cleanup, err := data.NewData(gormDB, client, s3Data, logger)
-	if err != nil {
-		return nil, nil, err
-	}
-	txRepo := data.NewTxRepo(dataData)
-	usersRepo := data.NewUserRepo(dataData)
-	accountRepo := data.NewAccountRepo(dataData)
-	usersUsecase := biz.NewUsersUsecase(logger, txRepo, usersRepo, accountRepo)
-	firebaseService, err := service.NewFirebaseService(logger, firebase)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	githubService := service.NewGithubService(logger, github)
-	jwtService := service.NewJwtService(jwt, logger)
-	userSessionRepo := data.NewUserSessionRepo(dataData)
-	cacheService := service.NewCacheService(client, logger)
-	userSessionService := service.NewUserSessionService(logger, session, userSessionRepo, cacheService, jwtService)
-	userService := service.NewUserService(logger, usersUsecase, firebaseService, githubService, jwtService, userSessionService, cacheService)
-	grpcServer := server.NewGRPCServer(confServer, userService, logger)
+func wireApp(confServer *conf.Server, confData *conf.Data, s3 *conf.S3) (*kratos.App, func(), error) {
 	healthService := service.NewHealthService()
-	s3Repo := data.NewS3Repo(s3, dataData, logger)
-	s3Usecase := biz.NewS3Usecase(s3, logger, s3Repo)
-	uploadService := service.NewUploadService(logger, s3Usecase)
-	httpServer := server.NewHTTPServer(confServer, jwt, healthService, jwtService, userService, uploadService, logger)
-	app := newApp(logger, grpcServer, httpServer)
+	gormDB := db.NewDB(confData)
+	s3Data := storage.NewS3(s3)
+	dataData, cleanup, err := data.NewData(gormDB, s3Data)
+	if err != nil {
+		return nil, nil, err
+	}
+	s3Repo := data.NewS3Repo(s3, dataData)
+	s3Usecase := biz.NewS3Usecase(s3, s3Repo)
+	uploadService := service.NewUploadService(s3Usecase)
+	httpServer := server.NewHTTPServer(confServer, healthService, uploadService)
+	app := newApp(httpServer)
 	return app, func() {
 		cleanup()
 	}, nil

@@ -3,8 +3,8 @@ package server
 import (
 	"net/http"
 
-	kratos_http "github.com/go-kratos/kratos/v2/transport/http"
-	kratos_status "github.com/go-kratos/kratos/v2/transport/http/status"
+	kratos_http "github.com/go-kratos/kratos/v3/transport/http"
+	kratos_status "github.com/go-kratos/kratos/v3/transport/http/status"
 	"google.golang.org/grpc/status"
 )
 

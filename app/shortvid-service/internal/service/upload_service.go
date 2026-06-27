@@ -3,45 +3,42 @@ package service
 import (
 	"context"
 
-	pb "shortvid-backend/api/shortvid-service/v1"
+	uploadV1 "shortvid-backend/api/v1/upload"
 	"shortvid-backend/app/shortvid-service/internal/biz"
 
-	"github.com/go-kratos/kratos/v2/log"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type UploadService struct {
-	pb.UnimplementedUploadServiceServer
+	uploadV1.UnimplementedUploadServiceServer
 
-	logger *log.Helper
-	uc     *biz.S3Usecase
+	uc *biz.S3Usecase
 }
 
-func NewUploadService(logger log.Logger, uc *biz.S3Usecase) *UploadService {
+func NewUploadService(uc *biz.S3Usecase) *UploadService {
 	return &UploadService{
-		logger: log.NewHelper(logger),
-		uc:     uc,
+		uc: uc,
 	}
 }
 
-func (s *UploadService) GetUploadSession(ctx context.Context, req *emptypb.Empty) (*pb.GetUploadSessionReply, error) {
+func (s *UploadService) GetUploadSession(ctx context.Context, req *emptypb.Empty) (*uploadV1.GetUploadSessionReply, error) {
 	session, err := s.uc.GetUploadSession(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetUploadSessionReply{
+	return &uploadV1.GetUploadSessionReply{
 		AccessKeyId:     session.AccessKeyID,
 		SecretAccessKey: session.SecretAccessKey,
 		SessionToken:    session.SessionToken,
 	}, nil
 }
 
-func (s *UploadService) ListBuckets(ctx context.Context, req *emptypb.Empty) (*pb.ListBucketsReply, error) {
+func (s *UploadService) ListBuckets(ctx context.Context, req *emptypb.Empty) (*uploadV1.ListBucketsReply, error) {
 	buckets, err := s.uc.ListBuckets(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.ListBucketsReply{
+	return &uploadV1.ListBucketsReply{
 		Buckets: buckets,
 	}, nil
 }

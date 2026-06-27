@@ -2,36 +2,25 @@ GOHOSTOS:=$(shell go env GOHOSTOS)
 GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 
-.PHONY: init
-# init env
-init:
-	go install github.com/google/wire/cmd/wire@latest
-	go install github.com/bufbuild/buf/cmd/buf@latest
-	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v3@v3.0.0-20260526000039-30da04b769dc
-	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v3@v3.0.0-20260526000039-30da04b769dc
-
-GO_ERRORS_PROTO_PATH:=$(shell go env GOMODCACHE)/github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v3@v3.0.0-20260526000039-30da04b769dc
-
-.PHONY: api
-# generate api proto (kratos v3; errors must be v3 to avoid proto registration conflict)
-api:
-	cd ../.. && protoc --proto_path=./api \
-	       --proto_path=./third_party \
-	       --go_out=paths=source_relative:./api \
-	       --go-grpc_out=paths=source_relative:./api \
-	       --go-http_out=paths=source_relative:./api \
-	       api/user-service/v1/user.proto
-	cd ../.. && protoc --proto_path=./api \
-	       --proto_path=$(GO_ERRORS_PROTO_PATH) \
-	       --proto_path=./third_party \
-	       --go_out=paths=source_relative:./api \
-	       --go-errors_out=paths=source_relative:./api \
-	       api/user-service/v1/errors.proto
+ifeq ($(GOHOSTOS), windows)
+	#the `find.exe` is different from `find` in bash/shell.
+	#to see https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/find.
+	#changed to use git-bash.exe to run find cli or other cli friendly, caused of every developer has a Git.
+	#Git_Bash= $(subst cmd\,bin\bash.exe,$(dir $(shell where git)))
+	Git_Bash=$(subst \,/,$(subst cmd\,bin\bash.exe,$(dir $(shell where git))))
+	INTERNAL_PROTO_FILES=$(shell $(Git_Bash) -c "find internal -name *.proto")
+	API_PROTO_FILES=$(shell $(Git_Bash) -c "find api -name *.proto")
+else
+	INTERNAL_PROTO_FILES=$(shell find internal -name *.proto)
+	API_PROTO_FILES=$(shell find api -name *.proto)
+endif
 
 .PHONY: config
 # generate internal proto
 config:
-	buf generate --template buf.gen.config.yaml
+	protoc --proto_path=./internal \
+ 	       --go_out=paths=source_relative:./internal \
+	       $(INTERNAL_PROTO_FILES)
 
 .PHONY: build
 # build
@@ -43,13 +32,6 @@ build:
 generate:
 	go generate ./...
 	go mod tidy
-
-.PHONY: all
-# generate all
-all:
-	make api
-	make config
-	make generate
 
 # show help
 help:

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
-	pb "shortvid-backend/api/user-service/v1"
+	pb "shortvid-backend/api/v1/user"
 	"shortvid-backend/app/user-service/internal/biz"
 	"shortvid-backend/app/user-service/internal/data/model"
 	"shortvid-backend/app/user-service/pkg/utils"

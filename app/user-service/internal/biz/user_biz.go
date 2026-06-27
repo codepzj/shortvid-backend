@@ -5,12 +5,13 @@ import (
 	"errors"
 	"log/slog"
 	"math/rand"
-	v1 "shortvid-backend/api/user-service/v1"
 	"shortvid-backend/app/user-service/internal/data/model"
 	"time"
 
 	"github.com/go-kratos/kratos/v3/log"
 	"github.com/go-sql-driver/mysql"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 )
 
@@ -147,7 +148,7 @@ func (uc *UsersUsecase) GetUserByUID(ctx context.Context, UID int) (*UserProfile
 		return nil, err
 	}
 	if user == nil {
-		return nil, v1.ErrorUserNotFound("user not found")
+		return nil, status.Errorf(codes.NotFound, "user not found")
 	}
 	return &UserProfileVO{
 		ID:       user.ID,
