@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/codepzj/shortvid-backend/compare/v1.8.0...v1.9.0) (2026-06-28)
+
+
+### Features
+
+* user-service修改http响应格式 ([6a072ce](https://github.com/codepzj/shortvid-backend/commit/6a072ce2c683f321541f69812237b4a264e2ba53))
+
 # [1.8.0](https://github.com/codepzj/shortvid-backend/compare/v1.7.0...v1.8.0) (2026-06-27)
 
 
