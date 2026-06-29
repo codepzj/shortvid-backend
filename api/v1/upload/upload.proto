@@ -1,34 +1,41 @@
 syntax = "proto3";
 
 package upload.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "validate/validate.proto";
+
 option go_package = "shortvid-backend/api/v1/upload;uploadV1";
 
-import "google/protobuf/empty.proto";
-import "google/api/annotations.proto";
-
 service UploadService {
-	rpc GetUploadSession (google.protobuf.Empty) returns (GetUploadSessionReply){
-		option (google.api.http) = {
-			post: "/api/v1/upload/session"
-			body: "*"
-		};
-	};
+  rpc GetUploadSession(GetUploadSessionRequest) returns (GetUploadSessionReply) {
+    option (google.api.http) = {
+      post: "/api/v1/upload/session"
+      body: "*"
+    };
+  }
 
-	rpc ListBuckets (google.protobuf.Empty) returns (ListBucketsReply){
-		option (google.api.http) = {
-			post: "/api/v1/upload/buckets"
-			body: "*"
-		};
-	};
+  rpc ListBuckets(google.protobuf.Empty) returns (ListBucketsReply) {
+    option (google.api.http) = {
+      post: "/api/v1/upload/buckets"
+      body: "*"
+    };
+  }
+}
+
+message GetUploadSessionRequest {
+  string vgroup = 1 [(validate.rules).string.pattern = "^[a-f0-9]{32}_[0-9]+$"];
 }
 
 message GetUploadSessionReply {
-	string access_key_id = 1; // 访问密钥ID
-	string secret_access_key = 2; // 秘密访问密钥
-	string session_token = 3; // 会话令牌
-	string endpoint = 4; // 终端节点
+  string access_key = 1; // 访问密钥ID
+  string secret_key = 2; // 秘密访问密钥
+  string token = 3; // 会话令牌
+  string bucket = 4; // 桶名
+  string path = 5; // 资源路径
 }
 
 message ListBucketsReply {
-	repeated string buckets = 1;
+  repeated string buckets = 1;
 }

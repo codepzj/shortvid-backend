@@ -22,7 +22,7 @@ const OperationUploadServiceGetUploadSession = "/upload.v1.UploadService/GetUplo
 const OperationUploadServiceListBuckets = "/upload.v1.UploadService/ListBuckets"
 
 type UploadServiceHTTPServer interface {
-	GetUploadSession(context.Context, *emptypb.Empty) (*GetUploadSessionReply, error)
+	GetUploadSession(context.Context, *GetUploadSessionRequest) (*GetUploadSessionReply, error)
 	ListBuckets(context.Context, *emptypb.Empty) (*ListBucketsReply, error)
 }
 
@@ -34,13 +34,13 @@ func RegisterUploadServiceHTTPServer(s *http.Server, srv UploadServiceHTTPServer
 
 func _UploadService_GetUploadSession0_HTTP_Handler(srv UploadServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in emptypb.Empty
+		var in GetUploadSessionRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationUploadServiceGetUploadSession)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUploadSession(ctx, req.(*emptypb.Empty))
+			return srv.GetUploadSession(ctx, req.(*GetUploadSessionRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -71,7 +71,7 @@ func _UploadService_ListBuckets0_HTTP_Handler(srv UploadServiceHTTPServer) func(
 }
 
 type UploadServiceHTTPClient interface {
-	GetUploadSession(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUploadSessionReply, err error)
+	GetUploadSession(ctx context.Context, req *GetUploadSessionRequest, opts ...http.CallOption) (rsp *GetUploadSessionReply, err error)
 	ListBuckets(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListBucketsReply, err error)
 }
 
@@ -83,7 +83,7 @@ func NewUploadServiceHTTPClient(client *http.Client) UploadServiceHTTPClient {
 	return &UploadServiceHTTPClientImpl{client}
 }
 
-func (c *UploadServiceHTTPClientImpl) GetUploadSession(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetUploadSessionReply, error) {
+func (c *UploadServiceHTTPClientImpl) GetUploadSession(ctx context.Context, in *GetUploadSessionRequest, opts ...http.CallOption) (*GetUploadSessionReply, error) {
 	var out GetUploadSessionReply
 	pattern := "/api/v1/upload/session"
 	path := http.BuildPath(pattern, in)

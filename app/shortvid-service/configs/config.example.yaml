@@ -15,6 +15,7 @@ data:
 
 s3:
   endpoint: ENDPOINT
+  bucket: BUCKET
   s3_access_key: S3_ACCESS_KEY
   s3_secret_key: S3_SECRET_KEY
   region: REGION
@@ -23,5 +24,4 @@ s3:
   sts_secret_key: STS_SECRET_KEY
   sts_role_arn: STS_ROLE_ARN
   sts_session_name: STS_SESSION_NAME
-  sts_policy: STS_POLICY
   sts_duration_seconds: 3600

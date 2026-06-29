@@ -21,15 +21,17 @@ func NewUploadService(uc *biz.S3Usecase) *UploadService {
 	}
 }
 
-func (s *UploadService) GetUploadSession(ctx context.Context, req *emptypb.Empty) (*uploadV1.GetUploadSessionReply, error) {
-	session, err := s.uc.GetUploadSession(ctx)
+func (s *UploadService) GetUploadSession(ctx context.Context, req *uploadV1.GetUploadSessionRequest) (*uploadV1.GetUploadSessionReply, error) {
+	session, err := s.uc.GetUploadSession(ctx, req.Vgroup)
 	if err != nil {
 		return nil, err
 	}
 	return &uploadV1.GetUploadSessionReply{
-		AccessKeyId:     session.AccessKeyID,
-		SecretAccessKey: session.SecretAccessKey,
-		SessionToken:    session.SessionToken,
+		AccessKey: session.AccessKey,
+		SecretKey: session.SecretKey,
+		Token:     session.Token,
+		Bucket:    session.Bucket,
+		Path:      session.Path,
 	}, nil
 }
 

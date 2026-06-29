@@ -9,7 +9,7 @@ import (
 )
 
 type S3Repo interface {
-	GetUploadSession(ctx context.Context) (*sts.AssumeRoleOutput, error)
+	GetUploadSession(ctx context.Context, vgroup string) (*sts.AssumeRoleOutput, string, string, error)
 	ListBuckets(ctx context.Context) ([]string, error)
 }
 
@@ -23,23 +23,25 @@ func NewS3Usecase(conf *conf.S3, repo S3Repo) *S3Usecase {
 }
 
 type UploadSession struct {
-	AccessKeyID     string
-	SecretAccessKey string
-	SessionToken    string
-	Endpoint        string
+	AccessKey string
+	SecretKey string
+	Token     string
+	Bucket    string
+	Path      string
 }
 
-func (s *S3Usecase) GetUploadSession(ctx context.Context) (*UploadSession, error) {
-	output, err := s.repo.GetUploadSession(ctx)
+func (s *S3Usecase) GetUploadSession(ctx context.Context, vgroup string) (*UploadSession, error) {
+	output, bucket, path, err := s.repo.GetUploadSession(ctx, vgroup)
 	if err != nil {
 		log.ErrorContext(ctx, "get upload session failed", "error", err)
 		return nil, err
 	}
 	return &UploadSession{
-		AccessKeyID:     *output.Credentials.AccessKeyId,
-		SecretAccessKey: *output.Credentials.SecretAccessKey,
-		SessionToken:    *output.Credentials.SessionToken,
-		Endpoint:        s.conf.Endpoint,
+		AccessKey: *output.Credentials.AccessKeyId,
+		SecretKey: *output.Credentials.SecretAccessKey,
+		Token:     *output.Credentials.SessionToken,
+		Bucket:    bucket,
+		Path:      path,
 	}, nil
 }
 

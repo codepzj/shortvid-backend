@@ -35,6 +35,121 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on GetUploadSessionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetUploadSessionRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUploadSessionRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUploadSessionRequestMultiError, or nil if none found.
+func (m *GetUploadSessionRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUploadSessionRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if !_GetUploadSessionRequest_Vgroup_Pattern.MatchString(m.GetVgroup()) {
+		err := GetUploadSessionRequestValidationError{
+			field:  "Vgroup",
+			reason: "value does not match regex pattern \"^[a-f0-9]{32}_[0-9]+$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetUploadSessionRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUploadSessionRequestMultiError is an error wrapping multiple validation
+// errors returned by GetUploadSessionRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetUploadSessionRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUploadSessionRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUploadSessionRequestMultiError) AllErrors() []error { return m }
+
+// GetUploadSessionRequestValidationError is the validation error returned by
+// GetUploadSessionRequest.Validate if the designated constraints aren't met.
+type GetUploadSessionRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUploadSessionRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUploadSessionRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUploadSessionRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUploadSessionRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUploadSessionRequestValidationError) ErrorName() string {
+	return "GetUploadSessionRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUploadSessionRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUploadSessionRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUploadSessionRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUploadSessionRequestValidationError{}
+
+var _GetUploadSessionRequest_Vgroup_Pattern = regexp.MustCompile("^[a-f0-9]{32}_[0-9]+$")
+
 // Validate checks the field values on GetUploadSessionReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

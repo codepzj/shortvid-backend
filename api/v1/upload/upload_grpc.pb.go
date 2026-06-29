@@ -28,7 +28,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UploadServiceClient interface {
-	GetUploadSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUploadSessionReply, error)
+	GetUploadSession(ctx context.Context, in *GetUploadSessionRequest, opts ...grpc.CallOption) (*GetUploadSessionReply, error)
 	ListBuckets(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListBucketsReply, error)
 }
 
@@ -40,7 +40,7 @@ func NewUploadServiceClient(cc grpc.ClientConnInterface) UploadServiceClient {
 	return &uploadServiceClient{cc}
 }
 
-func (c *uploadServiceClient) GetUploadSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUploadSessionReply, error) {
+func (c *uploadServiceClient) GetUploadSession(ctx context.Context, in *GetUploadSessionRequest, opts ...grpc.CallOption) (*GetUploadSessionReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUploadSessionReply)
 	err := c.cc.Invoke(ctx, UploadService_GetUploadSession_FullMethodName, in, out, cOpts...)
@@ -64,7 +64,7 @@ func (c *uploadServiceClient) ListBuckets(ctx context.Context, in *emptypb.Empty
 // All implementations must embed UnimplementedUploadServiceServer
 // for forward compatibility.
 type UploadServiceServer interface {
-	GetUploadSession(context.Context, *emptypb.Empty) (*GetUploadSessionReply, error)
+	GetUploadSession(context.Context, *GetUploadSessionRequest) (*GetUploadSessionReply, error)
 	ListBuckets(context.Context, *emptypb.Empty) (*ListBucketsReply, error)
 	mustEmbedUnimplementedUploadServiceServer()
 }
@@ -76,7 +76,7 @@ type UploadServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUploadServiceServer struct{}
 
-func (UnimplementedUploadServiceServer) GetUploadSession(context.Context, *emptypb.Empty) (*GetUploadSessionReply, error) {
+func (UnimplementedUploadServiceServer) GetUploadSession(context.Context, *GetUploadSessionRequest) (*GetUploadSessionReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUploadSession not implemented")
 }
 func (UnimplementedUploadServiceServer) ListBuckets(context.Context, *emptypb.Empty) (*ListBucketsReply, error) {
@@ -104,7 +104,7 @@ func RegisterUploadServiceServer(s grpc.ServiceRegistrar, srv UploadServiceServe
 }
 
 func _UploadService_GetUploadSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetUploadSessionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -116,7 +116,7 @@ func _UploadService_GetUploadSession_Handler(srv interface{}, ctx context.Contex
 		FullMethod: UploadService_GetUploadSession_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UploadServiceServer).GetUploadSession(ctx, req.(*emptypb.Empty))
+		return srv.(UploadServiceServer).GetUploadSession(ctx, req.(*GetUploadSessionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

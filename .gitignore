@@ -37,6 +37,9 @@ bin/
 .idea/
 *.swp
 
+# debug
+*debug*
+
 # 日志
 logs/
 

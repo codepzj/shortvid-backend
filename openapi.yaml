@@ -76,7 +76,9 @@ paths:
             operationId: UploadService_GetUploadSession
             requestBody:
                 content:
-                    application/json: {}
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/upload.v1.GetUploadSessionRequest'
                 required: true
             responses:
                 "200":
@@ -126,13 +128,20 @@ components:
         upload.v1.GetUploadSessionReply:
             type: object
             properties:
-                accessKeyId:
+                accessKey:
                     type: string
-                secretAccessKey:
+                secretKey:
                     type: string
-                sessionToken:
+                token:
                     type: string
-                endpoint:
+                bucket:
+                    type: string
+                path:
+                    type: string
+        upload.v1.GetUploadSessionRequest:
+            type: object
+            properties:
+                vgroup:
                     type: string
         upload.v1.ListBucketsReply:
             type: object

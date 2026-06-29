@@ -38,6 +38,7 @@ help:
 # init env
 init:
 	go install github.com/go-kratos/kratos/cmd/kratos/v3@latest
+	go install github.com/bufbuild/buf/cmd/buf@latest
 	kratos upgrade
 
 .PHONY: config
@@ -91,6 +92,7 @@ validate:
 # fmt go files
 fmt:
 	go fmt ./...
+	buf format -w
 
 .PHONY: all
 # generate all

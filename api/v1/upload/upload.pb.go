@@ -2,11 +2,12 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v6.33.2
-// source: api/v1/upload/upload.proto
+// source: v1/upload/upload.proto
 
 package uploadV1
 
 import (
+	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -23,19 +24,64 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type GetUploadSessionRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Vgroup        string                 `protobuf:"bytes,1,opt,name=vgroup,proto3" json:"vgroup,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUploadSessionRequest) Reset() {
+	*x = GetUploadSessionRequest{}
+	mi := &file_v1_upload_upload_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUploadSessionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUploadSessionRequest) ProtoMessage() {}
+
+func (x *GetUploadSessionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_upload_upload_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUploadSessionRequest.ProtoReflect.Descriptor instead.
+func (*GetUploadSessionRequest) Descriptor() ([]byte, []int) {
+	return file_v1_upload_upload_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *GetUploadSessionRequest) GetVgroup() string {
+	if x != nil {
+		return x.Vgroup
+	}
+	return ""
+}
+
 type GetUploadSessionReply struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	AccessKeyId     string                 `protobuf:"bytes,1,opt,name=access_key_id,json=accessKeyId,proto3" json:"access_key_id,omitempty"`             // 访问密钥ID
-	SecretAccessKey string                 `protobuf:"bytes,2,opt,name=secret_access_key,json=secretAccessKey,proto3" json:"secret_access_key,omitempty"` // 秘密访问密钥
-	SessionToken    string                 `protobuf:"bytes,3,opt,name=session_token,json=sessionToken,proto3" json:"session_token,omitempty"`            // 会话令牌
-	Endpoint        string                 `protobuf:"bytes,4,opt,name=endpoint,proto3" json:"endpoint,omitempty"`                                        // 终端节点
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AccessKey     string                 `protobuf:"bytes,1,opt,name=access_key,json=accessKey,proto3" json:"access_key,omitempty"` // 访问密钥ID
+	SecretKey     string                 `protobuf:"bytes,2,opt,name=secret_key,json=secretKey,proto3" json:"secret_key,omitempty"` // 秘密访问密钥
+	Token         string                 `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`                          // 会话令牌
+	Bucket        string                 `protobuf:"bytes,4,opt,name=bucket,proto3" json:"bucket,omitempty"`                        // 桶名
+	Path          string                 `protobuf:"bytes,5,opt,name=path,proto3" json:"path,omitempty"`                            // 资源路径
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUploadSessionReply) Reset() {
 	*x = GetUploadSessionReply{}
-	mi := &file_api_v1_upload_upload_proto_msgTypes[0]
+	mi := &file_v1_upload_upload_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -47,7 +93,7 @@ func (x *GetUploadSessionReply) String() string {
 func (*GetUploadSessionReply) ProtoMessage() {}
 
 func (x *GetUploadSessionReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_upload_upload_proto_msgTypes[0]
+	mi := &file_v1_upload_upload_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,33 +106,40 @@ func (x *GetUploadSessionReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUploadSessionReply.ProtoReflect.Descriptor instead.
 func (*GetUploadSessionReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_upload_upload_proto_rawDescGZIP(), []int{0}
+	return file_v1_upload_upload_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetUploadSessionReply) GetAccessKeyId() string {
+func (x *GetUploadSessionReply) GetAccessKey() string {
 	if x != nil {
-		return x.AccessKeyId
+		return x.AccessKey
 	}
 	return ""
 }
 
-func (x *GetUploadSessionReply) GetSecretAccessKey() string {
+func (x *GetUploadSessionReply) GetSecretKey() string {
 	if x != nil {
-		return x.SecretAccessKey
+		return x.SecretKey
 	}
 	return ""
 }
 
-func (x *GetUploadSessionReply) GetSessionToken() string {
+func (x *GetUploadSessionReply) GetToken() string {
 	if x != nil {
-		return x.SessionToken
+		return x.Token
 	}
 	return ""
 }
 
-func (x *GetUploadSessionReply) GetEndpoint() string {
+func (x *GetUploadSessionReply) GetBucket() string {
 	if x != nil {
-		return x.Endpoint
+		return x.Bucket
+	}
+	return ""
+}
+
+func (x *GetUploadSessionReply) GetPath() string {
+	if x != nil {
+		return x.Path
 	}
 	return ""
 }
@@ -100,7 +153,7 @@ type ListBucketsReply struct {
 
 func (x *ListBucketsReply) Reset() {
 	*x = ListBucketsReply{}
-	mi := &file_api_v1_upload_upload_proto_msgTypes[1]
+	mi := &file_v1_upload_upload_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -112,7 +165,7 @@ func (x *ListBucketsReply) String() string {
 func (*ListBucketsReply) ProtoMessage() {}
 
 func (x *ListBucketsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_upload_upload_proto_msgTypes[1]
+	mi := &file_v1_upload_upload_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -125,7 +178,7 @@ func (x *ListBucketsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListBucketsReply.ProtoReflect.Descriptor instead.
 func (*ListBucketsReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_upload_upload_proto_rawDescGZIP(), []int{1}
+	return file_v1_upload_upload_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ListBucketsReply) GetBuckets() []string {
@@ -135,45 +188,51 @@ func (x *ListBucketsReply) GetBuckets() []string {
 	return nil
 }
 
-var File_api_v1_upload_upload_proto protoreflect.FileDescriptor
+var File_v1_upload_upload_proto protoreflect.FileDescriptor
 
-const file_api_v1_upload_upload_proto_rawDesc = "" +
+const file_v1_upload_upload_proto_rawDesc = "" +
 	"\n" +
-	"\x1aapi/v1/upload/upload.proto\x12\tupload.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/api/annotations.proto\"\xa8\x01\n" +
-	"\x15GetUploadSessionReply\x12\"\n" +
-	"\raccess_key_id\x18\x01 \x01(\tR\vaccessKeyId\x12*\n" +
-	"\x11secret_access_key\x18\x02 \x01(\tR\x0fsecretAccessKey\x12#\n" +
-	"\rsession_token\x18\x03 \x01(\tR\fsessionToken\x12\x1a\n" +
-	"\bendpoint\x18\x04 \x01(\tR\bendpoint\",\n" +
+	"\x16v1/upload/upload.proto\x12\tupload.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"O\n" +
+	"\x17GetUploadSessionRequest\x124\n" +
+	"\x06vgroup\x18\x01 \x01(\tB\x1c\xfaB\x19r\x172\x15^[a-f0-9]{32}_[0-9]+$R\x06vgroup\"\x97\x01\n" +
+	"\x15GetUploadSessionReply\x12\x1d\n" +
+	"\n" +
+	"access_key\x18\x01 \x01(\tR\taccessKey\x12\x1d\n" +
+	"\n" +
+	"secret_key\x18\x02 \x01(\tR\tsecretKey\x12\x14\n" +
+	"\x05token\x18\x03 \x01(\tR\x05token\x12\x16\n" +
+	"\x06bucket\x18\x04 \x01(\tR\x06bucket\x12\x12\n" +
+	"\x04path\x18\x05 \x01(\tR\x04path\",\n" +
 	"\x10ListBucketsReply\x12\x18\n" +
-	"\abuckets\x18\x01 \x03(\tR\abuckets2\xe7\x01\n" +
-	"\rUploadService\x12o\n" +
-	"\x10GetUploadSession\x12\x16.google.protobuf.Empty\x1a .upload.v1.GetUploadSessionReply\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/upload/session\x12e\n" +
+	"\abuckets\x18\x01 \x03(\tR\abuckets2\xf3\x01\n" +
+	"\rUploadService\x12{\n" +
+	"\x10GetUploadSession\x12\".upload.v1.GetUploadSessionRequest\x1a .upload.v1.GetUploadSessionReply\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/upload/session\x12e\n" +
 	"\vListBuckets\x12\x16.google.protobuf.Empty\x1a\x1b.upload.v1.ListBucketsReply\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/upload/bucketsB)Z'shortvid-backend/api/v1/upload;uploadV1b\x06proto3"
 
 var (
-	file_api_v1_upload_upload_proto_rawDescOnce sync.Once
-	file_api_v1_upload_upload_proto_rawDescData []byte
+	file_v1_upload_upload_proto_rawDescOnce sync.Once
+	file_v1_upload_upload_proto_rawDescData []byte
 )
 
-func file_api_v1_upload_upload_proto_rawDescGZIP() []byte {
-	file_api_v1_upload_upload_proto_rawDescOnce.Do(func() {
-		file_api_v1_upload_upload_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_v1_upload_upload_proto_rawDesc), len(file_api_v1_upload_upload_proto_rawDesc)))
+func file_v1_upload_upload_proto_rawDescGZIP() []byte {
+	file_v1_upload_upload_proto_rawDescOnce.Do(func() {
+		file_v1_upload_upload_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_upload_upload_proto_rawDesc), len(file_v1_upload_upload_proto_rawDesc)))
 	})
-	return file_api_v1_upload_upload_proto_rawDescData
+	return file_v1_upload_upload_proto_rawDescData
 }
 
-var file_api_v1_upload_upload_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_api_v1_upload_upload_proto_goTypes = []any{
-	(*GetUploadSessionReply)(nil), // 0: upload.v1.GetUploadSessionReply
-	(*ListBucketsReply)(nil),      // 1: upload.v1.ListBucketsReply
-	(*emptypb.Empty)(nil),         // 2: google.protobuf.Empty
+var file_v1_upload_upload_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_v1_upload_upload_proto_goTypes = []any{
+	(*GetUploadSessionRequest)(nil), // 0: upload.v1.GetUploadSessionRequest
+	(*GetUploadSessionReply)(nil),   // 1: upload.v1.GetUploadSessionReply
+	(*ListBucketsReply)(nil),        // 2: upload.v1.ListBucketsReply
+	(*emptypb.Empty)(nil),           // 3: google.protobuf.Empty
 }
-var file_api_v1_upload_upload_proto_depIdxs = []int32{
-	2, // 0: upload.v1.UploadService.GetUploadSession:input_type -> google.protobuf.Empty
-	2, // 1: upload.v1.UploadService.ListBuckets:input_type -> google.protobuf.Empty
-	0, // 2: upload.v1.UploadService.GetUploadSession:output_type -> upload.v1.GetUploadSessionReply
-	1, // 3: upload.v1.UploadService.ListBuckets:output_type -> upload.v1.ListBucketsReply
+var file_v1_upload_upload_proto_depIdxs = []int32{
+	0, // 0: upload.v1.UploadService.GetUploadSession:input_type -> upload.v1.GetUploadSessionRequest
+	3, // 1: upload.v1.UploadService.ListBuckets:input_type -> google.protobuf.Empty
+	1, // 2: upload.v1.UploadService.GetUploadSession:output_type -> upload.v1.GetUploadSessionReply
+	2, // 3: upload.v1.UploadService.ListBuckets:output_type -> upload.v1.ListBucketsReply
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -181,26 +240,26 @@ var file_api_v1_upload_upload_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_api_v1_upload_upload_proto_init() }
-func file_api_v1_upload_upload_proto_init() {
-	if File_api_v1_upload_upload_proto != nil {
+func init() { file_v1_upload_upload_proto_init() }
+func file_v1_upload_upload_proto_init() {
+	if File_v1_upload_upload_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_upload_upload_proto_rawDesc), len(file_api_v1_upload_upload_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_upload_upload_proto_rawDesc), len(file_v1_upload_upload_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_api_v1_upload_upload_proto_goTypes,
-		DependencyIndexes: file_api_v1_upload_upload_proto_depIdxs,
-		MessageInfos:      file_api_v1_upload_upload_proto_msgTypes,
+		GoTypes:           file_v1_upload_upload_proto_goTypes,
+		DependencyIndexes: file_v1_upload_upload_proto_depIdxs,
+		MessageInfos:      file_v1_upload_upload_proto_msgTypes,
 	}.Build()
-	File_api_v1_upload_upload_proto = out.File
-	file_api_v1_upload_upload_proto_goTypes = nil
-	file_api_v1_upload_upload_proto_depIdxs = nil
+	File_v1_upload_upload_proto = out.File
+	file_v1_upload_upload_proto_goTypes = nil
+	file_v1_upload_upload_proto_depIdxs = nil
 }

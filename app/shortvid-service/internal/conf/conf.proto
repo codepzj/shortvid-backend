@@ -1,9 +1,9 @@
 syntax = "proto3";
 package kratos.api;
 
-option go_package = "shortvid-backend/app/shortvid-service/internal/conf;conf";
-
 import "google/protobuf/duration.proto";
+
+option go_package = "shortvid-backend/app/shortvid-service/internal/conf;conf";
 
 message Bootstrap {
   Server server = 1;
@@ -32,14 +32,14 @@ message Data {
 
 message S3 {
   string endpoint = 1;
-  string s3_access_key = 2;
-  string s3_secret_key = 3;
-  string region = 4;
-  bool use_path_style = 5;
-  string sts_access_key = 6;
-  string sts_secret_key = 7;
-  string sts_role_arn = 8;
-  string sts_session_name = 9;
-  string sts_policy = 10;
+  string bucket = 2;
+  string s3_access_key = 3;
+  string s3_secret_key = 4;
+  string region = 5;
+  bool use_path_style = 6;
+  string sts_access_key = 7;
+  string sts_secret_key = 8;
+  string sts_role_arn = 9;
+  string sts_session_name = 10;
   int32 sts_duration_seconds = 11;
 }

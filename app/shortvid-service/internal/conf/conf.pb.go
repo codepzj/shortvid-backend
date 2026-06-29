@@ -173,15 +173,15 @@ func (x *Data) GetMysql() *Data_Mysql {
 type S3 struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	Endpoint           string                 `protobuf:"bytes,1,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
-	S3AccessKey        string                 `protobuf:"bytes,2,opt,name=s3_access_key,json=s3AccessKey,proto3" json:"s3_access_key,omitempty"`
-	S3SecretKey        string                 `protobuf:"bytes,3,opt,name=s3_secret_key,json=s3SecretKey,proto3" json:"s3_secret_key,omitempty"`
-	Region             string                 `protobuf:"bytes,4,opt,name=region,proto3" json:"region,omitempty"`
-	UsePathStyle       bool                   `protobuf:"varint,5,opt,name=use_path_style,json=usePathStyle,proto3" json:"use_path_style,omitempty"`
-	StsAccessKey       string                 `protobuf:"bytes,6,opt,name=sts_access_key,json=stsAccessKey,proto3" json:"sts_access_key,omitempty"`
-	StsSecretKey       string                 `protobuf:"bytes,7,opt,name=sts_secret_key,json=stsSecretKey,proto3" json:"sts_secret_key,omitempty"`
-	StsRoleArn         string                 `protobuf:"bytes,8,opt,name=sts_role_arn,json=stsRoleArn,proto3" json:"sts_role_arn,omitempty"`
-	StsSessionName     string                 `protobuf:"bytes,9,opt,name=sts_session_name,json=stsSessionName,proto3" json:"sts_session_name,omitempty"`
-	StsPolicy          string                 `protobuf:"bytes,10,opt,name=sts_policy,json=stsPolicy,proto3" json:"sts_policy,omitempty"`
+	Bucket             string                 `protobuf:"bytes,2,opt,name=bucket,proto3" json:"bucket,omitempty"`
+	S3AccessKey        string                 `protobuf:"bytes,3,opt,name=s3_access_key,json=s3AccessKey,proto3" json:"s3_access_key,omitempty"`
+	S3SecretKey        string                 `protobuf:"bytes,4,opt,name=s3_secret_key,json=s3SecretKey,proto3" json:"s3_secret_key,omitempty"`
+	Region             string                 `protobuf:"bytes,5,opt,name=region,proto3" json:"region,omitempty"`
+	UsePathStyle       bool                   `protobuf:"varint,6,opt,name=use_path_style,json=usePathStyle,proto3" json:"use_path_style,omitempty"`
+	StsAccessKey       string                 `protobuf:"bytes,7,opt,name=sts_access_key,json=stsAccessKey,proto3" json:"sts_access_key,omitempty"`
+	StsSecretKey       string                 `protobuf:"bytes,8,opt,name=sts_secret_key,json=stsSecretKey,proto3" json:"sts_secret_key,omitempty"`
+	StsRoleArn         string                 `protobuf:"bytes,9,opt,name=sts_role_arn,json=stsRoleArn,proto3" json:"sts_role_arn,omitempty"`
+	StsSessionName     string                 `protobuf:"bytes,10,opt,name=sts_session_name,json=stsSessionName,proto3" json:"sts_session_name,omitempty"`
 	StsDurationSeconds int32                  `protobuf:"varint,11,opt,name=sts_duration_seconds,json=stsDurationSeconds,proto3" json:"sts_duration_seconds,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
@@ -220,6 +220,13 @@ func (*S3) Descriptor() ([]byte, []int) {
 func (x *S3) GetEndpoint() string {
 	if x != nil {
 		return x.Endpoint
+	}
+	return ""
+}
+
+func (x *S3) GetBucket() string {
+	if x != nil {
+		return x.Bucket
 	}
 	return ""
 }
@@ -276,13 +283,6 @@ func (x *S3) GetStsRoleArn() string {
 func (x *S3) GetStsSessionName() string {
 	if x != nil {
 		return x.StsSessionName
-	}
-	return ""
-}
-
-func (x *S3) GetStsPolicy() string {
-	if x != nil {
-		return x.StsPolicy
 	}
 	return ""
 }
@@ -444,21 +444,20 @@ const file_conf_conf_proto_rawDesc = "" +
 	"\x03dsn\x18\x01 \x01(\tR\x03dsn\x12G\n" +
 	"\x12slow_sql_threshold\x18\x02 \x01(\v2\x19.google.protobuf.DurationR\x10slowSqlThreshold\x12$\n" +
 	"\x0emax_open_conns\x18\x03 \x01(\x03R\fmaxOpenConns\x12$\n" +
-	"\x0emax_idle_conns\x18\x04 \x01(\x03R\fmaxIdleConns\"\x8f\x03\n" +
+	"\x0emax_idle_conns\x18\x04 \x01(\x03R\fmaxIdleConns\"\x88\x03\n" +
 	"\x02S3\x12\x1a\n" +
-	"\bendpoint\x18\x01 \x01(\tR\bendpoint\x12\"\n" +
-	"\rs3_access_key\x18\x02 \x01(\tR\vs3AccessKey\x12\"\n" +
-	"\rs3_secret_key\x18\x03 \x01(\tR\vs3SecretKey\x12\x16\n" +
-	"\x06region\x18\x04 \x01(\tR\x06region\x12$\n" +
-	"\x0euse_path_style\x18\x05 \x01(\bR\fusePathStyle\x12$\n" +
-	"\x0ests_access_key\x18\x06 \x01(\tR\fstsAccessKey\x12$\n" +
-	"\x0ests_secret_key\x18\a \x01(\tR\fstsSecretKey\x12 \n" +
-	"\fsts_role_arn\x18\b \x01(\tR\n" +
+	"\bendpoint\x18\x01 \x01(\tR\bendpoint\x12\x16\n" +
+	"\x06bucket\x18\x02 \x01(\tR\x06bucket\x12\"\n" +
+	"\rs3_access_key\x18\x03 \x01(\tR\vs3AccessKey\x12\"\n" +
+	"\rs3_secret_key\x18\x04 \x01(\tR\vs3SecretKey\x12\x16\n" +
+	"\x06region\x18\x05 \x01(\tR\x06region\x12$\n" +
+	"\x0euse_path_style\x18\x06 \x01(\bR\fusePathStyle\x12$\n" +
+	"\x0ests_access_key\x18\a \x01(\tR\fstsAccessKey\x12$\n" +
+	"\x0ests_secret_key\x18\b \x01(\tR\fstsSecretKey\x12 \n" +
+	"\fsts_role_arn\x18\t \x01(\tR\n" +
 	"stsRoleArn\x12(\n" +
-	"\x10sts_session_name\x18\t \x01(\tR\x0estsSessionName\x12\x1d\n" +
-	"\n" +
-	"sts_policy\x18\n" +
-	" \x01(\tR\tstsPolicy\x120\n" +
+	"\x10sts_session_name\x18\n" +
+	" \x01(\tR\x0estsSessionName\x120\n" +
 	"\x14sts_duration_seconds\x18\v \x01(\x05R\x12stsDurationSecondsB:Z8shortvid-backend/app/shortvid-service/internal/conf;confb\x06proto3"
 
 var (

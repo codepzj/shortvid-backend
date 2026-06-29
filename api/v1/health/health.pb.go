@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v6.33.2
-// source: api/v1/health/health.proto
+// source: v1/health/health.proto
 
 package healthV1
 
@@ -22,18 +22,18 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-var File_api_v1_health_health_proto protoreflect.FileDescriptor
+var File_v1_health_health_proto protoreflect.FileDescriptor
 
-const file_api_v1_health_health_proto_rawDesc = "" +
+const file_v1_health_health_proto_rawDesc = "" +
 	"\n" +
-	"\x1aapi/v1/health/health.proto\x12\thealth.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto2a\n" +
+	"\x16v1/health/health.proto\x12\thealth.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto2a\n" +
 	"\rHealthService\x12P\n" +
 	"\x06Health\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/v1/healthB)Z'shortvid-backend/api/v1/health;healthV1b\x06proto3"
 
-var file_api_v1_health_health_proto_goTypes = []any{
+var file_v1_health_health_proto_goTypes = []any{
 	(*emptypb.Empty)(nil), // 0: google.protobuf.Empty
 }
-var file_api_v1_health_health_proto_depIdxs = []int32{
+var file_v1_health_health_proto_depIdxs = []int32{
 	0, // 0: health.v1.HealthService.Health:input_type -> google.protobuf.Empty
 	0, // 1: health.v1.HealthService.Health:output_type -> google.protobuf.Empty
 	1, // [1:2] is the sub-list for method output_type
@@ -43,25 +43,25 @@ var file_api_v1_health_health_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_api_v1_health_health_proto_init() }
-func file_api_v1_health_health_proto_init() {
-	if File_api_v1_health_health_proto != nil {
+func init() { file_v1_health_health_proto_init() }
+func file_v1_health_health_proto_init() {
+	if File_v1_health_health_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_health_health_proto_rawDesc), len(file_api_v1_health_health_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_health_health_proto_rawDesc), len(file_v1_health_health_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_api_v1_health_health_proto_goTypes,
-		DependencyIndexes: file_api_v1_health_health_proto_depIdxs,
+		GoTypes:           file_v1_health_health_proto_goTypes,
+		DependencyIndexes: file_v1_health_health_proto_depIdxs,
 	}.Build()
-	File_api_v1_health_health_proto = out.File
-	file_api_v1_health_health_proto_goTypes = nil
-	file_api_v1_health_health_proto_depIdxs = nil
+	File_v1_health_health_proto = out.File
+	file_v1_health_health_proto_goTypes = nil
+	file_v1_health_health_proto_depIdxs = nil
 }
