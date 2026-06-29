@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/codepzj/shortvid-backend/compare/v1.9.1...v1.10.0) (2026-06-29)
+
+
+### Features
+
+* 打包自动提交go和proto的格式化代码 ([77db97b](https://github.com/codepzj/shortvid-backend/commit/77db97bd3de187b28e36ccc2ceb85f95b828895b))
+
 ## [1.9.1](https://github.com/codepzj/shortvid-backend/compare/v1.9.0...v1.9.1) (2026-06-29)
 
 
