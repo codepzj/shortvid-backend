@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/codepzj/shortvid-backend/compare/v1.9.0...v1.9.1) (2026-06-29)
+
+
+### Bug Fixes
+
+* 调整rustfs的sts临时凭证为最小权限 ([cf84afe](https://github.com/codepzj/shortvid-backend/commit/cf84afe3fdda8768517e37e039198a71fbc46cc2))
+
 # [1.9.0](https://github.com/codepzj/shortvid-backend/compare/v1.8.0...v1.9.0) (2026-06-28)
 
 
